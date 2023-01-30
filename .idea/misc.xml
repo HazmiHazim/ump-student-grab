@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2165" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable/ic_add.xml" value="0.2095" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable/ic_baseline_directions_car_24.xml" value="0.2165" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.2165" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable/ic_empty.xml" value="0.2095" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/drawable/ic_round_account_circle_24.xml" value="0.2165" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/activity_location.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/booking_detail.xml" value="0.264" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/booking_driver.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/change_password.xml" value="0.1902497027348395" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/choose_driver.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/cusotmer_location.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/customer_main.xml" value="0.2" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/customer_profile.xml" value="0.2" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_detail.xml" value="0.264" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_main.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_profile.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/dropdown_item.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/edit_driver.xml" value="0.264" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/edit_profile.xml" value="0.264" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/forgot_password.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/load_anim.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/locate_customer.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/login.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/main.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/manage_passenger.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/passenger_row.xml" value="0.264" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/pickup_passenger.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/register.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/menu/customer_main_menu.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>

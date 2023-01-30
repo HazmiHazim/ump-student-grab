@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">UMP_Student_Grab</string>
+    <string name="From">From:</string>
+    <string name="To">To:</string>
+    <string name="Time">Time:</string>
+    <string name="Date">Date:</string>
+
+</resources>
