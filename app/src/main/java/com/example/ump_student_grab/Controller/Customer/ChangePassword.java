@@ -53,7 +53,7 @@ public class ChangePassword extends AppCompatActivity {
                 checkField(confirmPassword);
                 if(valid){
                     if (newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-                        cm.updatePassword(oldPassword.getText().toString(), newPassword.getText().toString());
+                        cm.updatePassword(ChangePassword.this, oldPassword.getText().toString(), newPassword.getText().toString());
                     }
                     else {
                         Toast.makeText(ChangePassword.this, "New Password and Confirm Password Must Be Identical", Toast.LENGTH_SHORT).show();

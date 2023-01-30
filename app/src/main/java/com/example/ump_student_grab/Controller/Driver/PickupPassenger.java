@@ -31,8 +31,6 @@ public class PickupPassenger extends AppCompatActivity {
     TextView textStatus;
     Button drop, home, mapBtn;
     boolean status = false;
-    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -140,7 +140,7 @@ public class CustomerModel {
         builder.create().show();
     }
 
-    public void updatePassword (String oldPassword, String newPassword) {
+    public void updatePassword (Context context, String oldPassword, String newPassword) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
