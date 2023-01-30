@@ -1,10 +1,12 @@
 package com.example.ump_student_grab.Controller.Driver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ump_student_grab.Model.CustomerModel.CustomerModel;
@@ -15,7 +17,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class PassengerAdapter extends FirestoreRecyclerAdapter<Passenger, PassengerAdapter.PassangerHolder> {
@@ -33,6 +40,7 @@ public class PassengerAdapter extends FirestoreRecyclerAdapter<Passenger, Passen
         holder.pPhone.setText(model.getphone());
         holder.pFrom.setText(model.getFrom());
         holder.pTo.setText(model.getTo());
+
     }
 
     @NonNull
@@ -60,7 +68,8 @@ public class PassengerAdapter extends FirestoreRecyclerAdapter<Passenger, Passen
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION && listener != null) {
-                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                        DocumentSnapshot documentSnapshot = getSnapshots().getSnapshot(position);
+                        listener.onItemClick(documentSnapshot, position);
                     }
                 }
             });

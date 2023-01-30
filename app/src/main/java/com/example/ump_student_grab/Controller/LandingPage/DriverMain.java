@@ -16,6 +16,7 @@ import com.example.ump_student_grab.Controller.Driver.ManagePassenger;
 import com.example.ump_student_grab.Main;
 import com.example.ump_student_grab.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -51,7 +52,9 @@ public class DriverMain extends AppCompatActivity {
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                driverName.setText(documentSnapshot.getString("Name"));
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    driverName.setText(documentSnapshot.getString("Name"));
+                }
             }
         });
 

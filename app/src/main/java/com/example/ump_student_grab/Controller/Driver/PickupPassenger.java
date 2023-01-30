@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -31,8 +32,7 @@ public class PickupPassenger extends AppCompatActivity {
     Button drop, home, mapBtn;
     boolean status = false;
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    FirebaseAuth fAuth;
-    String uid;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,28 +44,12 @@ public class PickupPassenger extends AppCompatActivity {
         home = findViewById(R.id.btn_home);
         mapBtn = findViewById(R.id.btn_map);
 
-        fAuth = FirebaseAuth.getInstance();
-        uid = fAuth.getCurrentUser().getUid();
-
         drop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 status = true;
                 textStatus.setText("Passenger Dropped");
-                DocumentReference df = fStore.collection("Users").document(uid);
-                Map<String,Object> deleteTake = new HashMap<>();
-                deleteTake.put("Take", FieldValue.delete());
-                df.update(deleteTake).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(PickupPassenger.this, "Thank You! :)", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //
-                    }
-                });
+                Toast.makeText(PickupPassenger.this, "Thank You! :)", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -2,6 +2,7 @@ package com.example.ump_student_grab.Controller.Customer;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -64,7 +65,6 @@ public class BookingDetail extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         uid = fAuth.getCurrentUser().getUid();
 
-
         DocumentReference documentReference = fStore.collection("Users").document(uid);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -73,14 +73,7 @@ public class BookingDetail extends AppCompatActivity {
                 bookTo.setText(documentSnapshot.getString("To"));
                 bookTime.setText(documentSnapshot.getString("Time"));
                 bookDate.setText(documentSnapshot.getString("Date"));
-            }
-        });
-
-        DocumentReference df = fStore.collection("Users").document("ptXy7kL4LeZy82Xyf2Am4Kk94oG2");
-        df.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                driverName.setText(documentSnapshot.getString("Name"));
+                driverName.setText(documentSnapshot.getString("Driver"));
             }
         });
 

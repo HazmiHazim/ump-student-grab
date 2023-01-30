@@ -69,6 +69,7 @@ public class Main extends AppCompatActivity {
                         public void onSuccess(AuthResult authResult) {
                             Toast.makeText(Main.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                             checkAccessLevel(authResult.getUser().getUid());
+                            //FirebaseUser user = fAuth.getCurrentUser();
                             dialog.dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
