@@ -24,6 +24,11 @@
             android:name=".Auth.ForgotPassword"
             android:exported="false" />
 
+        <!-- Admin View -->
+        <activity
+            android:name=".Controller.Admin.RegisteredDriver"
+            android:exported="false" />
+
         <!-- Customer View -->
         <activity
             android:name=".Controller.Customer.BookingDriver"

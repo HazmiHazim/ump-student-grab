@@ -50,6 +50,7 @@ public class ManagePassenger extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_passenger);
 
+        String uid = fAuth.getCurrentUser().getUid();
         setRecyclerView();
 
         pAdapter.setOnItemClickListener(new PassengerAdapter.onItemClickListener() {

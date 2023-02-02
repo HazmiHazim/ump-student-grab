@@ -58,9 +58,9 @@ public class DriverProfile extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 driverName.setText(documentSnapshot.getString("Name"));
                 driverPhone.setText(documentSnapshot.getString("phone"));
-                driverLicense.setText(documentSnapshot.getString("License No"));
-                driverCar.setText(documentSnapshot.getString("Car Brand"));
-                carPlate.setText(documentSnapshot.getString("Plate No"));
+                driverLicense.setText(documentSnapshot.getString("LicenseNo"));
+                driverCar.setText(documentSnapshot.getString("CarBrand"));
+                carPlate.setText(documentSnapshot.getString("PlateNo"));
 
                 Log.d(TAG, "onCreate" + driverName);
             }
@@ -72,9 +72,9 @@ public class DriverProfile extends AppCompatActivity {
                 Intent intent = new Intent(DriverProfile.this, EditDriver.class);
                 intent.putExtra("Name", driverName.getText().toString());
                 intent.putExtra("phone", driverPhone.getText().toString());
-                intent.putExtra("License No", driverLicense.getText().toString());
-                intent.putExtra("Car Brand", driverCar.getText().toString());
-                intent.putExtra("Plate No", carPlate.getText().toString());
+                intent.putExtra("LicenseNo", driverLicense.getText().toString());
+                intent.putExtra("CarBrand", driverCar.getText().toString());
+                intent.putExtra("PlateNo", carPlate.getText().toString());
                 startActivity(intent);
             }
         });

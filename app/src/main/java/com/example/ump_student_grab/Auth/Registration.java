@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.ump_student_grab.Controller.LandingPage.AdminMain;
 import com.example.ump_student_grab.Controller.LandingPage.CustomerMain;
 import com.example.ump_student_grab.Controller.LandingPage.DriverMain;
 import com.example.ump_student_grab.Main;
@@ -35,7 +36,7 @@ public class Registration extends AppCompatActivity {
     public static final String TAG = "TAG";
     EditText TypeRegisterName, TypeRegisterMatric, TypeRegisterEmail, TypeRegisterPassword;
     Button btn_cancel, btn_register;
-    CheckBox reg_customer, reg_driver;
+    CheckBox reg_customer, reg_driver, reg_admin;
     ProgressBar LoadRegister;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
@@ -56,6 +57,7 @@ public class Registration extends AppCompatActivity {
         LoadRegister = findViewById(R.id.pb_register);
         reg_customer = findViewById(R.id.checkBox_customer);
         reg_driver = findViewById(R.id.checkBox_Driver);
+        reg_admin = findViewById(R.id.checkBox_Admin);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -80,6 +82,17 @@ public class Registration extends AppCompatActivity {
             }
         });
 
+        //If register as Amin, only driver can tick and other is cannot
+        reg_admin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(compoundButton.isChecked()) {
+                    reg_driver.setChecked(false);
+                    reg_customer.setChecked(false);
+                }
+            }
+        });
+
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +103,7 @@ public class Registration extends AppCompatActivity {
 
 
                 //CheckBox validation
-                if(!(reg_customer.isChecked() || reg_driver.isChecked())) {
+                if(!(reg_customer.isChecked() || reg_driver.isChecked() || reg_admin.isChecked())) {
                     Toast.makeText(Registration.this, "Select Register as", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -111,13 +124,23 @@ public class Registration extends AppCompatActivity {
                             userinfo.put("email", TypeRegisterEmail.getText().toString());
 
                             //Specify if the user is Customer or Driver or Admin
+                            if(reg_admin.isChecked()) {
+                                userinfo.put("isAdmin", "1");
+                            }
+
                             if(reg_customer.isChecked()) {
                                 userinfo.put("isCustomer", "2");
                             }
                             if(reg_driver.isChecked()) {
                                 userinfo.put("isDriver", "3");
+                                userinfo.put("isPending", "0");
                             }
                             df.set(userinfo);
+                            if(reg_admin.isChecked()) {
+                                startActivity(new Intent(getApplicationContext(), AdminMain.class));
+                                finish();
+                            }
+
                             if(reg_customer.isChecked()) {
                                 startActivity(new Intent(getApplicationContext(), CustomerMain.class));
                                 finish();

@@ -68,13 +68,13 @@ public class DriverModel {
         Map<String, Object> driverInfo = new HashMap<>();
         driverInfo.put("Name", name);
         driverInfo.put("phone", phone);
-        driverInfo.put("License No", license);
-        driverInfo.put("Car Brand", car);
-        driverInfo.put("Plate No", plate);
+        driverInfo.put("LicenseNo", license);
+        driverInfo.put("CarBrand", car);
+        driverInfo.put("PlateNo", plate);
         df.update(driverInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Toast.makeText(context, "Book Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Profile Updated", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, DriverProfile.class);
                 context.startActivity(intent);
             }

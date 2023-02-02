@@ -57,9 +57,9 @@ public class EditDriver extends AppCompatActivity {
         Intent data = getIntent();
         String name = data.getStringExtra("Name");
         String phone = data.getStringExtra("phone");
-        String license = data.getStringExtra("License No");
-        String car = data.getStringExtra("Car Brand");
-        String plate = data.getStringExtra("Plate No");
+        String license = data.getStringExtra("LicenseNo");
+        String car = data.getStringExtra("CarBrand");
+        String plate = data.getStringExtra("PlateNo");
 
         //Set Text to EditText
         driverName.setText(name);
