@@ -100,7 +100,7 @@ public class ManagePassenger extends AppCompatActivity {
 
     private void setRecyclerView() {
 
-        Query query = passengerRef.orderBy("isCustomer");
+        Query query = passengerRef.orderBy("isCustomer").orderBy("From").orderBy("To");
 
         FirestoreRecyclerOptions<Passenger> options = new FirestoreRecyclerOptions.Builder<Passenger>().setQuery(query, Passenger.class).build();
 
