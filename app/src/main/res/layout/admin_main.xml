@@ -36,11 +36,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/driver_pending_list"
         android:layout_width="409dp"
-        android:layout_height="560dp"
+        android:layout_height="570dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_below="@id/total_pending"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
