@@ -66,18 +66,20 @@ public class ManagePassenger extends AppCompatActivity {
                         // Get the customer's UID
                         String customerUID = documentSnapshot.getId();
 
-                        // Get the driver's name
+                        // Get the driver's name & phone number
                         String uid = fAuth.getCurrentUser().getUid();
                         DocumentReference df = fStore.collection("Users").document(uid);
                         df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 String driverName = documentSnapshot.getString("Name");
+                                String driverPhoneNum = documentSnapshot.getString("phone");
 
                                 // Add the driver's name to the customer's database as the "Driver" field
                                 DocumentReference customerDocRef = fStore.collection("Users").document(customerUID);
                                 Map<String, Object> updates = new HashMap<>();
                                 updates.put("Driver", driverName);
+                                updates.put("Driver Phone No", driverPhoneNum);
                                 customerDocRef.update(updates);
                             }
                         });
@@ -98,7 +100,7 @@ public class ManagePassenger extends AppCompatActivity {
 
     private void setRecyclerView() {
 
-        Query query = passengerRef.orderBy("isCustomer").orderBy("From").orderBy("To");
+        Query query = passengerRef.orderBy("isCustomer");
 
         FirestoreRecyclerOptions<Passenger> options = new FirestoreRecyclerOptions.Builder<Passenger>().setQuery(query, Passenger.class).build();
 

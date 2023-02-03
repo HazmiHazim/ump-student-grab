@@ -126,8 +126,11 @@ public class BookingDriver extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String bookStatus = "Pending";
+                double amountPaid = 0.0;
+
                 cm.bookDriver(autoCompleteTextView1.getText().toString(), autoCompleteTextView2.getText().toString(),
-                        autoCompleteTextView3.getText().toString(), autoCompleteTextView4.getText().toString());
+                        autoCompleteTextView3.getText().toString(), autoCompleteTextView4.getText().toString(), bookStatus, amountPaid);
             }
         });
     }

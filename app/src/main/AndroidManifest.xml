@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ump_student_grab">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -52,6 +55,18 @@
 
         <activity
             android:name=".Controller.Customer.ChangePassword"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Customer.PayHistory"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Customer.PaymentOption"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Customer.PayPage"
             android:exported="false" />
 
         <!-- Driver View -->
