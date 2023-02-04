@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,7 +52,6 @@ public class ManagePassenger extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_passenger);
 
-        String uid = fAuth.getCurrentUser().getUid();
         setRecyclerView();
 
         pAdapter.setOnItemClickListener(new PassengerAdapter.onItemClickListener() {
@@ -84,6 +85,7 @@ public class ManagePassenger extends AppCompatActivity {
                             }
                         });
                         Intent intent = new Intent(ManagePassenger.this, PickupPassenger.class);
+                        intent.putExtra("id", customerUID);
                         startActivity(intent);
                     }
                 });
