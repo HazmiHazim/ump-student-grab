@@ -52,12 +52,16 @@ public class ChangePassword extends AppCompatActivity {
                 checkField(newPassword);
                 checkField(confirmPassword);
                 if(valid){
-                    if (newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-                        cm.updatePassword(ChangePassword.this, oldPassword.getText().toString(), newPassword.getText().toString());
+                    if(!oldPassword.getText().toString().equals(newPassword.getText().toString())) {
+                        if (newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
+                            CustomerModel cm = new CustomerModel(ChangePassword.this);
+                            cm.updatePassword(ChangePassword.this, oldPassword.getText().toString(), newPassword.getText().toString());
+                        } else {
+                            Toast.makeText(ChangePassword.this, "New Password and Confirm Password Must Be Identical", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else {
-                        Toast.makeText(ChangePassword.this, "New Password and Confirm Password Must Be Identical", Toast.LENGTH_SHORT).show();
-                    }
+                    else
+                        Toast.makeText(ChangePassword.this, "Old password and new password must be different", Toast.LENGTH_SHORT).show();
                 }
             }
         });

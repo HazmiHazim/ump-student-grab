@@ -166,7 +166,7 @@ public class CustomerModel {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Old password is incorrect", Toast.LENGTH_SHORT).show();
             }
         });
     }
