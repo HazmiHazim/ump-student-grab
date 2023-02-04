@@ -16,6 +16,7 @@ import com.example.ump_student_grab.Controller.Customer.ChangePassword;
 import com.example.ump_student_grab.Controller.Customer.CustomerProfile;
 import com.example.ump_student_grab.Controller.Customer.EditProfile;
 import com.example.ump_student_grab.Controller.LandingPage.CustomerMain;
+import com.example.ump_student_grab.Main;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
@@ -155,6 +156,9 @@ public class CustomerModel {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(context, "Change Password Successful", Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(context, Main.class);
+                        context.startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
