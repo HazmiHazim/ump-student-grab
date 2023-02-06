@@ -3,6 +3,7 @@ package com.example.ump_student_grab.Controller.Customer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,49 +16,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ump_student_grab.Model.CustomerModel.PaymentModel;
 import com.example.ump_student_grab.R;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.MyViewHolder>{
+public class PaymentAdapter extends FirestoreRecyclerAdapter<PaymentModel,PaymentAdapter.PaymentHolder> {
 
     Context context;
-    ArrayList<PaymentModel> payArrayList;
-
     FirebaseFirestore fStore;
     FirebaseAuth fAuth;
     String uid;
 
-    public PaymentAdapter(Context context, ArrayList<PaymentModel> payArrayList) {
-        this.context = context;
-        this.payArrayList = payArrayList;
-    }
-
-    @NonNull
-    @Override
-    public PaymentAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.pay_item,parent,false);
-        return new MyViewHolder(v);
+    public PaymentAdapter(@NonNull FirestoreRecyclerOptions<PaymentModel> options) {
+        super(options);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PaymentAdapter.MyViewHolder holder, int position) {
+    protected void onBindViewHolder(@NonNull PaymentHolder holder, int position, @NonNull PaymentModel model) {
 
-        PaymentModel payModel = payArrayList.get(position);
-
-        holder.From.setText(payModel.getFrom());
-        holder.To.setText(payModel.getTo());
-        holder.Driver.setText(payModel.getDriver());
-        holder.Status.setText(payModel.getStatus());
-        holder.amountPaid.setText(String.valueOf(payModel.getAmountPaid()));
+        holder.From.setText(model.getFrom());
+        holder.To.setText(model.getTo());
+        holder.Driver.setText(model.getTo());
+        holder.Status.setText(model.getStatus());
+        holder.amountPaid.setText(String.valueOf(model.getAmountPaid()));
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -72,7 +61,6 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.MyViewHo
                 builder.setMessage("Delete payment history?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                    FirebaseUser user = fAuth.getCurrentUser();
                     DocumentReference df = fStore.collection("Users").document(uid);
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -105,18 +93,19 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.MyViewHo
         });
     }
 
+    @NonNull
     @Override
-    public int getItemCount() {
-        return payArrayList.size();
+    public PaymentHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.pay_item, parent,false);
+        return new PaymentHolder(v);
     }
 
-    //refer to all element wants to populate in the recyclerview
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    class PaymentHolder extends RecyclerView.ViewHolder {
 
         TextView From, To, Driver, Status, amountPaid;
         ImageView delete;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public PaymentHolder(@NonNull View itemView) {
             super(itemView);
 
             From = itemView.findViewById(R.id.tvFrom);

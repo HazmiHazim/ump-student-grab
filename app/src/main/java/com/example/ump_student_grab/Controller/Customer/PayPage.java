@@ -48,7 +48,7 @@ public class PayPage extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateBooking(v);
-                        startActivity(new Intent(PayPage.this, PayHistory.class));
+                        startActivity(new Intent(PayPage.this, PaymentHistory.class));
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

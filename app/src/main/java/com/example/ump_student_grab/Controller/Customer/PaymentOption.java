@@ -45,36 +45,10 @@ public class PaymentOption extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                scanCode();
-//                startActivity(new Intent(PaymentOption.this, QrPay.class));
+                Intent intent = new Intent(PaymentOption.this, QrPay.class);
+                startActivity(intent);
             }
         });
     }
 
-    private void scanCode() {
-        ScanOptions options = new ScanOptions();
-        options.setPrompt("Volume up to flash on");
-        options.setBeepEnabled(true);
-        options.setOrientationLocked(true);
-        options.setCaptureActivity(CaptureAct.class);
-        barLaucher.launch(options);
-    }
-
-    ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result->
-    {
-        if(result.getContents() !=null)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(PaymentOption.this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    dialogInterface.dismiss();
-                }
-            }).show();
-        }
-    });
 }

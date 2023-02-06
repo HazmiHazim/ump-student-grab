@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ump_student_grab">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -58,15 +59,19 @@
             android:exported="false" />
 
         <activity
-            android:name=".Controller.Customer.PayHistory"
-            android:exported="false" />
-
-        <activity
             android:name=".Controller.Customer.PaymentOption"
             android:exported="false" />
 
         <activity
             android:name=".Controller.Customer.PayPage"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Customer.PaymentHistory"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Customer.QrPay"
             android:exported="false" />
 
         <!-- Driver View -->
@@ -110,6 +115,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.example.ump_student_grab.Controller.Customer.CaptureAct"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"/>
+
+
     </application>
 
 </manifest>
