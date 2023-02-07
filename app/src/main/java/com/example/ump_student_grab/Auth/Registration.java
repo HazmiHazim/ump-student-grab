@@ -66,6 +66,7 @@ public class Registration extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(compoundButton.isChecked()) {
                     reg_driver.setChecked(false);
+                    reg_admin.setChecked(false);
                 }
             }
         });
@@ -76,6 +77,7 @@ public class Registration extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(compoundButton.isChecked()) {
                     reg_customer.setChecked(false);
+                    reg_admin.setChecked(false);
                 }
             }
         });
