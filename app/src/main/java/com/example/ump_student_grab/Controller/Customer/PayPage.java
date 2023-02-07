@@ -14,10 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ump_student_grab.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -48,7 +51,6 @@ public class PayPage extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateBooking(v);
-                        startActivity(new Intent(PayPage.this, PaymentHistory.class));
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -64,6 +66,11 @@ public class PayPage extends AppCompatActivity {
 
     public void updateBooking(View view){
 
+        if(amount.getText().toString().isEmpty()) {
+            Toast.makeText(PayPage.this, "Field is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String amt = amount.getText().toString();
         double amountPaid = Double.parseDouble(amt);
 
@@ -71,20 +78,25 @@ public class PayPage extends AppCompatActivity {
         DocumentReference df = fStore.collection("Users").document(uid);
 
         Map<String,Object> map = new HashMap<>();
-        map.put("Status","Paid");
-        map.put("Amount Paid", amountPaid);
-
-        df.update(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(PayPage.this, "Payment Received", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PayPage.this, "Payment Fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                double fee = documentSnapshot.getDouble("Fee");
+                if(amountPaid >= fee) {
+                    map.put("Status","Paid");
+                    map.put("AmountPaid", amountPaid);
+                    df.update(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(PayPage.this, "Payment Received", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(PayPage.this, PaymentHistory.class));
+                        }
+                    });
+                }
+                if(amountPaid < fee) {
+                    Toast.makeText(PayPage.this, "Insufficient amount", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

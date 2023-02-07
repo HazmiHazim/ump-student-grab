@@ -39,6 +39,7 @@ public class RegisteredDriver extends AppCompatActivity {
     CollectionReference driverRef = fStore.collection("Users");
     DriverAdapter dAdapter;
     TextView totalRegistered;
+    Button btnBack;
 
 
     @Override
@@ -47,6 +48,7 @@ public class RegisteredDriver extends AppCompatActivity {
         setContentView(R.layout.registered_driver);
 
         totalRegistered = findViewById(R.id.total_approve);
+        btnBack = findViewById(R.id.btn_homeAdmin);
 
         driverRef.whereEqualTo("isApprove", "Yes").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -86,6 +88,14 @@ public class RegisteredDriver extends AppCompatActivity {
                     }
                 });
                 builder.create().show();
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisteredDriver.this, AdminMain.class);
+                startActivity(intent);
             }
         });
     }

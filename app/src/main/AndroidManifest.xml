@@ -33,6 +33,14 @@
             android:name=".Controller.Admin.RegisteredDriver"
             android:exported="false" />
 
+        <activity
+            android:name=".Controller.Admin.AdminProfile"
+            android:exported="false" />
+
+        <activity
+            android:name=".Controller.Admin.EditAdmin"
+            android:exported="false" />
+
         <!-- Customer View -->
         <activity
             android:name=".Controller.Customer.BookingDriver"
@@ -48,10 +56,6 @@
 
         <activity
             android:name=".Controller.Customer.BookingDetail"
-            android:exported="false" />
-
-        <activity
-            android:name=".Controller.Customer.DriverDetail"
             android:exported="false" />
 
         <activity

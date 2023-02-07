@@ -3,18 +3,18 @@ package com.example.ump_student_grab.Model.CustomerModel;
 public class PaymentModel {
 
     private String From, To, Driver, Status;
-    private double amountPaid;
+    private double AmountPaid;
 
     public PaymentModel(){
 
     }
 
-    public PaymentModel(String From, String To, String Driver, String Status, double amountPaid) {
+    public PaymentModel(String From, String To, String Driver, String Status, double AmountPaid) {
         this.From = From;
         this.To = To;
         this.Driver = Driver;
         this.Status = Status;
-        this.amountPaid = amountPaid;
+        this.AmountPaid = AmountPaid;
     }
 
     public String getFrom() {
@@ -33,6 +33,6 @@ public class PaymentModel {
         return Status;
     }
     public double getAmountPaid() {
-        return amountPaid;
+        return AmountPaid;
     }
 }

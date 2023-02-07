@@ -49,7 +49,7 @@ import java.util.Map;
 public class BookingDetail extends AppCompatActivity {
 
     TextView bookFrom, bookTo, bookTime, bookDate, driverName, bookStatus, driverPhoneNum;
-    Button btn_cancelBook, btn_back, seeDriver, btnPay, btnCall;
+    Button btn_cancelBook, btn_back, btnPay, btnCall;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String uid;
@@ -65,7 +65,6 @@ public class BookingDetail extends AppCompatActivity {
         bookTime = findViewById(R.id.book_time);
         bookDate = findViewById(R.id.book_date);
         driverName = findViewById(R.id.view_driverName);
-        seeDriver = findViewById(R.id.driverDetailBtn);
         btn_cancelBook = findViewById(R.id.book_cancel);
         btn_back = findViewById(R.id.book_back);
         btnPay = findViewById(R.id.btnPay);
@@ -106,13 +105,6 @@ public class BookingDetail extends AppCompatActivity {
             }
         });
 
-        seeDriver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BookingDetail.this, DriverDetail.class);
-                startActivity(intent);
-            }
-        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

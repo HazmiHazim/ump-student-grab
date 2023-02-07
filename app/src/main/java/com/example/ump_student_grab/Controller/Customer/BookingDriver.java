@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,11 +22,19 @@ import com.example.ump_student_grab.Controller.LandingPage.CustomerMain;
 import com.example.ump_student_grab.Model.CustomerModel.CustomerModel;
 import com.example.ump_student_grab.R;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BookingDriver extends AppCompatActivity {
@@ -35,6 +44,7 @@ public class BookingDriver extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     StorageReference storageReference;
+    FirebaseUser user;
 
 
     String[] item1 = {"UMP", "DHUAM", "PEKAN", "KUANTAN"};
@@ -128,7 +138,9 @@ public class BookingDriver extends AppCompatActivity {
 
                 String bookStatus = "Pending";
                 double amountPaid = 0.0;
-
+                fAuth = FirebaseAuth.getInstance();
+                fStore = FirebaseFirestore.getInstance();
+                user = fAuth.getCurrentUser();
                 cm.bookDriver(autoCompleteTextView1.getText().toString(), autoCompleteTextView2.getText().toString(),
                         autoCompleteTextView3.getText().toString(), autoCompleteTextView4.getText().toString(), bookStatus, amountPaid);
             }

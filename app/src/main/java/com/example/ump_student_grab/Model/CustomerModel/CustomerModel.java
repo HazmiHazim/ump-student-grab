@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +41,7 @@ public class CustomerModel {
     StorageReference storageReference;
     FirebaseUser user;
     private Context context;
+    double fee = 0;
 
     public CustomerModel(Context context) {
         this.context = context;
@@ -118,11 +120,72 @@ public class CustomerModel {
                 bookinfo.put("Time", bookTime);
                 bookinfo.put("Date", bookDate);
                 bookinfo.put("Status",bookStatus);
-                bookinfo.put("Amount Paid",amountPaid);
+                bookinfo.put("AmountPaid",amountPaid);
                 df.update(bookinfo).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(context, "Book Success", Toast.LENGTH_SHORT).show();
+                        //Set fee to the customer
+                        DocumentReference df = fStore.collection("Users").document(user.getUid());
+                        df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if(documentSnapshot.get("From").equals("UMP") && documentSnapshot.get("To").equals("DHUAM")){
+                                    fee = 7.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("UMP") && documentSnapshot.get("To").equals("PEKAN")) {
+                                    fee = 15.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("UMP") && documentSnapshot.get("To").equals("KUANTAN")) {
+                                    fee = 40.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("DHUAM") && documentSnapshot.get("To").equals("PEKAN")) {
+                                    fee = 5.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("DHUAM") && documentSnapshot.get("To").equals("UMP")) {
+                                    fee = 7.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("DHUAM") && documentSnapshot.get("To").equals("KUANTAN")) {
+                                    fee = 40.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("PEKAN") && documentSnapshot.get("To").equals("DHUAM")) {
+                                    fee = 5.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("PEKAN") && documentSnapshot.get("To").equals("UMP")) {
+                                    fee = 15.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("PEKAN") && documentSnapshot.get("To").equals("KUANTAN")) {
+                                    fee = 50.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("KUANTAN") && documentSnapshot.get("To").equals("DHUAM")) {
+                                    fee = 40.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("KUANTAN") && documentSnapshot.get("To").equals("PEKAN")) {
+                                    fee = 50.00;
+                                }
+                                else if(documentSnapshot.get("From").equals("KUANTAN") && documentSnapshot.get("To").equals("UMP")) {
+                                    fee = 40.00;
+                                }
+                                Map<String, Object> bookfee = new HashMap<>();
+                                bookfee.put("Fee", fee);
+                                df.update(bookfee).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        //
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        //
+                                    }
+                                });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //
+                            }
+                        });
                         Intent intent = new Intent(context, BookingDetail.class);
                         context.startActivity(intent);
                     }
@@ -137,11 +200,12 @@ public class CustomerModel {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //Nothing happen
             }
         });
         builder.create().show();
     }
+
 
     public void updatePassword (Context context, String oldPassword, String newPassword) {
 

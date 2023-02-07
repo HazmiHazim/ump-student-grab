@@ -175,13 +175,6 @@
         android:text="CALL DRIVER"/>
 
     <Button
-        android:id="@+id/driverDetailBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Driver Details" />
-
-    <Button
         android:id="@+id/book_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
