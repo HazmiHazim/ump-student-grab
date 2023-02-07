@@ -13,6 +13,7 @@
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/admin_change_password.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/admin_main.xml" value="0.2359375" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/admin_profile.xml" value="0.8" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/book_history_list.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/booking_detail.xml" value="0.264" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/booking_driver.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/change_password.xml" value="0.1902497027348395" />
@@ -24,7 +25,7 @@
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_detail.xml" value="0.264" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_main.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_profile.xml" value="0.1" />
-        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_row.xml" value="0.2359375" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/driver_row.xml" value="0.1" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/dropdown_item.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/edit_admin.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/edit_driver.xml" value="0.264" />
@@ -42,7 +43,7 @@
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/payment_option.xml" value="0.2359375" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/pickup_passenger.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/qr_pay.xml" value="0.25" />
-        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/register.xml" value="0.25" />
+        <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/register.xml" value="0.2" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/layout/registered_driver.xml" value="0.2359375" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/menu/admin_main_menu.xml" value="0.25" />
         <entry key="..\:/UMP/Sem 5/Mobile Application &amp; Development/Project/UMP_Student_Grab/app/src/main/res/menu/customer_main_menu.xml" value="0.25" />

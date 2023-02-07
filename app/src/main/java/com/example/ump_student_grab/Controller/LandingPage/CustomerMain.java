@@ -9,19 +9,32 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ump_student_grab.Controller.Admin.Driver;
+import com.example.ump_student_grab.Controller.Admin.DriverAdapter;
+import com.example.ump_student_grab.Controller.Customer.BookHistoryAdapter;
 import com.example.ump_student_grab.Controller.Customer.BookingDetail;
 import com.example.ump_student_grab.Controller.Customer.BookingDriver;
 import com.example.ump_student_grab.Controller.Customer.ChangePassword;
 import com.example.ump_student_grab.Controller.Customer.CustomerProfile;
 import com.example.ump_student_grab.Main;
+import com.example.ump_student_grab.Model.CustomerModel.PaymentModel;
 import com.example.ump_student_grab.R;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class CustomerMain extends AppCompatActivity {
 
     ImageView menu;
     ImageView book;
+    BookHistoryAdapter bhAdapter;
+    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    CollectionReference bookHistoryRef = fStore.collection("BookHistory");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,5 +84,36 @@ public class CustomerMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        setRecyclerView();
+        bhAdapter.notifyDataSetChanged();
+    }
+
+    private void setRecyclerView() {
+
+        Query query = bookHistoryRef;
+
+        FirestoreRecyclerOptions<PaymentModel> options = new FirestoreRecyclerOptions.Builder<PaymentModel>()
+                .setQuery(query,PaymentModel.class)
+                .build();
+
+        bhAdapter = new BookHistoryAdapter(options);
+
+        RecyclerView recyclerView = findViewById(R.id.customer_booking_history);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(bhAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bhAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        bhAdapter.stopListening();
     }
 }

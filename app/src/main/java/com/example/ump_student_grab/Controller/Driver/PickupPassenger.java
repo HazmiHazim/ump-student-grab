@@ -56,17 +56,41 @@ public class PickupPassenger extends AppCompatActivity {
             public void onClick(View v) {
                 status = true;
                 textStatus.setText("Passenger Dropped");
-                DocumentReference df = fStore.collection("Users").document(customerID);
-                Map<String,Object> drop = new HashMap<>();
-                drop.put("From", FieldValue.delete());
-                drop.put("To", FieldValue.delete());
-                drop.put("Time", FieldValue.delete());
-                drop.put("Date", FieldValue.delete());
-                drop.put("Driver Phone No", FieldValue.delete());
-                df.update(drop).addOnCompleteListener(new OnCompleteListener<Void>() {
+                fStore.collection("Users").document(customerID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(PickupPassenger.this, "Thank You! :)", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String from = documentSnapshot.getString("From");
+                        String to = documentSnapshot.getString("To");
+                        String time = documentSnapshot.getString("Time");
+                        String date = documentSnapshot.getString("Date");
+
+                        // Generate a unique ID for each booking
+                        String bookingID = fStore.collection("BookHistory").document().getId();
+
+                        Map<String,Object> add = new HashMap<>();
+                        add.put("From", from);
+                        add.put("To", to);
+                        add.put("Time", time);
+                        add.put("Date", date);
+                        DocumentReference nd = fStore.collection("BookHistory").document(bookingID);
+                        nd.set(add).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                DocumentReference df = fStore.collection("Users").document(customerID);
+                                Map<String,Object> drop = new HashMap<>();
+                                drop.put("From", FieldValue.delete());
+                                drop.put("To", FieldValue.delete());
+                                drop.put("Time", FieldValue.delete());
+                                drop.put("Date", FieldValue.delete());
+                                drop.put("Driver Phone No", FieldValue.delete());
+                                df.update(drop).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(PickupPassenger.this, "Thank You! :)", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

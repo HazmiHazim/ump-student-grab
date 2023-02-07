@@ -35,7 +35,6 @@ public class Main extends AppCompatActivity {
     EditText TypeEmailLogin, TypePasswordLogin;
     TextView ForgotButton, RegisterButton;
     Button btn_login;
-    ProgressBar LoadLogin;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     boolean valid = true;
@@ -51,7 +50,6 @@ public class Main extends AppCompatActivity {
         ForgotButton = findViewById(R.id.fg_button);
         RegisterButton = findViewById(R.id.reg_button);
         btn_login = findViewById(R.id.btn_login);
-        LoadLogin = findViewById(R.id.pb_login);
 
         //Initialize Firebase
         fAuth = FirebaseAuth.getInstance();

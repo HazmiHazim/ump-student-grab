@@ -37,7 +37,6 @@ public class Registration extends AppCompatActivity {
     EditText TypeRegisterName, TypeRegisterMatric, TypeRegisterEmail, TypeRegisterPassword;
     Button btn_cancel, btn_register;
     CheckBox reg_customer, reg_driver, reg_admin;
-    ProgressBar LoadRegister;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     boolean valid = true;
@@ -54,7 +53,6 @@ public class Registration extends AppCompatActivity {
         TypeRegisterPassword = findViewById(R.id.RegisterPass);
         btn_cancel = findViewById(R.id.cancel_register);
         btn_register = findViewById(R.id.btn_register);
-        LoadRegister = findViewById(R.id.pb_register);
         reg_customer = findViewById(R.id.checkBox_customer);
         reg_driver = findViewById(R.id.checkBox_Driver);
         reg_admin = findViewById(R.id.checkBox_Admin);
