@@ -114,55 +114,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status:"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/passengerStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Passenger Status"
-                android:textColor="@color/black"
-                android:layout_marginLeft="8dp"
-                android:textSize="15dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Amount Paid:"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="18sp"/>
-
-            <TextView
-                android:id="@+id/amountPaid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Amount Paid"
-                android:textColor="@color/black"
-                android:layout_marginLeft="8dp"
-                android:textSize="15dp"/>
-        </LinearLayout>
-
-
     </LinearLayout>
 
 

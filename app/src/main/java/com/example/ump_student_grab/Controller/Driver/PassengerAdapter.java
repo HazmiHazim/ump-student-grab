@@ -40,8 +40,6 @@ public class PassengerAdapter extends FirestoreRecyclerAdapter<Passenger, Passen
         holder.pPhone.setText(model.getphone());
         holder.pFrom.setText(model.getFrom());
         holder.pTo.setText(model.getTo());
-        //holder.pStatus.setText(model.getStatus());
-        //holder.pAmountPaid.setText(Double.toString(model.getAmountPaid()));
 
     }
 
@@ -63,8 +61,6 @@ public class PassengerAdapter extends FirestoreRecyclerAdapter<Passenger, Passen
             pPhone = itemView.findViewById(R.id.passengerPhone);
             pFrom = itemView.findViewById(R.id.passengerFrom);
             pTo = itemView.findViewById(R.id.passengerTo);
-            pStatus = itemView.findViewById(R.id.passengerStatus);
-            pAmountPaid = itemView.findViewById(R.id.amountPaid);
 
             //Click on item in Recyclerview
             itemView.setOnClickListener(new View.OnClickListener() {
