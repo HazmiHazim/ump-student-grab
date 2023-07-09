@@ -84,15 +84,18 @@ public class ChangePassword extends AppCompatActivity {
                 df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists() && documentSnapshot.get("isAdmin") != null && documentSnapshot.get("isAdmin").equals("1")) {
-                            Intent intent = new Intent(ChangePassword.this, AdminMain.class);
-                            startActivity(intent);
-                        } else if (documentSnapshot.exists() && documentSnapshot.get("isCustomer") != null && documentSnapshot.get("isCustomer").equals("2")) {
-                            Intent intent = new Intent(ChangePassword.this, CustomerMain.class);
-                            startActivity(intent);
-                        } else if (documentSnapshot.exists() && documentSnapshot.get("isDriver") != null && documentSnapshot.get("isDriver").equals("3")) {
-                            Intent intent = new Intent(ChangePassword.this, DriverMain.class);
-                            startActivity(intent);
+                        if (documentSnapshot.exists() && documentSnapshot.contains("isUser")) {
+                            int user = documentSnapshot.getLong("isUser").intValue();
+                            if (user == 1) {
+                                Intent intent = new Intent(ChangePassword.this, AdminMain.class);
+                                startActivity(intent);
+                            } else if (user == 2) {
+                                Intent intent = new Intent(ChangePassword.this, CustomerMain.class);
+                                startActivity(intent);
+                            } else if (user == 3) {
+                                Intent intent = new Intent(ChangePassword.this, DriverMain.class);
+                                startActivity(intent);
+                            }
                         }
                     }
                 });

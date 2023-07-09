@@ -101,7 +101,7 @@ public class CustomerModel {
         });
     }
 
-    public void bookDriver(String bookFrom, String bookTo, String bookTime, String bookDate, String bookStatus, double amountPaid) {
+    public void bookDriver(String bookFrom, String bookTo, String bookTime, String bookDate, String bookStatus, int tripStatus, double amountPaid) {
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -120,6 +120,7 @@ public class CustomerModel {
                 bookinfo.put("Time", bookTime);
                 bookinfo.put("Date", bookDate);
                 bookinfo.put("Status",bookStatus);
+                bookinfo.put("Trip Status", tripStatus);
                 bookinfo.put("AmountPaid",amountPaid);
                 df.update(bookinfo).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

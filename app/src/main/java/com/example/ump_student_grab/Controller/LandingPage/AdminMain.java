@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ump_student_grab.Controller.Admin.AdminProfile;
-import com.example.ump_student_grab.Controller.Admin.Driver;
+import com.example.ump_student_grab.Model.AdminModel.Driver;
 import com.example.ump_student_grab.Controller.Admin.DriverAdapter;
 import com.example.ump_student_grab.Controller.Admin.RegisteredDriver;
 import com.example.ump_student_grab.Controller.Customer.ChangePassword;
@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -46,6 +45,7 @@ public class AdminMain extends AppCompatActivity {
     Button btnApprove;
     TextView totalPending;
     ImageView menu;
+    boolean hasPassenger = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class AdminMain extends AppCompatActivity {
             }
         });
 
-        driverRef.whereEqualTo("isPending", "0").get().addOnCompleteListener(task -> {
+        driverRef.whereEqualTo("isApprove", false).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 int count = task.getResult().size();
                 totalPending.setText(String.valueOf(count));
@@ -119,8 +119,8 @@ public class AdminMain extends AppCompatActivity {
                         // Add the driver's name to the customer's database as the "Driver" field
                         DocumentReference driverDocRef = fStore.collection("Users").document(driverUID);
                         Map<String, Object> approve = new HashMap<>();
-                        approve.put("isApprove", "Yes");
-                        approve.put("isPending", FieldValue.delete());
+                        approve.put("isApprove", true);
+                        approve.put("hasPassenger", hasPassenger);
                         driverDocRef.update(approve);
                         Toast.makeText(AdminMain.this, "Driver is Approved", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AdminMain.this, RegisteredDriver.class);
@@ -140,7 +140,7 @@ public class AdminMain extends AppCompatActivity {
 
     private void setRecyclerView() {
 
-        Query query = driverRef.orderBy("isDriver").orderBy("isPending");
+        Query query = driverRef.whereEqualTo("isUser", 3).whereEqualTo("isApprove", false);
 
         FirestoreRecyclerOptions<Driver> options = new FirestoreRecyclerOptions.Builder<Driver>().setQuery(query, Driver.class).build();
 

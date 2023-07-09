@@ -1,6 +1,5 @@
 package com.example.ump_student_grab.Controller.Admin;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +7,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.ump_student_grab.Controller.Driver.PassengerAdapter;
+
+import com.example.ump_student_grab.Model.AdminModel.Driver;
 import com.example.ump_student_grab.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;

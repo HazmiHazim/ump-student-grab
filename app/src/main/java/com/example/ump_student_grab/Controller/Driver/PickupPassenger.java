@@ -35,6 +35,8 @@ public class PickupPassenger extends AppCompatActivity {
     Button drop, home, mapBtn;
     boolean status = false;
     FirebaseFirestore fStore;
+    FirebaseAuth fAuth;
+    String uid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class PickupPassenger extends AppCompatActivity {
         mapBtn = findViewById(R.id.btn_map);
 
         fStore = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+        uid = fAuth.getCurrentUser().getUid();
+
 
         Intent data = getIntent();
         String customerID = data.getStringExtra("id");
@@ -56,6 +61,10 @@ public class PickupPassenger extends AppCompatActivity {
             public void onClick(View v) {
                 status = true;
                 textStatus.setText("Passenger Dropped");
+                DocumentReference df = fStore.collection("Users").document(uid);
+                Map<String, Object> dropPassenger = new HashMap<>();
+                dropPassenger.put("hasPassenger", false);
+                df.update(dropPassenger);
                 fStore.collection("Users").document(customerID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -82,6 +91,11 @@ public class PickupPassenger extends AppCompatActivity {
                                 drop.put("To", FieldValue.delete());
                                 drop.put("Time", FieldValue.delete());
                                 drop.put("Date", FieldValue.delete());
+                                drop.put("AmountPaid", FieldValue.delete());
+                                drop.put("Fee", FieldValue.delete());
+                                drop.put("Status", FieldValue.delete());
+                                drop.put("Driver", FieldValue.delete());
+                                drop.put("Trip Status", FieldValue.delete());
                                 drop.put("Driver Phone No", FieldValue.delete());
                                 df.update(drop).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -93,6 +107,8 @@ public class PickupPassenger extends AppCompatActivity {
                         });
                     }
                 });
+                Intent intent = new Intent(PickupPassenger.this, DriverMain.class);
+                startActivity(intent);
             }
         });
 

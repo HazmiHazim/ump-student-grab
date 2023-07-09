@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +17,10 @@ import com.example.ump_student_grab.Controller.Customer.ChangePassword;
 import com.example.ump_student_grab.Controller.Customer.CustomerProfile;
 import com.example.ump_student_grab.Controller.Driver.DriverProfile;
 import com.example.ump_student_grab.Controller.Driver.ManagePassenger;
+import com.example.ump_student_grab.Controller.Driver.PickupPassenger;
 import com.example.ump_student_grab.Main;
 import com.example.ump_student_grab.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,7 +32,7 @@ public class DriverMain extends AppCompatActivity {
 
     ImageView driverPicture, menu;
     TextView driverName;
-    Button booking;
+    Button booking, myPassenger;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String uid;
@@ -43,6 +46,7 @@ public class DriverMain extends AppCompatActivity {
         driverName = findViewById(R.id.view_driverName);
         booking = findViewById(R.id.checkBooking);
         menu = findViewById(R.id.driver_btn_menu);
+        myPassenger = findViewById(R.id.myPassengerBtn);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -91,10 +95,44 @@ public class DriverMain extends AppCompatActivity {
         booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DriverMain.this, ManagePassenger.class);
-                startActivity(intent);
+                documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.contains("isApprove")) {
+                            boolean approval = documentSnapshot.getBoolean("isApprove");
+
+                            if (!approval)
+                                Toast.makeText(DriverMain.this, "Your Driver account is not approved yet!", Toast.LENGTH_SHORT).show();
+
+                            else {
+                                Intent intent = new Intent(DriverMain.this, ManagePassenger.class);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                });
             }
         });
 
+        myPassenger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.contains("hasPassenger")) {
+                            boolean myCurrentPassenger = documentSnapshot.getBoolean("hasPassenger");
+
+                            if (!myCurrentPassenger)
+                                Toast.makeText(DriverMain.this, "You dont have any passenger right now. Click above button to take a passenger !", Toast.LENGTH_SHORT).show();
+                            else {
+                                Intent intent = new Intent(DriverMain.this, PickupPassenger.class);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 }

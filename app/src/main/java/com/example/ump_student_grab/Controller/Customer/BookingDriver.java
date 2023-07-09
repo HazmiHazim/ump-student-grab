@@ -137,12 +137,13 @@ public class BookingDriver extends AppCompatActivity {
             public void onClick(View view) {
 
                 String bookStatus = "Pending";
+                int tripStatus = 1;
                 double amountPaid = 0.0;
                 fAuth = FirebaseAuth.getInstance();
                 fStore = FirebaseFirestore.getInstance();
                 user = fAuth.getCurrentUser();
                 cm.bookDriver(autoCompleteTextView1.getText().toString(), autoCompleteTextView2.getText().toString(),
-                        autoCompleteTextView3.getText().toString(), autoCompleteTextView4.getText().toString(), bookStatus, amountPaid);
+                        autoCompleteTextView3.getText().toString(), autoCompleteTextView4.getText().toString(), bookStatus, tripStatus, amountPaid);
             }
         });
     }

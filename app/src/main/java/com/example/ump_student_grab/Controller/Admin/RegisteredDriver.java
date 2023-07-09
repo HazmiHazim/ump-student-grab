@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,20 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ump_student_grab.Controller.LandingPage.AdminMain;
-import com.example.ump_student_grab.Main;
+import com.example.ump_student_grab.Model.AdminModel.Driver;
 import com.example.ump_student_grab.R;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisteredDriver extends AppCompatActivity {
 
@@ -50,7 +44,7 @@ public class RegisteredDriver extends AppCompatActivity {
         totalRegistered = findViewById(R.id.total_approve);
         btnBack = findViewById(R.id.btn_homeAdmin);
 
-        driverRef.whereEqualTo("isApprove", "Yes").get().addOnCompleteListener(task -> {
+        driverRef.whereEqualTo("isApprove", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 int count = task.getResult().size();
                 totalRegistered.setText(String.valueOf(count));
@@ -102,7 +96,7 @@ public class RegisteredDriver extends AppCompatActivity {
 
     private void setRecyclerView() {
 
-        Query query = driverRef.orderBy("isDriver").orderBy("isApprove");
+        Query query = driverRef.whereEqualTo("isUser", 3).whereEqualTo("isApprove", true);
 
         FirestoreRecyclerOptions<Driver> options = new FirestoreRecyclerOptions.Builder<Driver>().setQuery(query, Driver.class).build();
 

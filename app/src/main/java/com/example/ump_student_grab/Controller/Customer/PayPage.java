@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +35,8 @@ public class PayPage extends AppCompatActivity {
     FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     EditText amount;
     Button btnConfirm;
+    TextView fee;
+    String uid = fAuth.getCurrentUser().getUid();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +45,18 @@ public class PayPage extends AppCompatActivity {
 
         amount = findViewById(R.id.etAmountPaid);
         btnConfirm = findViewById(R.id.btnConfirm);
+        fee = findViewById(R.id.fee);
+
+        DocumentReference documentReference = fStore.collection("Users").document(uid);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value.contains("Fee")) {
+                    int feeValue = value.getLong("Fee").intValue();
+                    fee.setText(String.valueOf(feeValue));
+                }
+            }
+        });
 
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override

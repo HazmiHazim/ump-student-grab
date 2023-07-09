@@ -106,20 +106,20 @@ public class Main extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 Log.d("TAG", "onSuccess: " + documentSnapshot.getData());
                 //identify the user type
-                if(documentSnapshot.getString("isCustomer") != null) {
-                    //User is Customer
-                    startActivity(new Intent(getApplicationContext(), CustomerMain.class));
-                    finish();
-                }
-                else if(documentSnapshot.getString("isDriver") != null) {
-                    //User is Driver
-                    startActivity(new Intent(getApplicationContext(), DriverMain.class));
-                    finish();
-                }
-                else {
-                    //User is Admin
-                    startActivity(new Intent(getApplicationContext(), AdminMain.class));
-                    finish();
+                if (documentSnapshot.contains("isUser")) {
+                    int user = documentSnapshot.getLong("isUser").intValue();
+                    if (user == 1) {
+                        startActivity(new Intent(getApplicationContext(), AdminMain.class));
+                        finish();
+                    }
+                    else if (user == 2) {
+                        startActivity(new Intent(getApplicationContext(), CustomerMain.class));
+                        finish();
+                    }
+                    else if (user == 3) {
+                        startActivity(new Intent(getApplicationContext(), DriverMain.class));
+                        finish();
+                    }
                 }
             }
         });
@@ -145,20 +145,20 @@ public class Main extends AppCompatActivity {
             df.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if(documentSnapshot.getString("isCustomer") != null) {
-                        startActivity(new Intent(getApplicationContext(), CustomerMain.class));
-                        dialog.dismiss();
-                        finish();
-                    }
-                    if(documentSnapshot.getString("isDriver") != null) {
-                        startActivity(new Intent(getApplicationContext(), DriverMain.class));
-                        dialog.dismiss();
-                        finish();
-                    }
-                    if(documentSnapshot.getString("isAdmin") != null) {
-                        startActivity(new Intent(getApplicationContext(), AdminMain.class));
-                        dialog.dismiss();
-                        finish();
+                    if (documentSnapshot.contains("isUser")) {
+                        int user = documentSnapshot.getLong("isUser").intValue();
+                        if (user == 1) {
+                            startActivity(new Intent(getApplicationContext(), AdminMain.class));
+                            finish();
+                        }
+                        else if (user == 2) {
+                            startActivity(new Intent(getApplicationContext(), CustomerMain.class));
+                            finish();
+                        }
+                        else if (user == 3) {
+                            startActivity(new Intent(getApplicationContext(), DriverMain.class));
+                            finish();
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

@@ -41,6 +41,10 @@ public class Registration extends AppCompatActivity {
     FirebaseFirestore fStore;
     boolean valid = true;
     AlertDialog dialog;
+    int customer = 2;
+    int admin = 1;
+    int driver = 3;
+    boolean isApprove = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,15 +129,15 @@ public class Registration extends AppCompatActivity {
 
                             //Specify if the user is Customer or Driver or Admin
                             if(reg_admin.isChecked()) {
-                                userinfo.put("isAdmin", "1");
+                                userinfo.put("isUser", admin);
                             }
 
                             if(reg_customer.isChecked()) {
-                                userinfo.put("isCustomer", "2");
+                                userinfo.put("isUser", customer);
                             }
                             if(reg_driver.isChecked()) {
-                                userinfo.put("isDriver", "3");
-                                userinfo.put("isPending", "0");
+                                userinfo.put("isUser", driver);
+                                userinfo.put("isApprove", isApprove);
                             }
                             df.set(userinfo);
                             if(reg_admin.isChecked()) {

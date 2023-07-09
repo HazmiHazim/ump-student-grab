@@ -29,7 +29,7 @@ public class PaymentHistory extends AppCompatActivity {
 
     private void setUpRecyclerView() {
 
-        Query query = paymentRef.orderBy("isCustomer");
+        Query query = paymentRef.whereEqualTo("isUser", 2).whereEqualTo("Status", "Paid");
 
         FirestoreRecyclerOptions<PaymentModel> options = new FirestoreRecyclerOptions.Builder<PaymentModel>()
                 .setQuery(query,PaymentModel.class)

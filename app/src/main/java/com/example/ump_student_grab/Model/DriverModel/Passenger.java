@@ -1,4 +1,4 @@
-package com.example.ump_student_grab.Controller.Driver;
+package com.example.ump_student_grab.Model.DriverModel;
 
 public class Passenger {
 
