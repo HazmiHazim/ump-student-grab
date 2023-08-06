@@ -1,4 +1,4 @@
-﻿# `CONNECT ANDROID STUDIO TO YOUR FIREBASE ACCOUNT`
+﻿## `CONNECT ANDROID STUDIO TO YOUR FIREBASE ACCOUNT`
 
 ```
 1. Go to the Firebase Console (https://console.firebase.google.com/).
@@ -53,7 +53,7 @@
     Enable your email authentication in firebase inside sign in provider section.
     ```
 
-# `Application Overview`
+## `Application Overview`
 
 #### Login
     
