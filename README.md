@@ -38,9 +38,6 @@
 ```
 12. In your Android Studio project, click on the "Sync Now" button in the upper right-hand corner.
 ```
-```
-13. You can now start using Firebase in your Android project.
-```
 
 - ADJUST FIREBASE RULE TO READ & WRITE FOR REALTIME (FOR LOCK MODE)
     ```
