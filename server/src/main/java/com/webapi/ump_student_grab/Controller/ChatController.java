@@ -78,12 +78,34 @@ public class ChatController {
 
             if (existingChat == null) {
                 status = HttpStatus.NOT_FOUND;
-                message = "Chat does not exists.";
+                message = "No data found in our record.";
                 response = new ApiResponse<>(status.value(), null, message);
             } else {
                 status = HttpStatus.OK;
                 message = "Chat found.";
                 response = new ApiResponse<>(status.value(), existingChat, message);
+            }
+
+            return new ResponseEntity<>(response, status);
+        });
+    }
+
+    @GetMapping("/allChats")
+    @Async
+    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDTO>>>> getAllChats() {
+        return _service.getAllChats().thenApply(chats -> {
+            ApiResponse<List<ChatDTO>> response;
+            HttpStatus status;
+            String message;
+
+            if (chats == null) {
+                status = HttpStatus.NOT_FOUND;
+                message = "Chat does not exists.";
+                response = new ApiResponse<>(status.value(), null, message);
+            } else {
+                status = HttpStatus.OK;
+                message = "Chats found.";
+                response = new ApiResponse<>(status.value(), chats, message);
             }
 
             return new ResponseEntity<>(response, status);
@@ -115,7 +137,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/getAllMessages/{userId}/{chatId}")
+    @GetMapping("/allMessages/{userId}/{chatId}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long userId, @PathVariable Long chatId) {
         return _service.getAllMessages(userId, chatId).thenApply(messages -> {

@@ -101,7 +101,7 @@ public class AuthController {
                 response = new ApiResponse<>(status.value(), null, message);
             } else {
                 status = HttpStatus.OK;
-                message = "Users founds.";
+                message = "Users found.";
                 response = new ApiResponse<>(status.value(), users, message);
             }
 

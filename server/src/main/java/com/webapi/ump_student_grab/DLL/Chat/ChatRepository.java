@@ -53,6 +53,13 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     @Async
+    public CompletableFuture<List<Chat>> getAllChats() {
+        List<Chat> chats = entityManager.createQuery("SELECT c FROM Chat c", Chat.class).getResultList();
+        return CompletableFuture.completedFuture(chats);
+    }
+
+    @Override
+    @Async
     @Transactional
     public CompletableFuture<Message> createMessage(Message message) {
         entityManager.persist(message);

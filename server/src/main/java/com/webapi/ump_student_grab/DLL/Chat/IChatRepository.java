@@ -10,6 +10,7 @@ public interface IChatRepository {
     CompletableFuture<Chat> createChat(Chat chat);
     CompletableFuture<Chat> getChatById(Long id);
     CompletableFuture<Chat> getChatByParticipant(Long senderId, Long recipientId);
+    CompletableFuture<List<Chat>> getAllChats();
     CompletableFuture<Message> createMessage(Message message);
     CompletableFuture<List<Message>> getAllMessages(Long userId, Long chatId);
 }

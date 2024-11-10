@@ -65,6 +65,11 @@ public class ChatServiceLogic implements IChatServiceLogic{
     }
 
     @Override
+    public CompletableFuture<List<ChatDTO>> getAllChats() {
+        return _repo.getAllChats().thenApply(_mapper::chatListToChatDTOList);
+    }
+
+    @Override
     public CompletableFuture<Integer> createMessage(MessageCreateDTO messageCreateDTO) {
         return _uRepo.getUserById(messageCreateDTO.getUserId()).thenCompose(user -> {
             if (user == null) {

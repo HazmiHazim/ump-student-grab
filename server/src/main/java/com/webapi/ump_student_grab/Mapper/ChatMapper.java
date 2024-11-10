@@ -18,6 +18,7 @@ public interface ChatMapper {
 
     ChatDTO chatToChatDTO(Chat chat);
     Chat chatCreateDTOToChat(ChatCreateDTO chatCreateDTO);
+    List<ChatDTO> chatListToChatDTOList(List<Chat> chats);
     Message messageDTOToMessage(MessageCreateDTO messageDTO);
-    List<MessageDTO> messageListToMessageDTOList(List<Message> message);
+    List<MessageDTO> messageListToMessageDTOList(List<Message> messages);
 }
