@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -78,5 +79,24 @@ public class ChatRepository implements IChatRepository {
                 .getResultList();
 
         return CompletableFuture.completedFuture(messages);
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<Message> getLastMessage(Long chatId, Long userId) {
+        String query = "SELECT m FROM Message m WHERE m.userId = :userId AND m.chatId = :chatId ORDER BY m.createdAt DESC";
+        Message message;
+
+        try {
+            message = entityManager.createQuery(query, Message.class)
+                    .setParameter("chatId", chatId)
+                    .setParameter("userId", userId)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            message = null;
+        }
+
+        return CompletableFuture.completedFuture(message);
     }
 }

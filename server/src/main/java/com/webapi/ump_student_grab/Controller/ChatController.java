@@ -1,13 +1,13 @@
 package com.webapi.ump_student_grab.Controller;
 
 import com.webapi.ump_student_grab.BLL.Chat.IChatServiceLogic;
-import com.webapi.ump_student_grab.DTO.ChatDTO.ChatCreateDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.ChatDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.MessageCreateDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.MessageDTO;
+import com.webapi.ump_student_grab.DTO.ChatDTO.*;
 import com.webapi.ump_student_grab.Model.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
@@ -156,6 +156,59 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        });
+    }
+
+    @GetMapping("/allChatsDetails")
+    @Async
+    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails() {
+        // Fetch all chats with details asynchronously and return the result
+        return _service.getAllChatsWithDetails().thenApplyAsync(chats -> {
+            ApiResponse<List<ChatDetailsDTO>> response;
+            HttpStatus status;
+            String message;
+
+            if (chats == null || chats.isEmpty()) {
+                status = HttpStatus.NOT_FOUND;
+                message = "No data found in our record.";
+                response = new ApiResponse<>(status.value(), null, message);
+            } else {
+                status = HttpStatus.OK;
+                message = "Messages found.";
+                response = new ApiResponse<>(status.value(), chats, message);
+            }
+
+            return new ResponseEntity<>(response, status);
+        });
+    }
+
+    @MessageMapping("/chatroom")
+    @SendTo("/topic/chatroom")
+    public CompletableFuture<ChatCreateDTO> broadcastChat(@Payload ChatCreateDTO chatCreateDTO) {
+        // Save the message to the database asynchronously
+        CompletableFuture<Void> saveTask = CompletableFuture.runAsync(() -> {
+            _service.createChat(chatCreateDTO).join(); // Save and wait for completion in the background
+        });
+
+        // Broadcast the message asynchronously
+        return CompletableFuture.supplyAsync(() -> {
+            // Directly return the DTO for broadcasting
+            return chatCreateDTO;
+        });
+    }
+
+    @MessageMapping("/chat")
+    @SendTo("/topic/chat")
+    public CompletableFuture<MessageCreateDTO> broadcastMessage(@Payload MessageCreateDTO messageCreateDTO) {
+        // Save the message to the database asynchronously
+        CompletableFuture<Void> saveTask = CompletableFuture.runAsync(() -> {
+            _service.createMessage(messageCreateDTO).join(); // Save and wait for completion in the background
+        });
+
+        // Broadcast the message asynchronously
+        return CompletableFuture.supplyAsync(() -> {
+            // Directly return the DTO for broadcasting
+            return messageCreateDTO;
         });
     }
 }

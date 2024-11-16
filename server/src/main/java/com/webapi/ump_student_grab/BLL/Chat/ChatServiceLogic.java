@@ -2,16 +2,17 @@ package com.webapi.ump_student_grab.BLL.Chat;
 
 import com.webapi.ump_student_grab.DLL.Chat.IChatRepository;
 import com.webapi.ump_student_grab.DLL.User.IUserRepository;
-import com.webapi.ump_student_grab.DTO.ChatDTO.ChatCreateDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.ChatDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.MessageCreateDTO;
-import com.webapi.ump_student_grab.DTO.ChatDTO.MessageDTO;
+import com.webapi.ump_student_grab.DTO.ChatDTO.*;
 import com.webapi.ump_student_grab.Mapper.ChatMapper;
 import com.webapi.ump_student_grab.Model.Chat;
+import com.webapi.ump_student_grab.Model.Message;
+import com.webapi.ump_student_grab.Model.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatServiceLogic implements IChatServiceLogic{
@@ -89,5 +90,34 @@ public class ChatServiceLogic implements IChatServiceLogic{
     @Override
     public CompletableFuture<List<MessageDTO>> getAllMessages(Long userId, Long chatId) {
         return _repo.getAllMessages(userId, chatId).thenApply(_mapper::messageListToMessageDTOList);
+    }
+
+    @Override
+    public CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails() {
+        // Get all chats asynchronously from the repository
+        return _repo.getAllChats().thenCompose(chats -> {
+            if (chats == null || chats.isEmpty()) {
+                return CompletableFuture.completedFuture(new ArrayList<ChatDetailsDTO>());  // Return empty list if no chats
+            }
+
+            // List to store all CompletableFutures for chat details
+            List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = chats.stream().map(chat -> {
+                // Fetch recipient and last message asynchronously
+                CompletableFuture<User> recipientFuture = _uRepo.getUserById(chat.getRecipientId());
+                CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId(), chat.getSenderId());
+
+                // Combine both futures and map using ChatMapper
+                return recipientFuture.thenCombine(lastMessageFuture, (recipient, lastMessage) -> {
+                    // Use the mapper to create ChatDetailsDTO when both asynchronous tasks are complete
+                    return _mapper.chatToChatDetailsDTO(chat, recipient.getFullName(), lastMessage.getContent());
+                });
+            }).toList();
+
+            // Wait for all futures to complete and return the final list of DTOs
+            return CompletableFuture.allOf(futureChatDetailsList.toArray(new CompletableFuture[0]))
+                    .thenApply(v -> futureChatDetailsList.stream()
+                            .map(CompletableFuture::join)  // Join each CompletableFuture to get the result
+                            .collect(Collectors.toList()));  // Collect the results in a list
+        });
     }
 }
