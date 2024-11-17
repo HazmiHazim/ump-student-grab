@@ -109,7 +109,7 @@ public class ChatServiceLogic implements IChatServiceLogic{
             List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = filteredChats.stream().map(chat -> {
                 // Fetch recipient and last message asynchronously
                 CompletableFuture<User> recipientFuture = _uRepo.getUserById(chat.getRecipientId());
-                CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId(), chat.getSenderId());
+                CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId());
 
                 // Combine both futures and map using ChatMapper
                 return recipientFuture.thenCombine(lastMessageFuture, (recipient, lastMessage) -> {

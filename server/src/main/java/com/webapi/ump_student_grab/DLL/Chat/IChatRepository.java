@@ -14,5 +14,5 @@ public interface IChatRepository {
     CompletableFuture<List<Chat>> getAllChats();
     CompletableFuture<Message> createMessage(Message message);
     CompletableFuture<List<Message>> getAllMessages(Long chatId, Long userId, Long participantId);
-    CompletableFuture<Message> getLastMessage(Long chatId, Long userId);
+    CompletableFuture<Message> getLastMessage(Long chatId);
 }

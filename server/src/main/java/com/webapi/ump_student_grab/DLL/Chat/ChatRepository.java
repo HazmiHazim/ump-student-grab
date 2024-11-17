@@ -86,14 +86,13 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     @Async
-    public CompletableFuture<Message> getLastMessage(Long chatId, Long userId) {
-        String query = "SELECT m FROM Message m WHERE m.userId = :userId AND m.chatId = :chatId ORDER BY m.createdAt DESC";
+    public CompletableFuture<Message> getLastMessage(Long chatId) {
+        String query = "SELECT m FROM Message m WHERE m.chatId = :chatId ORDER BY m.createdAt DESC";
         Message message;
 
         try {
             message = entityManager.createQuery(query, Message.class)
                     .setParameter("chatId", chatId)
-                    .setParameter("userId", userId)
                     .setMaxResults(1)
                     .getSingleResult();
         } catch (NoResultException ex) {
