@@ -88,20 +88,25 @@ public class ChatServiceLogic implements IChatServiceLogic{
     }
 
     @Override
-    public CompletableFuture<List<MessageDTO>> getAllMessages(Long userId, Long chatId) {
-        return _repo.getAllMessages(userId, chatId).thenApply(_mapper::messageListToMessageDTOList);
+    public CompletableFuture<List<MessageDTO>> getAllMessages(Long chatId, Long userId, Long participantId) {
+        return _repo.getAllMessages(chatId, userId, participantId).thenApply(_mapper::messageListToMessageDTOList);
     }
 
     @Override
-    public CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails() {
+    public CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails(Long userId) {
         // Get all chats asynchronously from the repository
         return _repo.getAllChats().thenCompose(chats -> {
             if (chats == null || chats.isEmpty()) {
                 return CompletableFuture.completedFuture(new ArrayList<ChatDetailsDTO>());  // Return empty list if no chats
             }
 
+            // Filter chats where the user is either the sender or the recipient
+            List<Chat> filteredChats = chats.stream()
+                    .filter(chat -> chat.getSenderId().equals(userId) || chat.getRecipientId().equals(userId))
+                    .toList();
+
             // List to store all CompletableFutures for chat details
-            List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = chats.stream().map(chat -> {
+            List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = filteredChats.stream().map(chat -> {
                 // Fetch recipient and last message asynchronously
                 CompletableFuture<User> recipientFuture = _uRepo.getUserById(chat.getRecipientId());
                 CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId(), chat.getSenderId());
@@ -109,7 +114,13 @@ public class ChatServiceLogic implements IChatServiceLogic{
                 // Combine both futures and map using ChatMapper
                 return recipientFuture.thenCombine(lastMessageFuture, (recipient, lastMessage) -> {
                     // Use the mapper to create ChatDetailsDTO when both asynchronous tasks are complete
-                    return _mapper.chatToChatDetailsDTO(chat, recipient.getFullName(), lastMessage.getContent());
+                    return _mapper.chatToChatDetailsDTO(
+                            chat.getId(),
+                            chat.getSenderId(),
+                            chat.getRecipientId(),
+                            recipient.getFullName(),
+                            lastMessage.getContent()
+                    );
                 });
             }).toList();
 

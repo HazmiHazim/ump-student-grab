@@ -117,13 +117,13 @@ public class AuthServiceLogic implements IAuthServiceLogic {
     }
 
     @Override
-    public CompletableFuture<Boolean> loginUser(AuthDTO authDTO) {
+    public CompletableFuture<UserDTO> loginUser(AuthDTO authDTO) {
         return _repo.getUserByEmail(authDTO.getEmail()).thenCompose(existingUser -> {
             if (existingUser == null || !encoder.matches(authDTO.getPassword(), existingUser.getPassword())) {
-                return CompletableFuture.completedFuture(false);
+                return CompletableFuture.completedFuture(null);
             }
 
-            return CompletableFuture.completedFuture(true);
+            return CompletableFuture.completedFuture(_mapper.userToUserDTO(existingUser));
         });
     }
 

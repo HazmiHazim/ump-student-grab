@@ -38,7 +38,9 @@ public class ChatRepository implements IChatRepository {
     @Override
     @Async
     public CompletableFuture<Chat> getChatByParticipant(Long senderId, Long recipientId) {
-        String query = "SELECT c FROM Chat c WHERE c.senderId = :senderId AND c.recipientId = :recipientId";
+        String query = "SELECT c FROM Chat c WHERE " +
+                "(c.senderId = :senderId AND c.recipientId = :recipientId)" +
+                " OR (c.senderId = :recipientId AND c.recipientId = :senderId)";
         Chat chat;
         try {
             chat = entityManager.createQuery(query, Chat.class)
@@ -70,12 +72,13 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     @Async
-    public CompletableFuture<List<Message>> getAllMessages(Long userId, Long chatId) {
-        String query = "SELECT m FROM Message m WHERE m.userId = :userId AND m.chatId = :chatId";
+    public CompletableFuture<List<Message>> getAllMessages(Long chatId, Long userId, Long participantId) {
+        String query = "SELECT m FROM Message m WHERE m.chatId = :chatId AND (m.userId = :userId OR m.userId = :participantId)";
 
         List<Message> messages = entityManager.createQuery(query, Message.class)
-                .setParameter("userId", userId)
                 .setParameter("chatId", chatId)
+                .setParameter("userId", userId)
+                .setParameter("participantId", participantId)
                 .getResultList();
 
         return CompletableFuture.completedFuture(messages);

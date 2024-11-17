@@ -137,10 +137,10 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/allMessages/{userId}/{chatId}")
+    @GetMapping("/allMessages/{chatId}/{userId}/{participantId}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long userId, @PathVariable Long chatId) {
-        return _service.getAllMessages(userId, chatId).thenApply(messages -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long chatId, @PathVariable Long userId, @PathVariable Long participantId) {
+        return _service.getAllMessages(chatId, userId, participantId).thenApply(messages -> {
             ApiResponse<List<MessageDTO>> response;
             HttpStatus status;
             String message;
@@ -159,11 +159,11 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/allChatsDetails")
+    @GetMapping("/allChatsDetails/{userId}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails() {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails(@PathVariable Long userId) {
         // Fetch all chats with details asynchronously and return the result
-        return _service.getAllChatsWithDetails().thenApplyAsync(chats -> {
+        return _service.getAllChatsWithDetails(userId).thenApplyAsync(chats -> {
             ApiResponse<List<ChatDetailsDTO>> response;
             HttpStatus status;
             String message;

@@ -160,15 +160,16 @@ public class AuthController {
             HttpStatus status;
             String message;
 
-            if (!loginUser) {
+            if (loginUser == null) {
                 status = HttpStatus.UNAUTHORIZED;
                 message = "Invalid email or password.";
+                response = new ApiResponse<>(status.value(), null, message);
             } else {
                 status = HttpStatus.OK;
                 message = "User login successfully.";
+                response = new ApiResponse<>(status.value(), loginUser, message);
             }
 
-            response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
         });
     }

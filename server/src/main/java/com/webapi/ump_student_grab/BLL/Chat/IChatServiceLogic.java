@@ -11,6 +11,6 @@ public interface IChatServiceLogic {
     CompletableFuture<ChatDTO> getChatByParticipant(Long senderId, Long recipientId);
     CompletableFuture<List<ChatDTO>> getAllChats();
     CompletableFuture<Integer> createMessage(MessageCreateDTO messageCreateDTO);
-    CompletableFuture<List<MessageDTO>> getAllMessages(Long userId, Long chatId);
-    CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails();
+    CompletableFuture<List<MessageDTO>> getAllMessages(Long chatId, Long userId, Long participantId);
+    CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails(Long userId);
 }

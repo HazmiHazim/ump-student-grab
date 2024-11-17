@@ -12,7 +12,7 @@ public interface IAuthServiceLogic {
     CompletableFuture<List<UserDTO>> getAllUsers();
     CompletableFuture<UserDTO> updateUser(Long id, UserUpdateDTO userUpdateDTO);
     CompletableFuture<Boolean> deleteUser(Long id);
-    CompletableFuture<Boolean> loginUser(AuthDTO authDTO);
+    CompletableFuture<UserDTO> loginUser(AuthDTO authDTO);
     CompletableFuture<Integer> forgotPassword(String email);
     CompletableFuture<Integer> resetPassword(UserResetPassDTO userResetPassDTO);
     CompletableFuture<Boolean> verifyEmail(String email);

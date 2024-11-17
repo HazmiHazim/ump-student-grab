@@ -19,5 +19,5 @@ public interface ChatMapper {
     List<ChatDTO> chatListToChatDTOList(List<Chat> chats);
     Message messageDTOToMessage(MessageCreateDTO messageDTO);
     List<MessageDTO> messageListToMessageDTOList(List<Message> messages);
-    ChatDetailsDTO chatToChatDetailsDTO(Chat chat, String recipientFullName, String lastMessage);
+    ChatDetailsDTO chatToChatDetailsDTO(Long chatId, Long senderId, Long recipientId, String recipientFullName, String lastMessage);
 }
