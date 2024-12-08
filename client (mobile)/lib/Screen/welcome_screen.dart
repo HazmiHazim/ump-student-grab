@@ -1,106 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/login_screen.dart';
-import 'package:ump_student_grab_mobile/Screen/Auth/signup_screen.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ump_student_grab_mobile/widget/custom_welcome_screen_container.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
 
   static const routeName = "/welcome-screen";
 
-  /*
-  Widget routeButton(Color buttonColor, String title, Color textColor, BuildContext context) {
-    return Container(
-      height: 80,
-      width: double.infinity,
-      padding: const EdgeInsets.only(top: 25, left: 24, right: 24),
-      child: RaisedButton(
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        color: buttonColor,
-        onPressed: () => context,
-        child: Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: textColor,),),
-      ),
-    );
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final pageController = PageController();
+  bool isLastPage = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
   }
-  */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(
-                      'https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE4fHx8ZW58MHx8fHw%3D&w=1000&q=80'),
-                  fit: BoxFit.fill),
+      body: Container(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: PageView(
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              isLastPage = index == 3;
+            });
+          },
+          children: [
+            // First view
+            CustomWelcomeScreenContainer(
+                color: Colors.white,
+                title: "Explore New Application with UMPSA Student Grab",
+                subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                imagePath: "assets/images/welcome-1.png"
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 6,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 60, left: 25),
-                  child: Column(
-                    children: [
-                      Text('Hello', style: TextStyle(fontSize: 55, fontWeight: FontWeight.bold, color: Colors.white),),
-                      Text('Lorem ipsum dolor sit amet', style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.white),),
-                    ],
-                  ),
-                ),),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 80,
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(top: 25, left: 24, right: 24),
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.pushNamed(context, "/login-screen"),
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                          backgroundColor: Colors.indigo,
-                        ),
-                        child: Text(
-                          'Log In',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 80,
-                      width: double.infinity,
-                      padding: const EdgeInsets.only(top: 25, left: 24, right: 24),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                          backgroundColor: Colors.white
-                        ),
-                        onPressed: () => Navigator.pushNamed(context, "/signup-screen"),
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.lightBlue,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
+            // Second view
+            CustomWelcomeScreenContainer(
+                color: Colors.white,
+                title: "Your Ride, Your Schedule",
+                subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                imagePath: "assets/images/welcome-2.png"
+            ),
+
+            // Third view
+            CustomWelcomeScreenContainer(
+                color: Colors.white,
+                title: "Campus Commute Made Easy",
+                subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                imagePath: "assets/images/welcome-3.png"
+            ),
+
+            // Last view
+            CustomWelcomeScreenContainer(
+                color: Colors.white,
+                title: "Exclusive Student Rides at Unbeatable Prices",
+                subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                imagePath: "assets/images/welcome-4.png"
+            ),
+          ],
+        ),
+      ),
+      bottomSheet: isLastPage ? Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: TextButton(
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)
               ),
-            ],
+              backgroundColor: Color.fromRGBO(0, 159, 160, 100),
+              minimumSize: const Size.fromHeight(60)
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) =>  LoginScreen()));
+            },
+            child: const Text(
+                "Get Started",
+                style: TextStyle(fontSize: 20, color: Colors.white))
           ),
-        ],
+        ),
+      ) : Container(
+        padding: const EdgeInsets.symmetric(horizontal: 40),
+        height: 80,
+        color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Text button for skip
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) =>  LoginScreen()));
+                },
+                child: Text("Skip", style: TextStyle(fontSize: 18))
+            ),
+
+            // Text button for next
+            Center(
+              child: SmoothPageIndicator(
+                effect: WormEffect(
+                  spacing: 15,
+                  dotColor: Colors.blueGrey.shade300,
+                  activeDotColor: Color.fromRGBO(0, 159, 160, 100),
+                ),
+                controller: pageController,
+                count: 4
+              ),
+            ),
+            TextButton(
+                onPressed: () {
+                  pageController.nextPage(
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeInOut
+                  );
+                },
+                child: Text("Next", style: TextStyle(fontSize: 18))
+            ),
+          ],
+        ),
       ),
     );
   }

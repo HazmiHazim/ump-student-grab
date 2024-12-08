@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/BL/auth_service.dart';
 import 'package:ump_student_grab_mobile/Model/auth_response.dart';
-import 'package:ump_student_grab_mobile/Screen/home_screen.dart';
 
 class SignupScreen extends StatelessWidget {
 

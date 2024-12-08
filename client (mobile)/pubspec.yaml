@@ -56,6 +56,7 @@ dev_dependencies:
   flutter_dotenv: ^5.2.1
   stomp_dart_client: ^2.1.0
   shared_preferences: ^2.3.3
+  smooth_page_indicator: ^1.2.0+3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

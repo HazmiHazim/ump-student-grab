@@ -4,6 +4,7 @@ import 'package:ump_student_grab_mobile/Model/user.dart';
 
 class SharedPreferencesUtil {
   static const String _userKey = 'loggedInUser';
+  static const String _firstTimeKey = 'isFirstTime';
 
   /// Save User object to SharedPreferences
   static Future<void> saveUser(User user) async {
@@ -35,5 +36,18 @@ class SharedPreferencesUtil {
   static Future<void> clearUser() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_userKey);
+  }
+
+  /// Check if this is the first time the app is opened
+  static Future<bool> isFirstTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool(_firstTimeKey);
+
+    // If null, it's the first time. Update the flag.
+    if (isFirstTime == null || isFirstTime) {
+      await prefs.setBool(_firstTimeKey, false);
+      return true;
+    }
+    return false;
   }
 }

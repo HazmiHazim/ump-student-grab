@@ -15,6 +15,7 @@ import 'package:ump_student_grab_mobile/Screen/Chat/chat_room_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/main_chat_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/home_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/search_screen.dart';
+import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +24,19 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(MyApp());
+
+  // Check if it's the first time the app is opened
+  final isFirstTime = await SharedPreferencesUtil.isFirstTime();
+
+  runApp(MyApp(isFirstTime: isFirstTime));
 }
 
 class MyApp extends StatelessWidget {
+  final bool isFirstTime;
+
+  // Constructor that accepts the `isFirstTime` flag
+  MyApp({required this.isFirstTime});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -40,7 +50,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: WelcomeScreen(),
+        home: isFirstTime ? WelcomeScreen() : LoginScreen(),
         routes: {
           "/welcome-screen": (context) => WelcomeScreen(),
           "/signup-screen": (context) => SignupScreen(),
