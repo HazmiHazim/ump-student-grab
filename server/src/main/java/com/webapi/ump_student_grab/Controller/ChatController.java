@@ -184,17 +184,14 @@ public class ChatController {
 
     @MessageMapping("/chatroom")
     @SendTo("/topic/chatroom")
-    public CompletableFuture<ChatCreateDTO> broadcastChat(@Payload ChatCreateDTO chatCreateDTO) {
-        // Save the message to the database asynchronously
-        CompletableFuture<Void> saveTask = CompletableFuture.runAsync(() -> {
-            _service.createChat(chatCreateDTO).join(); // Save and wait for completion in the background
+    public ChatCreateDTO broadcastChat(@Payload ChatCreateDTO chatCreateDTO) {
+        // Save the message to the database
+        CompletableFuture.runAsync(() -> {
+            _service.createChat(chatCreateDTO);
         });
 
-        // Broadcast the message asynchronously
-        return CompletableFuture.supplyAsync(() -> {
-            // Directly return the DTO for broadcasting
-            return chatCreateDTO;
-        });
+        // Return the input DTO to be broadcasted to clients
+        return chatCreateDTO;
     }
 
     @MessageMapping("/chat")
