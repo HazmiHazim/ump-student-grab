@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/BL/auth_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
+import 'package:ump_student_grab_mobile/BL/location_service.dart';
 import 'package:ump_student_grab_mobile/Screen//welcome_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Account/main_account_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/forgot_password_screen.dart';
@@ -13,8 +14,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ump_student_grab_mobile/Screen/Booking/main_booking_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/chat_room_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/main_chat_screen.dart';
-import 'package:ump_student_grab_mobile/Screen/home_screen.dart';
-import 'package:ump_student_grab_mobile/Screen/search_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Home/home_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Home/map_screen.dart';
+import 'package:ump_student_grab_mobile/util/location_manager_util.dart';
 import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';
 
 void main() async {
@@ -26,16 +28,19 @@ void main() async {
   ]);
 
   // Check if it's the first time the app is opened
-  final isFirstTime = await SharedPreferencesUtil.isFirstTime();
+  //final isFirstTime = await SharedPreferencesUtil.isFirstTime();
 
-  runApp(MyApp(isFirstTime: isFirstTime));
+  // Initialize LocationManagerUtil
+  LocationManagerUtil.shared.initLocation();
+
+  runApp(MyApp(/*isFirstTime: isFirstTime*/));
 }
 
 class MyApp extends StatelessWidget {
-  final bool isFirstTime;
+  //final bool isFirstTime;
 
   // Constructor that accepts the `isFirstTime` flag
-  MyApp({required this.isFirstTime});
+  //MyApp({ this.isFirstTime = false });
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +48,15 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => AuthService()),
         ChangeNotifierProvider(create: (ctx) =>  ChatService()),
-        ChangeNotifierProvider(create: (ctx) => ChatWebsocketService())
+        ChangeNotifierProvider(create: (ctx) => ChatWebsocketService()),
+        ChangeNotifierProvider(create: (ctx) => LocationService())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: isFirstTime ? WelcomeScreen() : LoginScreen(),
+        home: WelcomeScreen(),//isFirstTime ? WelcomeScreen() : LoginScreen(),
         routes: {
           "/welcome-screen": (context) => WelcomeScreen(),
           "/signup-screen": (context) => SignupScreen(),
@@ -61,7 +67,7 @@ class MyApp extends StatelessWidget {
           "/main-chat-screen": (context) => MainChatScreen(),
           "/main-account-screen": (context) => MainAccountScreen(),
           "/chat-room-screen": (context) => ChatRoomScreen(),
-          "/search-screen": (context) => SearchScreen()
+          "/map-screen": (context) => MapScreen()
         },
       ),
     );

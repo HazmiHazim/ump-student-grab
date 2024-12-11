@@ -4,7 +4,7 @@ import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
 import 'package:ump_student_grab_mobile/Screen/Account/main_account_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Booking/main_booking_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/main_chat_screen.dart';
-import 'package:ump_student_grab_mobile/Screen/home_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Home/home_screen.dart';
 import 'package:ump_student_grab_mobile/widget/custom_bottom_navigation_bar.dart';
 import 'package:provider/provider.dart';
 

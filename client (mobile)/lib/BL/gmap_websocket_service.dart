@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:ump_student_grab_mobile/Model/location.dart';
 import 'package:ump_student_grab_mobile/Model/message_response.dart';
 
-class ChatWebsocketService with ChangeNotifier {
+class GmapWebsocketService extends ChangeNotifier {
 
   final String appDomain = dotenv.get("APP_DOMAIN");
   final String appPort = dotenv.get("APP_PORT");
@@ -12,12 +13,9 @@ class ChatWebsocketService with ChangeNotifier {
   late StompFrame stompFrame;
   List<MessageResponse> _messages = [];
 
-  // Getter to access the chats list
-  List<MessageResponse> get messages => _messages;
-
   // Start WebSocket connection and listen for messages
   void startConnection() {
-    final url = 'ws://$appDomain:$appPort/chat';  // WebSocket URL for connection
+    final url = 'ws://$appDomain:$appPort/location';  // WebSocket URL for connection
     print("Connecting to WebSocket: $url");
 
     // Create StompClient instance and connect
@@ -39,26 +37,23 @@ class ChatWebsocketService with ChangeNotifier {
     print('Connected to WebSocket');
     // Subscribe to the /topic/allChats destination
     stompClient.subscribe(
-      destination: '/topic/allChats',
+      destination: '/topic/mylocation',
       callback: onMessageReceived,
     );
   }
 
   // Called when a message is received from the server
   void onMessageReceived(StompFrame frame) {
-    print("HEHEHEHEHHE");
     print('Received message: ${frame.body}');
     try {
       final List<dynamic> data = jsonDecode(frame.body!);
       List<MessageResponse> messagesResponse = data.map((item) => MessageResponse.fromJson(item)).toList();
       _messages.addAll(messagesResponse);
-      print("Updated Messages List: $_messages"); // Check if messages are added
       notifyListeners(); // Notify the listeners to update UI
     } catch (e) {
       print("Error parsing message: $e");
     }
   }
-
 
   // Callback to handle connection errors
   void onStompError(StompFrame frame) {
@@ -75,20 +70,15 @@ class ChatWebsocketService with ChangeNotifier {
     stompClient.deactivate();  // Disconnect the STOMP client
   }
 
-  // Send a message via WebSocket
-  void sendMessage(String messageContent, String attachment, int userId, int chatId) {
-    final messageCreateDTO = {
-      "content": messageContent,
-      "attachment": attachment,
-      "userId": userId,
-      "chatId": chatId
-    };
-
-    final jsonBody = jsonEncode(messageCreateDTO);
-
+  // Send location to the backend
+  void sendLocation(Location location) {
     stompClient.send(
-      destination: "/app/chat",  // The Spring endpoint for sending messages
-      body: jsonBody,
+      destination: '/app/location', // Server-side endpoint to handle location
+      body: json.encode({
+        "userId": "userId",
+        "latitude": "3232.3232",
+        "longitude": "323232.3232"
+      })
     );
   }
 }

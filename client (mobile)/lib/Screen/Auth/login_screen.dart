@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) =>  SharedWidget()));
                           } else {
                             showDialog(context: context, builder: (ctx) => AlertDialog(
-                              title: Text(response.message),
+                              title: Text(response.message, style: TextStyle(fontSize: 16)),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(ctx).pop(),

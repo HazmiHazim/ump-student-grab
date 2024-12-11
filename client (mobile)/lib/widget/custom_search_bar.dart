@@ -17,7 +17,7 @@ class CustomSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, "/search-screen");
+        Navigator.pushNamed(context, "/map-screen");
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),

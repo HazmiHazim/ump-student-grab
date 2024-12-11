@@ -69,40 +69,50 @@ class AuthService with ChangeNotifier {
   // Login service
   Future<AuthResponse> login(String email, String password) async {
     final url = Uri.parse("http://$appDomain:$appPort/api/users/login");
-    final response = await http.post(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json.encode({
-          "email": email,
-          "password": password,
-        })
-    );
 
-    final responseJson = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      // Parse user data from the response
-      final userData = responseJson["data"];
-      final user = User.fromJson(userData);
-      // Save the user object in the state
-      setUser(user);
-      // Save the user data to shared preferences
-      await SharedPreferencesUtil.saveUser(user);
-
-      return AuthResponse(
-          status: response.statusCode,
-          userId: user.id,
-          isSuccess: true,
-          message: responseJson["message"]
+    try {
+      final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: json.encode({
+            "email": email,
+            "password": password,
+          })
       );
-    } else {
+
+      final responseJson = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        // Parse user data from the response
+        final userData = responseJson["data"];
+        final user = User.fromJson(userData);
+        // Save the user object in the state
+        setUser(user);
+        // Save the user data to shared preferences
+        await SharedPreferencesUtil.saveUser(user);
+
+        return AuthResponse(
+            status: response.statusCode,
+            userId: user.id,
+            isSuccess: true,
+            message: responseJson["message"]
+        );
+      } else {
+        return AuthResponse(
+            status: response.statusCode,
+            userId: null,
+            isSuccess: false,
+            message: responseJson["message"]
+        );
+      }
+    } catch (exception) {
       return AuthResponse(
-          status: response.statusCode,
-          userId: null,
-          isSuccess: false,
-          message: responseJson["message"]
+        status: 0,
+        userId: null,
+        isSuccess: false,
+        message: "An unexpected error occurred: ${exception.toString()}",
       );
     }
   }
