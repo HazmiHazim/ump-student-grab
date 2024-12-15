@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:ump_student_grab_mobile/BL/account_service.dart';
 import 'package:ump_student_grab_mobile/BL/auth_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
@@ -16,8 +17,11 @@ import 'package:ump_student_grab_mobile/Screen/Chat/chat_room_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/main_chat_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Home/home_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Home/map_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/shared_widget.dart';
 import 'package:ump_student_grab_mobile/util/location_manager_util.dart';
 import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';
+
+import 'Model/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,19 +32,24 @@ void main() async {
   ]);
 
   // Check if it's the first time the app is opened
-  //final isFirstTime = await SharedPreferencesUtil.isFirstTime();
-
+  final isFirstTime = await SharedPreferencesUtil.isFirstTime();
+  // Check if the user is logged in by loading from SharedPreferences
+  final user = await SharedPreferencesUtil.loadUser();
   // Initialize LocationManagerUtil
   LocationManagerUtil.shared.initLocation();
 
-  runApp(MyApp(/*isFirstTime: isFirstTime*/));
+  runApp(MyApp(
+      isFirstTime: isFirstTime,
+      user: user
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  //final bool isFirstTime;
+  final bool isFirstTime;
+  final User? user;
 
-  // Constructor that accepts the `isFirstTime` flag
-  //MyApp({ this.isFirstTime = false });
+  // Constructor that accepts the `isFirstTime` flag and user
+  MyApp({ this.isFirstTime = false, this.user });
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +58,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => AuthService()),
         ChangeNotifierProvider(create: (ctx) =>  ChatService()),
         ChangeNotifierProvider(create: (ctx) => ChatWebsocketService()),
-        ChangeNotifierProvider(create: (ctx) => LocationService())
+        ChangeNotifierProvider(create: (ctx) => LocationService()),
+        ChangeNotifierProvider(create: (ctx) => AccountService())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: WelcomeScreen(),//isFirstTime ? WelcomeScreen() : LoginScreen(),
+        home: isFirstTime ? WelcomeScreen() : (user != null ? SharedWidget() : LoginScreen()),
         routes: {
           "/welcome-screen": (context) => WelcomeScreen(),
           "/signup-screen": (context) => SignupScreen(),

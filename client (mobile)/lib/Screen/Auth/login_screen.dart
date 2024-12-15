@@ -126,6 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               passwordController.text
                           );
 
+                          // Close the loading dialog after the login process is completed
                           Navigator.of(context).pop();
 
                           if (response.isSuccess) {

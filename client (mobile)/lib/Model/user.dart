@@ -5,7 +5,9 @@ class User {
   final String matricNo;
   final String phoneNo;
   final String role;
+  final int attachmentId;
   final bool isVerified;
+  final String token;
 
   User({
     required this.id,
@@ -14,7 +16,9 @@ class User {
     required this.matricNo,
     required this.phoneNo,
     required this.role,
-    required this.isVerified
+    required this.attachmentId,
+    required this.isVerified,
+    required this.token
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,7 +29,9 @@ class User {
         matricNo: json["matricNo"],
         phoneNo: json["phoneNo"],
         role: json["role"],
-        isVerified: json["isVerified"]
+        attachmentId: json["attachmentId"],
+        isVerified: json["isVerified"],
+      token: json["token"]
     );
   }
 }

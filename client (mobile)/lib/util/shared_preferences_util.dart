@@ -20,7 +20,9 @@ class SharedPreferencesUtil {
       "matricNo": user.matricNo,
       "phoneNo": user.phoneNo,
       "role": user.role,
+      "attachmentId": user.attachmentId,
       "isVerified": user.isVerified,
+      "token": user.token
     });
     await prefs.setString(_userKey, userJson);
   }

@@ -117,6 +117,39 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  // Logout service
+  Future<AuthResponse> logout(String userToken) async {
+
+    final url = Uri.parse("http://$appDomain:$appPort/api/users/logout/$userToken");
+    final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        }
+    );
+
+    final responseJson = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      // Clean user from shared preference
+      clearUser();
+
+      return AuthResponse(
+          status: response.statusCode,
+          userId: null,
+          isSuccess: true,
+          message: responseJson["message"]
+      );
+    } else {
+      return AuthResponse(
+          status: response.statusCode,
+          userId: null,
+          isSuccess: false,
+          message: responseJson["message"]
+      );
+    }
+  }
+
   // Forgot password service
   Future<AuthResponse> forgotPassword(String email) async {
     final url = Uri.parse("http://$appDomain:$appPort/api/users/forgotPassword?email=$email");

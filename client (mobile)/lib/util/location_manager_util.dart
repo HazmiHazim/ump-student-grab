@@ -32,8 +32,12 @@ class LocationManagerUtil {
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      debugPrint("Location service is denied.");
-      return;
+      permission = await Geolocator.requestPermission();
+
+      if (permission == LocationPermission.denied) {
+        debugPrint("Location permission is denied.");
+        return;
+      }
     }
 
     if (permission == LocationPermission.deniedForever) {
