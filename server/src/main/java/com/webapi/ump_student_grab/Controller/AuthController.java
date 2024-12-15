@@ -174,6 +174,26 @@ public class AuthController {
         });
     }
 
+    @PostMapping("/logout/{token}")
+    @Async
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@PathVariable String token) {
+        return _service.logoutUser(token).thenApply(logoutUser -> {
+            HttpStatus status;
+            String message;
+
+            if (!logoutUser) {
+                status = HttpStatus.NOT_FOUND;
+                message = "Token is invalid.";
+            } else {
+                status = HttpStatus.OK;
+                message = "User logout successfully.";
+            }
+
+            ApiResponse<UserDTO> response = new ApiResponse<>(status.value(), null, message);
+            return new ResponseEntity<>(response, status);
+        });
+    }
+
     @PostMapping("/forgotPassword")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestParam String email) {

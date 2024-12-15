@@ -9,13 +9,15 @@ public class UserUpdateDTO {
     private String matricNo;
     private String phoneNo;
     private String role;
+    private Long attachmentId;
 
-    public UserUpdateDTO(String email, String fullName, String matricNo, String phoneNo, String role) {
+    public UserUpdateDTO(String email, String fullName, String matricNo, String phoneNo, String role, Long attachmentId) {
         this.email = email;
         this.fullName = fullName;
         this.matricNo = matricNo;
         this.phoneNo = phoneNo;
         this.role = role;
+        this.attachmentId = attachmentId;
     }
 
     public String getEmail() {
@@ -56,5 +58,13 @@ public class UserUpdateDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(Long attachmentId) {
+        this.attachmentId = attachmentId;
     }
 }

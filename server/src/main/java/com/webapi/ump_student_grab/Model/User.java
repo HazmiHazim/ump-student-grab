@@ -25,7 +25,11 @@ public class User {
     @Column
     private String role;
     @Column
+    private Long attachmentId;
+    @Column
     private Boolean isVerified = false;
+    @Column
+    private String token;
     @Column(updatable = false)
     private LocalDateTime createdAt;
     @Column
@@ -34,7 +38,7 @@ public class User {
     // No-argument constructor is required by JPA
     public User() {}
 
-    public User(Long id, String email, String password, String fullName, String matricNo, String phoneNo, String role, Boolean isVerified, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public User(Long id, String email, String password, String fullName, String matricNo, String phoneNo, String role, Long attachmentId, Boolean isVerified, String token, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -42,7 +46,9 @@ public class User {
         this.matricNo = matricNo;
         this.phoneNo = phoneNo;
         this.role = role;
+        this.attachmentId = attachmentId;
         this.isVerified = isVerified;
+        this.token = token;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
@@ -103,12 +109,28 @@ public class User {
         this.role = role;
     }
 
+    public Long getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(Long attachmentId) {
+        this.attachmentId = attachmentId;
+    }
+
     public Boolean getIsVerified() {
         return isVerified;
     }
 
     public void setIsVerified(Boolean verified) {
         isVerified = verified;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public LocalDateTime getCreatedAt() {

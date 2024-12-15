@@ -9,18 +9,22 @@ public class UserDTO {
     private final String matricNo;
     private final String phoneNo;
     private final String role;
+    private final Long attachmentId;
     private final Boolean isVerified;
+    private final String token;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public UserDTO(Long id, String email, String fullName, String matricNo, String phoneNo, String role, Boolean isVerified, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserDTO(Long id, String email, String fullName, String matricNo, String phoneNo, String role, Long attachmentId, Boolean isVerified, String token, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
         this.matricNo = matricNo;
         this.phoneNo = phoneNo;
         this.role = role;
+        this.attachmentId = attachmentId;
         this.isVerified = isVerified;
+        this.token = token;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
@@ -49,8 +53,16 @@ public class UserDTO {
         return role;
     }
 
+    public Long getAttachmentId() {
+        return attachmentId;
+    }
+
     public Boolean getIsVerified() {
         return isVerified;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public LocalDateTime getCreatedAt() {

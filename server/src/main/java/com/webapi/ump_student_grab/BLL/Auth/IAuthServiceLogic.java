@@ -13,6 +13,7 @@ public interface IAuthServiceLogic {
     CompletableFuture<UserDTO> updateUser(Long id, UserUpdateDTO userUpdateDTO);
     CompletableFuture<Boolean> deleteUser(Long id);
     CompletableFuture<UserDTO> loginUser(AuthDTO authDTO);
+    CompletableFuture<Boolean> logoutUser(String token);
     CompletableFuture<Integer> forgotPassword(String email);
     CompletableFuture<Integer> resetPassword(UserResetPassDTO userResetPassDTO);
     CompletableFuture<Boolean> verifyEmail(String email);

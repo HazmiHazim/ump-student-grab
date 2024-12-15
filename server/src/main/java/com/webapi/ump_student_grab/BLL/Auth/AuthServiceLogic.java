@@ -25,14 +25,12 @@ public class AuthServiceLogic implements IAuthServiceLogic {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
     private final JavaMailSender _mailSender;
     private final ITokenRepository _tRepo;
-    private final TokenMapper _tMapper;
 
     public AuthServiceLogic(IUserRepository repo, UserMapper mapper, JavaMailSender mailSender, ITokenRepository tRepo, TokenMapper tMapper) {
         this._repo = repo;
         this._mapper = mapper;
         this._mailSender = mailSender;
         this._tRepo = tRepo;
-        this._tMapper = tMapper;
     }
 
     @Override
@@ -99,6 +97,9 @@ public class AuthServiceLogic implements IAuthServiceLogic {
             if (userUpdateDTO.getRole() != null) {
                 existingUser.setRole(userUpdateDTO.getRole());
             }
+            if (userUpdateDTO.getAttachmentId() != null) {
+                existingUser.setAttachmentId(userUpdateDTO.getAttachmentId());
+            }
 
             // Save user and map the created User entity to UserDTO
             return _repo.updateUser(existingUser).thenApply(_mapper::userToUserDTO);
@@ -123,7 +124,38 @@ public class AuthServiceLogic implements IAuthServiceLogic {
                 return CompletableFuture.completedFuture(null);
             }
 
-            return CompletableFuture.completedFuture(_mapper.userToUserDTO(existingUser));
+            // Generate a unique token (using UUID)
+            String generatedToken = UUID.randomUUID().toString().replace("-", "");
+            // Set the token expiration to 15 minutes from now
+            LocalDateTime createdAt = LocalDateTime.now();
+            LocalDateTime modifiedAt = LocalDateTime.now();
+
+            Token token = new Token(null, generatedToken, existingUser.getId(), null, createdAt, modifiedAt);
+
+            return _tRepo.createToken(token).thenCompose(createdToken -> {
+                if (createdToken == null) {
+                    return CompletableFuture.completedFuture(null);
+                }
+
+                existingUser.setToken(generatedToken);
+
+                return _repo.updateUser(existingUser).thenCompose(updatedUser -> CompletableFuture.completedFuture(_mapper.userToUserDTO(existingUser)));
+            });
+        });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> logoutUser(String token) {
+        return _tRepo.getTokenByToken(token).thenCompose(existingToken -> {
+            if (existingToken == null) {
+                return CompletableFuture.completedFuture(false); // Token is invalid or expired
+            }
+
+            // Update expired at
+            existingToken.setExpiredAt(LocalDateTime.now());
+            existingToken.setModifiedAt(LocalDateTime.now());
+
+            return _tRepo.updateToken(existingToken).thenApply(v -> true);
         });
     }
 
