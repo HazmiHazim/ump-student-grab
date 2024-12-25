@@ -16,7 +16,7 @@ import 'package:ump_student_grab_mobile/Screen/Booking/main_booking_screen.dart'
 import 'package:ump_student_grab_mobile/Screen/Chat/chat_room_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Chat/main_chat_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Home/home_screen.dart';
-import 'package:ump_student_grab_mobile/Screen/Home/map_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Booking/map_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/shared_widget.dart';
 import 'package:ump_student_grab_mobile/util/location_manager_util.dart';
 import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';

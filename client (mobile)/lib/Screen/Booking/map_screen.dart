@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:ump_student_grab_mobile/Model/user.dart';
 import 'package:ump_student_grab_mobile/util/location_manager_util.dart';
 import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';
+import 'package:ump_student_grab_mobile/widget/custom_draggable_bottom_sheet.dart';
 
 class MapScreen extends StatefulWidget {
   static const routeName = "/map-screen";
@@ -29,6 +30,7 @@ class _MapScreenState extends State<MapScreen> {
   BitmapDescriptor? icon;
 
   final Completer<GoogleMapController> _gMapController = Completer<GoogleMapController>();
+  final DraggableScrollableController draggableController = DraggableScrollableController();
 
   @override
   void initState() {
@@ -42,7 +44,12 @@ class _MapScreenState extends State<MapScreen> {
     //User? user = await SharedPreferencesUtil.loadUser();
     var userId = "3";//user?.id;
 
-    getMarkerIcon();
+    //getMarkerIcon();
+    // Load the marker icon first, then add the marker
+    getMarkerIcon().then((_) {
+      addMarker();
+    });
+
     currentPosition = LatLng(
         LocationManagerUtil.shared.currentPosition?.latitude ?? 0.0, LocationManagerUtil.shared.currentPosition?.longitude ?? 0.0
     );
@@ -100,6 +107,38 @@ class _MapScreenState extends State<MapScreen> {
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+
+  Future<void> _goToMe() async {
+    final GoogleMapController controller = await _gMapController.future;
+    await controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: currentPosition)
+    ));
+  }
+
+  void addMarker() async {
+    // Load user from SharedPreferences using the utility method
+    User? user = await SharedPreferencesUtil.loadUser();
+    var userId = user?.id;
+
+    var markerId = MarkerId(userId.toString());
+
+    setState(() {
+      markers.add(Marker(markerId: markerId, position: currentPosition, icon: icon ?? BitmapDescriptor.defaultMarker  ));
+    });
+  }
+
+  Future<void> getMarkerIcon() async {
+    var loadedIcon = await BitmapDescriptor.asset(
+      const ImageConfiguration(devicePixelRatio: 3.2),
+      "assets/images/car-marker.png",
+      width: 30,
+      height: 40,
+    );
+
+    setState(() {
+      icon = loadedIcon;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,40 +218,18 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
             ),
+          Positioned(
+            top: 16.0, // Center vertically
+            right: 4.0, // Place near the right edge
+            child: FloatingActionButton(
+              onPressed: _goToMe,
+              backgroundColor: Colors.white,
+              child: const Icon(Icons.my_location), // Change to a pin-like icon
+            ),
+          ),
+          CustomDraggableBottomSheet(draggableController: draggableController, enableBookButton: true),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToMe,
-        label: const Text("Go To Me"),
-        
-      ),
     );
-  }
-
-  Future<void> _goToMe() async {
-    final GoogleMapController controller = await _gMapController.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: currentPosition)
-    ));
-  }
-
-  void addMarker() async {
-    // Load user from SharedPreferences using the utility method
-    User? user = await SharedPreferencesUtil.loadUser();
-    var userId = user?.id;
-
-    var markerId = MarkerId(userId.toString());
-    markers.add(Marker(markerId: markerId, position: currentPosition, icon: icon ?? BitmapDescriptor.defaultMarker  ));
-    setState(() {
-
-    });
-  }
-
-  void getMarkerIcon() async {
-    var icon = await BitmapDescriptor.asset(const ImageConfiguration(devicePixelRatio: 3.2), "assets/images/car-marker.png", width: 30, height: 40);
-
-    setState(() {
-      this.icon = icon;
-    });
   }
 }
