@@ -44,7 +44,7 @@
 </p>
 
 ## Configuration before you can use the app (Server)
-**Because im using xampp to run the server. Follow this step if you want to do the same. If you have other option do yourself.**
+**Because im using xampp to run the server. Follow this step if you want to do the same. If you have other option do it yourself.**
 
 1. Start Apache and MySQL in XAMPP.
 2. Navigate to the server directory
@@ -64,21 +64,22 @@ mvn spring-boot:run
 ```
 
 ## Configuration for mobile app (Client)
-**Im using flutter for the mobile app. so there are some configuration need to do.**
+**I'm using flutter for the mobile app. so there are some configuration need to do.**
 
 1. Open the client folder in seperate window.
 ```
 cd YOUR-PATH-TO-PROJECT\ump-student-grab\client
 ```
-2. Copy sample env file and change configuration according to your need in ".env" file.
+2. Copy sample env file and change configuration according to your need in `.env` file.
 ```
 cp .env.example .env
 ```
 3. Change the `APP_DOMAIN` and `APP_PORT`.
-- **Note** The `APP_DOMAIN` should be your PC's IP address. To find it: 
+- **Note**: The `APP_DOMAIN` should be your PC's IP address. To find it: 
  - Open your terminal in your pc, type `ipconfig`. Copy the IPv4 Address under `Wireless LAN adapter Wi-Fi`.
-- **Note** Ensure your mobile device and PC are on the same network; otherwise, the app won't work.
-4. Update the Google Maps API key:
+- **Note**: Ensure your mobile device and PC are on the same network; otherwise, the app won't work.
+4. Update the Google Maps API key
+
 **For Android**
 - Go to `android/app/src/main/AndoirdManifest.xml` and replace `YOUR_GOOGLE_MAP_API_KEY` with your key. (Search google how can i get google map api key) (Dont expect semua nk kene suap)
 ```
