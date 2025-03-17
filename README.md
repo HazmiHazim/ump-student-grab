@@ -46,14 +46,22 @@
 ## Configuration before you can use the app (Server)
 **Because im using xampp to run the server. Follow this step if you want to do the same. If you have other option do yourself.**
 
-1. Run your apache and MySQL server.
-2. Open the server folder
+1. Start Apache and MySQL in XAMPP.
+2. Navigate to the server directory
 ```
 cd YOUR-PATH-TO-PROJECT\ump-student-grab\server
 ```
-3. Go to `src/main/java/resources/application.properties`. Configure your credential xampp and your email configuration.
-4. Run command `mvn clean install`.
-5. Run the application `mvn spring-boot:run`
+3. Go to `src/main/java/resources/application.properties` and update:
+- Your XAMPP database credentials.
+- (Optional) Your email configuration.
+4. Build the project
+```
+mvn clean install
+```
+5. Run the application
+```
+mvn spring-boot:run
+```
 
 ## Configuration for mobile app (Client)
 **Im using flutter for the mobile app. so there are some configuration need to do.**
@@ -67,14 +75,18 @@ cd YOUR-PATH-TO-PROJECT\ump-student-grab\client
 cp .env.example .env
 ```
 3. Change the `APP_DOMAIN` and `APP_PORT`.
-- Note: The APP_DOMAIN is your pc IP. To get your ip: Open your terminal in your pc, type `ipconfig`. Copy IPV4 address at `Wireless LAN adapter Wi-Fi` section.
-- Note that the network need to be same from both your mobile and your pc. Else it will not work.
-4. Now go to `android/app/src/main/AndoirdManifest.xml` Change to your google map API KEY for ANDROID (Search google how can i get google map api key) (Dont expect semua nk kene suap)
+- **Note** The `APP_DOMAIN` should be your PC's IP address. To find it: 
+ - Open your terminal in your pc, type `ipconfig`. Copy the IPv4 Address under `Wireless LAN adapter Wi-Fi`.
+- **Note** Ensure your mobile device and PC are on the same network; otherwise, the app won't work.
+4. Update the Google Maps API key:
+**For Android**
+- Go to `android/app/src/main/AndoirdManifest.xml` and replace `YOUR_GOOGLE_MAP_API_KEY` with your key. (Search google how can i get google map api key) (Dont expect semua nk kene suap)
 ```
 <meta-data android:name="com.google.android.geo.API_KEY" android:value="YOUR GOOGLE MAP API KEY"/>
 ```
-5. Now go to `ios/Runner/AppDelegate.swift` Change to your google map API KEY Also here for IPHONE
+**For iOS**
+- Go to `ios/Runner/AppDelegate.swift` and replace `YOUR_GOOGLE_MAP_API_KEY with your key.
 ```
 GMSServices.provideAPIKey("YOUR GOOGLE MAP API KEY")
 ```
-6. Run the application `flutter run`
+5. Run the Flutter application `flutter run`
