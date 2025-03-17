@@ -53,36 +53,30 @@
 ## `Application Overview`
 
 #### Login
-    
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/login.jpg)
+<img src="Images/login.png" width="150px" height="250px">
 
 ### Register
-
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/registration.jpg)
+<img src="Images/registration.jpg" width="150px" height="250px">
 
 ### Forgot Password
-
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/forgot_password.jpg)
+<img src="Images/forgot_password.jpg" width="150px" height="250px">
 
 ### Customer
-
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/customer_main.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/customer_book.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/customer_profile.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/customer_booking_detail.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/change_password.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/payment_option.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/cash.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/qr_pay.jpg)
+<img src="Images/customer_main.jpg" width="150px" height="250px">
+<img src="Images/customer_book.jpg" width="150px" height="250px">
+<img src="Images/customer_profile.jpg" width="150px" height="250px">
+<img src="Images/customer_booking_detail.jpg" width="150px" height="250px">
+<img src="Images/change_password.jpg" width="150px" height="250px">
+<img src="Images/payment_option.jpg" width="150px" height="250px">
+<img src="Images/cash.jpg" width="150px" height="250px">
+<img src="Images/qr_pay.jpg" width="150px" height="250px">
 
 ### Driver
-
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/driver_main.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/driver_booking.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/drop_passenger.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/map.jpg)
+<img src="Images/driver_main.jpg" width="150px" height="250px">
+<img src="Images/driver_booking.jpg" width="150px" height="250px">
+<img src="Images/drop_passenger.jpg" width="150px" height="250px">
+<img src="Images/map.jpg" width="150px" height="250px">
 
 ### Admin
-
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/admin_main.jpg)
-![CHEESE!](https://github.com/HazmiHazim/ump-student-grab/blob/main/Images/admin_approve.jpg)
+<img src="Images/admin_main.jpg" width="150px" height="250px">
+<img src="Images/admin_approve.jpg" width="150px" height="250px">
