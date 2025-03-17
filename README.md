@@ -56,27 +56,27 @@
 <img src="Images/login.png" width="150px" height="250px">
 
 ### Register
-<img src="Images/registration.jpg" width="150px" height="250px">
+<img src="Images/registration.jpg">
 
 ### Forgot Password
-<img src="Images/forgot_password.jpg" width="150px" height="250px">
+<img src="Images/forgot_password.jpg">
 
 ### Customer
-<img src="Images/customer_main.jpg" width="150px" height="250px">
-<img src="Images/customer_book.jpg" width="150px" height="250px">
-<img src="Images/customer_profile.jpg" width="150px" height="250px">
-<img src="Images/customer_booking_detail.jpg" width="150px" height="250px">
-<img src="Images/change_password.jpg" width="150px" height="250px">
-<img src="Images/payment_option.jpg" width="150px" height="250px">
-<img src="Images/cash.jpg" width="150px" height="250px">
-<img src="Images/qr_pay.jpg" width="150px" height="250px">
+<img src="Images/customer_main.jpg">
+<img src="Images/customer_book.jpg">
+<img src="Images/customer_profile.jpg">
+<img src="Images/customer_booking_detail.jpg">
+<img src="Images/change_password.jpg">
+<img src="Images/payment_option.jpg">
+<img src="Images/cash.jpg">
+<img src="Images/qr_pay.jpg">
 
 ### Driver
-<img src="Images/driver_main.jpg" width="150px" height="250px">
-<img src="Images/driver_booking.jpg" width="150px" height="250px">
-<img src="Images/drop_passenger.jpg" width="150px" height="250px">
-<img src="Images/map.jpg" width="150px" height="250px">
+<img src="Images/driver_main.jpg">
+<img src="Images/driver_booking.jpg">
+<img src="Images/drop_passenger.jpg">
+<img src="Images/map.jpg">
 
 ### Admin
-<img src="Images/admin_main.jpg" width="150px" height="250px">
-<img src="Images/admin_approve.jpg" width="150px" height="250px">
+<img src="Images/admin_main.jpg">
+<img src="Images/admin_approve.jpg">
