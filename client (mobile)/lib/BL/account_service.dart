@@ -10,7 +10,7 @@ class AccountService with ChangeNotifier {
   Future<Uint8List?> getUserImage(int imageId) async {
     final url = Uri.parse("http://$appDomain:$appPort/api/attachments/getFileById/$imageId");
     final response = await http.get(url);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       // Returning the file data as Uint8List
       return response.bodyBytes;
     } else {
