@@ -37,7 +37,7 @@ class ChatService with ChangeNotifier {
 
     //print(responseJson);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       // Map the "data" array to a list of ChatResponse objects
       for (var chat in responseJson["data"]) {
         int chatId = chat["chatId"];
@@ -82,7 +82,7 @@ class ChatService with ChangeNotifier {
     final responseJson = json.decode(response.body);
     //print("JSON: $responseJson");
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       // Map the "data" array to a list of ChatResponse objects
       for (var message in responseJson["data"]) {
         String content = message["content"] ?? "";

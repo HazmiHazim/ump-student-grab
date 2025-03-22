@@ -36,7 +36,7 @@ class LocationService with ChangeNotifier {
 
     final responseJson = json.decode(response.body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return LocationResponse(
           status: response.statusCode,
           userId: responseJson["userId"],

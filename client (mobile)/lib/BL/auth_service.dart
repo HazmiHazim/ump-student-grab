@@ -49,7 +49,7 @@ class AuthService with ChangeNotifier {
 
     final responseJson = json.decode(response.body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return AuthResponse(
           status: response.statusCode,
           userId: null,
@@ -84,7 +84,7 @@ class AuthService with ChangeNotifier {
 
       final responseJson = json.decode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         // Parse user data from the response
         final userData = responseJson["data"];
         final user = User.fromJson(userData);
@@ -130,7 +130,7 @@ class AuthService with ChangeNotifier {
 
     final responseJson = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       // Clean user from shared preference
       clearUser();
 
@@ -162,7 +162,7 @@ class AuthService with ChangeNotifier {
 
     final responseJson = json.decode(response.body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return AuthResponse(
           status: response.statusCode,
           userId: null,

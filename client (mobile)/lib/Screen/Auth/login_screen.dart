@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
       hasError = true;
     }
 
-    if (!emailController.text.isEmpty && !RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(emailController.text)) {
+    if (emailController.text.isNotEmpty && !RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(emailController.text)) {
       setState(() => emailError = "Please enter a valid email address.");
       hasError = true;
     }

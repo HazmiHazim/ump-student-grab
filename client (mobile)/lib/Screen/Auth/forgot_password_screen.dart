@@ -22,126 +22,175 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            alignment: Alignment.topCenter,
-            fit: BoxFit.fill,
-            image: AssetImage(
-              "assets/images/login.jpg",
+      body: SafeArea(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 150,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              alignment: Alignment.topCenter,
+                              fit: BoxFit.contain,
+                              image: AssetImage("assets/images/forgot-password.png"),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Forgot your password",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 75, 75, 75),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                          child: Text(
+                            "Please enter the email associated with your account and we'll send you password reset link.",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 175, 175, 175),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CustomInput(
+                            userInput: emailController,
+                            hintText: "Email",
+                            keyboardType: TextInputType.emailAddress,
+                            errorText: emailError,
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 55,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
+                              ),
+                              onPressed: _handleForgotPassword,
+                              child: const Text(
+                                "Request Reset Link",
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.pushNamed(context, "/login-screen");
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.arrow_back, color: Color.fromRGBO(0, 159, 160, 100)),
+                                      Text(
+                                        "Back to login",
+                                        style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                      )
+                                    ],
+                                  )
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              height: 510,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 45),
-                    CustomInput(
-                        userInput: emailController,
-                        hintTitle: "Email",
-                        keyboardType: TextInputType.emailAddress,
-                        errorText: emailError
-                    ),
-                    Container(
-                      height: 55,
-                      // for an exact replicate, remove the padding.
-                      padding: const EdgeInsets.only(top: 5, left: 70, right: 70),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                          backgroundColor: Colors.indigo.shade800,
-                        ),
-                        onPressed: () async {
-                          // Reset error messages before validation
-                          setState(() {
-                            emailError = null;
-                          });
-
-                          bool hasError = false;
-
-                          if (emailController.text.isEmpty) {
-                            setState(() {
-                              emailError = "This field is required.";
-                            });
-                            hasError = true;
-                          }
-
-                          if (hasError) {
-                            return;
-                          }
-
-                          showDialog(context: context,
-                              barrierDismissible: false,
-                              builder: (ctx) => const Center(child: CustomLoading()));
-                          AuthResponse response = await Provider.of<AuthService>(context, listen: false).forgotPassword(
-                              emailController.text,
-                          );
-
-                          Navigator.of(context).pop();
-
-                          if (response.isSuccess) {
-                            Fluttertoast.showToast(
-                              msg: response.message,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 5,
-                              backgroundColor: Colors.green.shade800,
-                              textColor: Colors.white,
-                              fontSize: 12.0
-                            );
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: response.message,
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 5,
-                              backgroundColor: Colors.red.shade800,
-                              textColor: Colors.white,
-                              fontSize: 12.0
-                            );
-                          }
-                        },
-                        child: Text("Request Reset Link", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white,),),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Center(child: Text("Back to login"),),
-                    Divider(thickness: 0, color: Colors.white),
-                    /*
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Text('Don\'t have an account yet ? ', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),),
-                    TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                  ),
-                  ],
-                ),
-                  */
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
+  }
+
+  void _handleForgotPassword() async {
+    // Reset error messages before validation
+    setState(() {
+      emailError = null;
+    });
+
+    bool hasError = false;
+
+    if (emailController.text.isEmpty) {
+      setState(() {
+        emailError = "This field is required.";
+      });
+      hasError = true;
+    }
+
+    if (emailController.text.isNotEmpty && !RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(emailController.text)) {
+      setState(() => emailError = "Please enter a valid email address.");
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    showDialog(context: context,
+        barrierDismissible: false,
+        builder: (ctx) => const Center(child: CustomLoading()));
+    AuthResponse response = await Provider.of<AuthService>(context, listen: false).forgotPassword(
+      emailController.text,
+    );
+
+    Navigator.of(context).pop();
+
+    if (response.isSuccess) {
+      Fluttertoast.showToast(
+          msg: response.message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.green.shade800,
+          textColor: Colors.white,
+          fontSize: 12.0
+      );
+    } else {
+      Fluttertoast.showToast(
+          msg: response.message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.red.shade800,
+          textColor: Colors.white,
+          fontSize: 12.0
+      );
+    }
   }
 }
