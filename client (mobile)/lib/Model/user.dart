@@ -5,7 +5,7 @@ class User {
   final String matricNo;
   final String phoneNo;
   final String role;
-  final int attachmentId;
+  final int? attachmentId;
   final bool isVerified;
   final String token;
 
@@ -16,7 +16,7 @@ class User {
     required this.matricNo,
     required this.phoneNo,
     required this.role,
-    required this.attachmentId,
+    this.attachmentId,
     required this.isVerified,
     required this.token
   });
