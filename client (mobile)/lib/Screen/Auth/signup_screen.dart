@@ -1,169 +1,259 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ump_student_grab_mobile/BL/auth_service.dart';
-import 'package:ump_student_grab_mobile/Model/auth_response.dart';
+import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
 
   static const routeName = '/signup-screen';
 
+  @override
+  _SignupScreenState createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
   final fullNameController = TextEditingController();
   final matricNoController = TextEditingController();
   final phoneNoController = TextEditingController();
 
-  Widget signUpWith(IconData icon) {
-    return Container(
-      height: 50,
-      width: 115,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withOpacity(0.4), width: 1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 24),
-          TextButton(onPressed: () {}, child: Text('Sign in')),
-        ],
-      ),
-    );
+  String? emailError;
+  String? fullNameError;
+  String? matricNoError;
+  String? phoneNoError;
+
+  // State to track button enable/disable status
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Add listeners to update button state
+    emailController.addListener(_updateButtonState);
+    fullNameController.addListener(_updateButtonState);
+    matricNoController.addListener(_updateButtonState);
+    phoneNoController.addListener(_updateButtonState);
   }
 
-  Widget userInput(TextEditingController userInput, String hintTitle, TextInputType keyboardType) {
-    return Container(
-      height: 55,
-      margin: EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(color: Colors.blueGrey.shade200, borderRadius: BorderRadius.circular(30)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 25.0, top: 15, right: 25),
-        child: TextField(
-          controller: userInput,
-          autocorrect: false,
-          enableSuggestions: false,
-          autofocus: false,
-          decoration: InputDecoration.collapsed(
-            hintText: hintTitle,
-            hintStyle: TextStyle(fontSize: 18, color: Colors.white70, fontStyle: FontStyle.italic),
-          ),
-          keyboardType: keyboardType,
-        ),
-      ),
-    );
+  void _updateButtonState() {
+    setState(() {
+      // Enable button if all field is filled
+      isButtonEnabled = emailController.text.isNotEmpty &&
+          fullNameController.text.isNotEmpty &&
+          matricNoController.text.isNotEmpty &&
+          phoneNoController.text.isNotEmpty;
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers to prevent memory leaks
+    emailController.dispose();
+    fullNameController.dispose();
+    matricNoController.dispose();
+    phoneNoController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            alignment: Alignment.topCenter,
-            fit: BoxFit.fill,
-            image: NetworkImage(
-              'https://www.teahub.io/photos/full/246-2460189_full-hd-background-abstract-portrait.jpg',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              color: Colors.white,
             ),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              height: 510,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 45),
-                    userInput(emailController, 'Email', TextInputType.emailAddress),
-                    userInput(passwordController, 'Password', TextInputType.visiblePassword),
-                    userInput(fullNameController, 'Full Name', TextInputType.text),
-                    userInput(matricNoController, 'Matric Number', TextInputType.text),
-                    userInput(phoneNoController, 'Phone Number', TextInputType.text),
-                    userInput(fullNameController, 'Full Name', TextInputType.text),
-                    Container(
-                      height: 55,
-                      // for an exact replicate, remove the padding.
-                      // pour une réplique exact, enlever le padding.
-                      padding: const EdgeInsets.only(top: 5, left: 70, right: 70),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                          backgroundColor: Colors.indigo.shade800
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 150,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              alignment: Alignment.topCenter,
+                              fit: BoxFit.contain,
+                              image: AssetImage("assets/images/forgot-password.png"),
+                            ),
+                          ),
                         ),
-                        onPressed: () async {
-                          print(emailController);
-                          print(passwordController);
-                          AuthResponse response = await Provider.of<AuthService>(context, listen: false).signup(
-                              emailController.text,
-                              passwordController.text,
-                              fullNameController.text,
-                              phoneNoController.text,
-                              matricNoController.text,
-                              "Passenger"
-                          );
-
-                          if (response.isSuccess) {
-                            Navigator.pushReplacementNamed(context, "/home-screen");
-                          } else {
-                            showDialog(context: context, builder: (ctx) => AlertDialog(
-                              title: Text(response.message),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(ctx).pop(),
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            ));
-                          }
-                        },
-                        child: Text("Sign up", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white,),),
-                      ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Create Account",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 75, 75, 75),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                          child: Text(
+                            "Please enter the email associated with your account and we'll send you password reset link.",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 175, 175, 175),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 20),
-                    Center(child: Text("Forgot password ?"),),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          signUpWith(Icons.add),
-                          signUpWith(Icons.book_online),
+                          CustomInput(
+                            userInput: emailController,
+                            hintText: "Email",
+                            keyboardType: TextInputType.emailAddress,
+                            errorText: emailError,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomInput(
+                            userInput: fullNameController,
+                            hintText: "Full Name",
+                            keyboardType: TextInputType.text,
+                            errorText: fullNameError,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomInput(
+                            userInput: matricNoController,
+                            hintText: "Matric No",
+                            keyboardType: TextInputType.text,
+                            errorText: matricNoError,
+                          ),
+                          const SizedBox(height: 5),
+                          CustomInput(
+                            userInput: phoneNoController,
+                            hintText: "Mobile Phone No",
+                            keyboardType: TextInputType.phone,
+                            errorText: phoneNoError,
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 55,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
+                                disabledBackgroundColor: const Color.fromRGBO(168, 196, 197, 100),
+                              ),
+                              onPressed: isButtonEnabled ? _handleFirstLayerSignup : null, // Disable if empty,
+                              child: const Text(
+                                "Next",
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.pushNamed(context, "/login-screen");
+                                  },
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.arrow_back, color: Color.fromRGBO(0, 159, 160, 100)),
+                                      Text(
+                                          "Back to login",
+                                          style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                      )
+                                    ],
+                                  )
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
-                    Divider(thickness: 0, color: Colors.white),
-                    /*
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //Text('Don\'t have an account yet ? ', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),),
-                    TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
                   ),
-                  ],
-                ),
-                  */
-                  ],
-                ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  void _handleFirstLayerSignup() async {
+    // Reset error messages before validation
+    setState(() {
+      emailError = null;
+      fullNameError = null;
+      matricNoError = null;
+      phoneNoError= null;
+    });
+
+    bool hasError = false;
+
+    if (emailController.text.isEmpty) {
+      setState(() => emailError = "This field is required.");
+      hasError = true;
+    }
+
+    if (fullNameController.text.isEmpty) {
+      setState(() => fullNameError = "This field is required.");
+      hasError = true;
+    }
+
+    if (matricNoController.text.isEmpty) {
+      setState(() => matricNoError = "This field is required.");
+      hasError = true;
+    }
+
+    if (phoneNoController.text.isEmpty) {
+      setState(() => phoneNoError = "This field is required.");
+      hasError = true;
+    }
+
+    if (emailController.text.isNotEmpty && !RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(emailController.text)) {
+      setState(() => emailError = "Please enter a valid email address.");
+      hasError = true;
+    }
+
+    if (matricNoController.text.isNotEmpty && !RegExp(r"^[A-Za-z]{2}\d{3}$").hasMatch(matricNoController.text)) {
+      setState(() => matricNoError = "Please enter a valid matric no.");
+      hasError = true;
+    }
+
+    if (phoneNoController.text.isNotEmpty && !RegExp(r"^(\+\d{1,3}[- ]?)?\d{10,11}$").hasMatch(phoneNoController.text)) {
+      setState(() => phoneNoError = "Phone number must be 10 or 11 digits.");
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    Navigator.pushNamed(
+      context,
+      "/create-password-screen",
+      arguments: {
+        "email": emailController.text,
+        "fullName": fullNameController.text,
+        "matricNo": matricNoController.text,
+        "phoneNo": phoneNoController.text
+      }
     );
   }
 }

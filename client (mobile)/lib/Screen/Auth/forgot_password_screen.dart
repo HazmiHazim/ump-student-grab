@@ -147,9 +147,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     bool hasError = false;
 
     if (emailController.text.isEmpty) {
-      setState(() {
-        emailError = "This field is required.";
-      });
+      setState(() => emailError = "This field is required.");
       hasError = true;
     }
 

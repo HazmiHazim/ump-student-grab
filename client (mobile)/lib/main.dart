@@ -8,6 +8,7 @@ import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
 import 'package:ump_student_grab_mobile/BL/location_service.dart';
 import 'package:ump_student_grab_mobile/Screen//welcome_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Account/main_account_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Auth/create_password_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/forgot_password_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/login_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/signup_screen.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
         routes: {
           "/welcome-screen": (context) => WelcomeScreen(),
           "/signup-screen": (context) => SignupScreen(),
+          "/create-password-screen": (context) => CreatePasswordScreen(),
           "/login-screen": (context) => LoginScreen(),
           "/forgot-password-screen": (context) => ForgotPasswordScreen(),
           "/home-screen": (context) => HomeScreen(),

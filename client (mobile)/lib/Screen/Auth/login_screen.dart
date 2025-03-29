@@ -148,12 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 25),
                         Center(
-                          child: InkWell(
-                            onTap: () => Navigator.pushNamed(context, "/forgot-password-screen"),
-                            child: const Text(
-                              "Forgot password?",
-                              style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100)),
-                            ),
+                          child: TextButton(
+                              onPressed: (){
+                                Navigator.pushNamed(context, "/forgot-password-screen");
+                              },
+                              child: const Text(
+                                  "Forgot password?",
+                                  style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                              )
                           ),
                         ),
                       ],
@@ -162,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(
                     flex: 1,
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 50),
+                      padding: const EdgeInsets.only(bottom: 40),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -173,18 +175,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               login("assets/images/facebook-logo.png", "Facebook"),
                             ],
                           ),
-                          const SizedBox(height: 20),
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have an account?",
                                 style: TextStyle(color: Color.fromARGB(255, 75, 75, 75)),
                               ),
-                              SizedBox(width: 5),
-                              Text(
-                                "Register",
-                                style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100)),
+                              const SizedBox(width: 5),
+                              TextButton(
+                                  onPressed: (){
+                                    Navigator.pushNamed(context, "/signup-screen");
+                                  },
+                                  child: const Text(
+                                      "Register",
+                                      style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                  )
                               ),
                             ],
                           ),
