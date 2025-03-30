@@ -53,7 +53,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             image: DecorationImage(
                               alignment: Alignment.topCenter,
                               fit: BoxFit.contain,
-                              image: AssetImage("assets/images/forgot-password.png"),
+                              image: AssetImage("assets/images/create-password-2.png"),
                             ),
                           ),
                         ),
@@ -220,7 +220,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

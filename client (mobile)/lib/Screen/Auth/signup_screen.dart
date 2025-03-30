@@ -82,7 +82,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             image: DecorationImage(
                               alignment: Alignment.topCenter,
                               fit: BoxFit.contain,
-                              image: AssetImage("assets/images/forgot-password.png"),
+                              image: AssetImage("assets/images/create-account-2.png"),
                             ),
                           ),
                         ),
@@ -98,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const Padding(
                           padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                           child: Text(
-                            "Please enter the email associated with your account and we'll send you password reset link.",
+                            "Please provide all required details to continue creating your account.",
                             style: TextStyle(
                                 color: Color.fromARGB(255, 175, 175, 175),
                                 fontSize: 14,
@@ -132,14 +132,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           const SizedBox(height: 5),
                           CustomInput(
                             userInput: matricNoController,
-                            hintText: "Matric No",
+                            hintText: "Matric No.",
                             keyboardType: TextInputType.text,
                             errorText: matricNoError,
                           ),
                           const SizedBox(height: 5),
                           CustomInput(
                             userInput: phoneNoController,
-                            hintText: "Mobile Phone No",
+                            hintText: "Mobile Phone No.",
                             keyboardType: TextInputType.phone,
                             errorText: phoneNoError,
                           ),
@@ -162,7 +162,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -231,8 +231,8 @@ class _SignupScreenState extends State<SignupScreen> {
       hasError = true;
     }
 
-    if (matricNoController.text.isNotEmpty && !RegExp(r"^[A-Za-z]{2}\d{3}$").hasMatch(matricNoController.text)) {
-      setState(() => matricNoError = "Please enter a valid matric no.");
+    if (matricNoController.text.isNotEmpty && !RegExp(r"^[A-Za-z]{2}\d{5}$").hasMatch(matricNoController.text)) {
+      setState(() => matricNoError = "Please enter a valid matric number (e.g. CB12345).");
       hasError = true;
     }
 
