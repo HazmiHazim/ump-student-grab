@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          //scaffoldBackgroundColor: Colors.white
         ),
         home: isFirstTime ? WelcomeScreen() : (user != null ? SharedWidget() : LoginScreen()),
         routes: {
