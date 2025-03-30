@@ -86,6 +86,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             hintText: "Email",
                             keyboardType: TextInputType.emailAddress,
                             errorText: emailError,
+                            onChanged: (value) {
+                              setState(() {
+                                emailError = null;
+                              });
+                            },
                           ),
                           const SizedBox(height: 10),
                           SizedBox(
@@ -105,7 +110,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -113,7 +118,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   onPressed: (){
                                     Navigator.pushNamed(context, "/login-screen");
                                   },
-                                  child: Row(
+                                  child: const Row(
                                     children: [
                                       Icon(Icons.arrow_back, color: Color.fromRGBO(0, 159, 160, 100)),
                                       Text(

@@ -121,6 +121,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: "Email",
                             keyboardType: TextInputType.emailAddress,
                             errorText: emailError,
+                            onChanged: (value) {
+                              setState(() {
+                                emailError = null;
+                              });
+                            },
                           ),
                           const SizedBox(height: 5),
                           CustomInput(
@@ -128,6 +133,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: "Full Name",
                             keyboardType: TextInputType.text,
                             errorText: fullNameError,
+                            onChanged: (value) {
+                              setState(() {
+                                fullNameError = null;
+                              });
+                            },
                           ),
                           const SizedBox(height: 5),
                           CustomInput(
@@ -135,6 +145,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: "Matric No.",
                             keyboardType: TextInputType.text,
                             errorText: matricNoError,
+                            onChanged: (value) {
+                              setState(() {
+                                matricNoError = null;
+                              });
+                            },
                           ),
                           const SizedBox(height: 5),
                           CustomInput(
@@ -142,6 +157,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: "Mobile Phone No.",
                             keyboardType: TextInputType.phone,
                             errorText: phoneNoError,
+                            onChanged: (value) {
+                              setState(() {
+                                phoneNoError = null;
+                              });
+                            },
                           ),
                           const SizedBox(height: 10),
                           SizedBox(

@@ -191,6 +191,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
                           errorText: passwordError,
+                          onChanged: (value) {
+                            setState(() {
+                              passwordError = null;
+                            });
+                          },
                         ),
                         const SizedBox(height: 5),
                         CustomInput(
@@ -199,6 +204,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
                           errorText: confirmPasswordError,
+                          onChanged: (value) {
+                            setState(() {
+                              confirmPasswordError = null;
+                            });
+                          },
                         ),
                         const SizedBox(height: 10),
                         SizedBox(

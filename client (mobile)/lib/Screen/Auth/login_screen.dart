@@ -119,6 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           hintText: "Email",
                           keyboardType: TextInputType.emailAddress,
                           errorText: emailError,
+                          onChanged: (value) {
+                            setState(() {
+                              emailError = null;
+                            });
+                          },
                         ),
                         const SizedBox(height: 5),
                         CustomInput(
@@ -127,6 +132,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.visiblePassword,
                           obscureText: true,
                           errorText: passwordError,
+                          onChanged: (value) {
+                            setState(() {
+                              passwordError = null;
+                            });
+                          },
                         ),
                         const SizedBox(height: 10),
                         SizedBox(
