@@ -35,7 +35,8 @@ public class UserRepository implements IUserRepository {
     @Override
     @Async
     public CompletableFuture<User> getUserByEmail(String email) {
-        List<User> users = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
+        List<User> users = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.email = :email", User.class)
                 .setParameter("email", email)
                 .getResultList();
 

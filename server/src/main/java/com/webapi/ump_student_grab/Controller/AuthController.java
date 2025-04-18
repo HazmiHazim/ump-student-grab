@@ -21,7 +21,7 @@ public class AuthController {
         this._service = service;
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> createUser(@RequestBody UserCreateDTO userCreateDTO) {
         return _service.createUser(userCreateDTO).thenApply(createdUser -> {
@@ -40,10 +40,14 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
-    @GetMapping("/getUserById/{id}")
+    @GetMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserById(@PathVariable Long id) {
         return _service.getUserById(id).thenApply(user -> {
@@ -65,7 +69,7 @@ public class AuthController {
         });
     }
 
-    @GetMapping("/getUserByEmail/{email}")
+    @GetMapping("/email/{email}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserByEmail(@PathVariable String email) {
         return _service.getUserByEmail(email).thenApply(user -> {
@@ -84,10 +88,14 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
-    @GetMapping("/allUsers")
+    @GetMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<UserDTO>>>> getAllUsers() {
         return _service.getAllUsers().thenApply(users -> {
@@ -109,7 +117,7 @@ public class AuthController {
         });
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
         return _service.updateUser(id, userUpdateDTO).thenApply(updatedUser -> {
@@ -128,10 +136,14 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> deleteUser(@PathVariable Long id) {
         return _service.deleteUser(id).thenApply(deletedUser -> {
@@ -171,6 +183,10 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
@@ -194,7 +210,7 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/forgotPassword")
+    @PostMapping("/forgot-password")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestParam String email) {
         return _service.forgotPassword(email).thenApply(result -> {
@@ -208,9 +224,13 @@ public class AuthController {
                     message = "Failed created token.";
                     yield HttpStatus.PRECONDITION_FAILED;
                 }
+                case 3 -> {
+                    message = "Failed to reset password.";
+                    yield HttpStatus.INTERNAL_SERVER_ERROR;
+                }
                 default -> {
                     message = "Successful sent reset link. Please check your email to reset new password.";
-                    yield HttpStatus.CREATED;
+                    yield HttpStatus.OK;
                 }
             };
 
@@ -219,7 +239,7 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/resetPassword")
+    @PostMapping("/reset-password")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> resetPassword(@RequestBody UserResetPassDTO userResetPassDTO) {
         return _service.resetPassword(userResetPassDTO).thenApply(result -> {
@@ -248,7 +268,7 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/verifyEmail")
+    @PostMapping("/verify-email")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(@RequestParam String email) {
         return _service.verifyEmail(email).thenApply(result -> {
@@ -269,7 +289,7 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/verifyUser/{token}")
+    @PostMapping("/verify-user/{token}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(@PathVariable String token) {
         return _service.verifyUser(token).thenApply(result -> {
