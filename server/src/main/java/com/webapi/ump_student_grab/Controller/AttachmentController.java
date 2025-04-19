@@ -22,16 +22,16 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/attachments")
 public class AttachmentController {
 
-    private final IAttachmentServiceLogic _service;
+    private final IAttachmentServiceLogic service;
 
     public AttachmentController(IAttachmentServiceLogic service) {
-        this._service = service;
+        this.service = service;
     }
 
-    @PostMapping("/uploadFile")
+    @PostMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> saveFile(@RequestParam("file")MultipartFile file, @RequestParam Long userId) {
-        return _service.saveFile(file, userId).thenApply(savedFile -> {
+        return service.saveFile(file, userId).thenApply(savedFile -> {
             ApiResponse<AttachmentDTO> response;
             HttpStatus status;
             String message;
@@ -49,10 +49,10 @@ public class AttachmentController {
         });
     }
 
-    @GetMapping("/getFileById/{id}")
+    @GetMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<?>> getFileById(@PathVariable Long id) {
-        return _service.getFileById(id).thenApply(resource -> {
+        return service.getFileById(id).thenApply(resource -> {
             if (resource == null) {
                 ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), null, "File not found.");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -88,14 +88,10 @@ public class AttachmentController {
         });
     }
 
-
-
-
-
-    @DeleteMapping("/deleteFile/{id}")
+    @DeleteMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> deleteFile(@PathVariable Long id) {
-        return _service.deleteFile(id).thenApply(deletedFile -> {
+        return service.deleteFile(id).thenApply(deletedFile -> {
             ApiResponse<AttachmentDTO> response;
             HttpStatus status;
             String message;

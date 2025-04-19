@@ -16,14 +16,14 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class AttachmentServiceLogic implements IAttachmentServiceLogic{
 
-    private final IAttachmentRepository _repo;
-    private final AttachmentMapper _mapper;
-    private final IUserRepository _uRepo;
+    private final IAttachmentRepository repo;
+    private final AttachmentMapper mapper;
+    private final IUserRepository uRepo;
 
     public AttachmentServiceLogic(IAttachmentRepository repo, AttachmentMapper mapper, IUserRepository uRepo) {
-        this._repo = repo;
-        this._mapper = mapper;
-        this._uRepo = uRepo;
+        this.repo = repo;
+        this.mapper = mapper;
+        this.uRepo = uRepo;
     }
 
     @Override
@@ -39,12 +39,13 @@ public class AttachmentServiceLogic implements IAttachmentServiceLogic{
         }
 
         // Check if user exists
-        return _uRepo.getUserById(userId).thenCompose(existingUser -> {
+        return uRepo.getUserById(userId).thenCompose(existingUser -> {
             // Check if user not exists then cannot upload
             if (existingUser == null) {
                 return CompletableFuture.completedFuture(null);
             }
 
+            // Specify your path to store the uploaded file
             String folderPath = "D:/Others/Spring Boot Assets/";
             File folder = new File(folderPath);
 
@@ -69,14 +70,14 @@ public class AttachmentServiceLogic implements IAttachmentServiceLogic{
             attachment.setFilePath(folderPath + fileName);
             attachment.setUploadedBy(userId);
 
-            return  _repo.saveFile(attachment).thenApply(_mapper::attachmentToAttachmentDTO);
+            return  repo.saveFile(attachment).thenApply(mapper::attachmentToAttachmentDTO);
         });
     }
 
     @Override
     public CompletableFuture<Resource> getFileById(Long id) {
         // check file exists
-        return _repo.getFileById(id).thenCompose(existingFile -> {
+        return repo.getFileById(id).thenCompose(existingFile -> {
             if (existingFile == null) {
                 return CompletableFuture.completedFuture(null);
             }
@@ -98,7 +99,7 @@ public class AttachmentServiceLogic implements IAttachmentServiceLogic{
 
     @Override
     public CompletableFuture<Boolean> deleteFile(Long id) {
-        return _repo.getFileById(id).thenCompose(existingFile -> {
+        return repo.getFileById(id).thenCompose(existingFile -> {
             if (existingFile == null) {
                 return CompletableFuture.completedFuture(false);
             }
@@ -120,7 +121,7 @@ public class AttachmentServiceLogic implements IAttachmentServiceLogic{
                 return CompletableFuture.completedFuture(false);
             }
 
-            return _repo.deleteFile(id).thenApply(v -> true);
+            return repo.deleteFile(id).thenApply(v -> true);
         });
     }
 }
