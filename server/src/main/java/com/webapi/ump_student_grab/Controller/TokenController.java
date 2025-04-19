@@ -15,16 +15,16 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/tokens")
 public class TokenController {
 
-    private final ITokenServiceLogic _service;
+    private final ITokenServiceLogic service;
 
     public TokenController(ITokenServiceLogic service) {
-        this._service = service;
+        this.service = service;
     }
 
-    @GetMapping("/getTokenById/{id}")
+    @GetMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<TokenDTO>>> getTokenById(@PathVariable Long id) {
-        return _service.getTokenById(id).thenApply(token -> {
+        return service.getTokenById(id).thenApply(token -> {
             ApiResponse<TokenDTO> response;
             HttpStatus status;
             String message;
@@ -43,10 +43,10 @@ public class TokenController {
         });
     }
 
-    @GetMapping("/getTokenByToken/{token}")
+    @GetMapping("/token/{token}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<TokenDTO>>> getTokenByToken(@PathVariable String token) {
-        return _service.getTokenByToken(token).thenApply(existingToken -> {
+        return service.getTokenByToken(token).thenApply(existingToken -> {
             ApiResponse<TokenDTO> response;
             HttpStatus status;
             String message;
@@ -65,10 +65,10 @@ public class TokenController {
         });
     }
 
-    @GetMapping("/allTokens")
+    @GetMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<TokenDTO>>>> getAllTokens() {
-        return _service.getAllTokens().thenApply(tokens -> {
+        return service.getAllTokens().thenApply(tokens -> {
             ApiResponse<List<TokenDTO>> response;
             HttpStatus status;
             String message;
