@@ -15,16 +15,16 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/users")
 public class AuthController {
 
-    private final IAuthServiceLogic _service;
+    private final IAuthServiceLogic service;
 
     public AuthController(IAuthServiceLogic service) {
-        this._service = service;
+        this.service = service;
     }
 
     @PostMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> createUser(@RequestBody UserCreateDTO userCreateDTO) {
-        return _service.createUser(userCreateDTO).thenApply(createdUser -> {
+        return service.createUser(userCreateDTO).thenApply(createdUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -50,7 +50,7 @@ public class AuthController {
     @GetMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserById(@PathVariable Long id) {
-        return _service.getUserById(id).thenApply(user -> {
+        return service.getUserById(id).thenApply(user -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -72,7 +72,7 @@ public class AuthController {
     @GetMapping("/email/{email}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserByEmail(@PathVariable String email) {
-        return _service.getUserByEmail(email).thenApply(user -> {
+        return service.getUserByEmail(email).thenApply(user -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -98,7 +98,7 @@ public class AuthController {
     @GetMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<UserDTO>>>> getAllUsers() {
-        return _service.getAllUsers().thenApply(users -> {
+        return service.getAllUsers().thenApply(users -> {
             ApiResponse<List<UserDTO>> response;
             HttpStatus status;
             String message;
@@ -120,7 +120,7 @@ public class AuthController {
     @PutMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
-        return _service.updateUser(id, userUpdateDTO).thenApply(updatedUser -> {
+        return service.updateUser(id, userUpdateDTO).thenApply(updatedUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -146,7 +146,7 @@ public class AuthController {
     @DeleteMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> deleteUser(@PathVariable Long id) {
-        return _service.deleteUser(id).thenApply(deletedUser -> {
+        return service.deleteUser(id).thenApply(deletedUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -167,7 +167,7 @@ public class AuthController {
     @PostMapping("/login")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> loginUser(@RequestBody AuthDTO authDTO) {
-        return _service.loginUser(authDTO).thenApply(loginUser -> {
+        return service.loginUser(authDTO).thenApply(loginUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -202,7 +202,7 @@ public class AuthController {
 
         // Extract the token
         String token = authHeader.substring(7);  // Remove "Bearer " from the start
-        return _service.logoutUser(token).thenApply(logoutUser -> {
+        return service.logoutUser(token).thenApply(logoutUser -> {
             HttpStatus status;
             String message;
 
@@ -222,7 +222,7 @@ public class AuthController {
     @PostMapping("/forgot-password")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
-        return _service.forgotPassword(forgotPasswordDTO).thenApply(result -> {
+        return service.forgotPassword(forgotPasswordDTO).thenApply(result -> {
             String message;
             HttpStatus status = switch (result) {
                 case 1 -> {
@@ -255,7 +255,7 @@ public class AuthController {
     @PostMapping("/reset-password")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> resetPassword(@RequestBody UserResetPassDTO userResetPassDTO) {
-        return _service.resetPassword(userResetPassDTO).thenApply(result -> {
+        return service.resetPassword(userResetPassDTO).thenApply(result -> {
             String message;
             HttpStatus status = switch (result) {
                 case 1 -> {
@@ -284,7 +284,7 @@ public class AuthController {
     @PostMapping("/verify-email")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(@RequestBody VerifyUserDTO verifyUserDTO) {
-        return _service.verifyEmail(verifyUserDTO).thenApply(result -> {
+        return service.verifyEmail(verifyUserDTO).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -309,7 +309,7 @@ public class AuthController {
     @PostMapping("/verify-user")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(@RequestParam String token) {
-        return _service.verifyUser(token).thenApply(result -> {
+        return service.verifyUser(token).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
