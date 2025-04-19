@@ -190,9 +190,9 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/logout/{token}")
+    @PostMapping("/logout")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@PathVariable String token) {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@RequestParam String token) {
         return _service.logoutUser(token).thenApply(logoutUser -> {
             HttpStatus status;
             String message;
@@ -225,7 +225,7 @@ public class AuthController {
                     yield HttpStatus.PRECONDITION_FAILED;
                 }
                 case 3 -> {
-                    message = "Failed to reset password.";
+                    message = "Failed to send reset password link.";
                     yield HttpStatus.INTERNAL_SERVER_ERROR;
                 }
                 default -> {
@@ -289,9 +289,9 @@ public class AuthController {
         });
     }
 
-    @PostMapping("/verify-user/{token}")
+    @PostMapping("/verify-user")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(@PathVariable String token) {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(@RequestParam String token) {
         return _service.verifyUser(token).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
@@ -302,7 +302,7 @@ public class AuthController {
                 message = "Token is invalid or expired.";
             } else {
                 status = HttpStatus.OK;
-                message = "http://127.0.0.1/verificationSuccessPage";
+                message = "Your account has been verified.";
             }
 
             response = new ApiResponse<>(status.value(), null, message);

@@ -8,13 +8,14 @@ import com.webapi.ump_student_grab.Model.Token;
 import com.webapi.ump_student_grab.Model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -267,6 +268,16 @@ public class AuthServiceLogic implements IAuthServiceLogic {
                     String htmlContent = templateEngine.process("email/forgot-password", thymeleafContext);
                     helper.setText(htmlContent, true);
 
+                    // ==========================================================
+                    //  USE THIS PART ONLY IN DEV. IF IN PROD, COMMENT THIS PART
+                    // ==========================================================
+                    // Embed the image
+                    FileSystemResource image1 = new FileSystemResource(new File("src/main/resources/static/images/logo-umpsa.png"));
+                    FileSystemResource image2 = new FileSystemResource(new File("src/main/resources/static/images/e-hailing-illustration.png"));
+                    helper.addInline("umpsaLogo", image1); // Pass the cid in the html template
+                    helper.addInline("illustration", image2); // Pass the cid in the html template
+                    // ==========================================================
+
                     mailSender.send(mimeMessage);
 
                     return CompletableFuture.completedFuture(0);
@@ -316,25 +327,43 @@ public class AuthServiceLogic implements IAuthServiceLogic {
             // Generate a unique token (using UUID)
             String generatedToken = UUID.randomUUID().toString().replace("-", "");
 
-            // Set the token expiration to 2 days from now
+            // Set the token expiration to 5 minutes from now
             LocalDateTime expiredAt = LocalDateTime.now().plusMinutes(5);
-            LocalDateTime createdAt = LocalDateTime.now();
-            LocalDateTime modifiedAt = LocalDateTime.now();
+            LocalDateTime now = LocalDateTime.now();
 
-            Token token = new Token(null, generatedToken, existingUser.getId(), expiredAt, createdAt, modifiedAt);
+            Token token = new Token(null, generatedToken, existingUser.getId(), expiredAt, now, now);
 
             // Create the token in the database
             return tRepo.createToken(token).thenCompose(createdToken -> {
-                // Create and send the email message
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom("umpsa.studentgrab@service.com");
-                message.setTo(email);
-                message.setSubject("Account Verification");
-                message.setText("Please click the link to verify your account: \n"
-                        + "http://127.0.0.1/api/users/verifyUser/" + generatedToken);
 
-                mailSender.send(message);
-                return CompletableFuture.completedFuture(true);
+                // Create and send the email message
+                try {
+                    MimeMessage mimeMessage = mailSender.createMimeMessage();
+                    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+                    helper.setFrom("studentgrab.service@umpsa.com.my");
+                    helper.setTo(email);
+                    helper.setSubject("Account Verification");
+
+                    Context thymeleafContext = new Context();
+                    thymeleafContext.setVariable("token", generatedToken);
+                    // Load HTML template
+                    String htmlContent = templateEngine.process("email/account-verification", thymeleafContext);
+                    helper.setText(htmlContent, true);
+
+                    // ==========================================================
+                    //  USE THIS PART ONLY IN DEV. IF IN PROD, COMMENT THIS PART
+                    // ==========================================================
+                    // Embed the image
+                    FileSystemResource image1 = new FileSystemResource(new File("src/main/resources/static/images/logo-umpsa.png"));
+                    helper.addInline("umpsaLogo", image1); // Pass the cid in the html template
+                    // ==========================================================
+
+                    mailSender.send(mimeMessage);
+
+                    return CompletableFuture.completedFuture(true);
+                } catch (MessagingException ex) {
+                    return CompletableFuture.completedFuture(false);
+                }
             });
         });
     }

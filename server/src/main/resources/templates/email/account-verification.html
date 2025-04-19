@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test</title>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: helvetica,'helvetica neue',arial,verdana,sans-serif;
+        font-size: 16px;
+        color: #131313;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #DDDDDD;
+        padding: 50px;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+    }
+
+    img {
+        width: 100%;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    h1, p, span {
+        width: 100%;
+        max-width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    .card {
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+    }
+
+    #card-header {
+        display: flex;
+        background-color: #009FA0;
+        width: inherit;
+        height: 80px;
+        border-radius: 20px 20px 0px 0px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        width: inherit;
+    }
+
+    #card-body-content {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 70px;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    #linkBtn {
+        display: flex;
+        background-color: #009FA0;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 100%;
+        height: 50px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    #umpsaLogo-img {
+        width: 80px;
+        height: inherit;
+    }
+
+    #illustration-img {
+        width: inherit;
+        max-width: 100%;
+        height: 400px;
+    }
+
+    @media screen and (max-width: 768px) {
+        h1, p, span {
+            font-size: 14px;
+            letter-spacing: 0;
+        }
+
+        #card-body-content {
+            padding: 10px 30px;
+        }
+
+        #linkBtn {
+            width: 100%;
+            font-size: 14px;
+        }
+
+        #illustration-img {
+            height: 200px;
+        }
+    }
+  </style>
+</head>
+<body>
+<section>
+    <div class="card">
+        <div id="card-header">
+            <!-- USE THIS IN DEVELOPMENT -->
+            <img id="umpsaLogo-img" src="cid:umpsaLogo" alt="UMPSA Logo">
+            <!-- USE THIS IN PRODUCTION. UNCOMMENT THIS IF IN PRODUCTION -->
+            <!-- <img id="umpsaLogo-img" src="https://127.0.0.1/images/logo-umpsa.png" alt="UMPSA Logo"> -->
+        </div>
+
+        <div id="card-body">
+            <div id="card-body-content">
+                <h1>
+                    Email Verification
+                </h1>
+
+                <p>Please click the link to verify your account. The link will expire in 5 minutes.</p>
+
+                <a id="linkBtn" th:href="@{'http://127.0.0.1/verify-account?token=' + ${token}}" target="_blank">
+                    Verify my email
+                </a>
+
+                <p>If you do not know why you received this email, you can just ignore it.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <p style="text-align: center;">
+        ©2025 Hazmi Hazim. All rights reserved.
+    </p>
+</section>
+</body>
+</html>
