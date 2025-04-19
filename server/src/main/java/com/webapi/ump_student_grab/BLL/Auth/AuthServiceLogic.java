@@ -233,8 +233,23 @@ public class AuthServiceLogic implements IAuthServiceLogic {
     }
 
     @Override
-    public CompletableFuture<Integer> forgotPassword(String email) {
-        return repo.getUserByEmail(email).thenCompose(existingUser -> {
+    public CompletableFuture<Integer> forgotPassword(ForgotPasswordDTO forgotPasswordDTO) {
+        // Check if the request has email
+        if (forgotPasswordDTO.getEmail() == null || forgotPasswordDTO.getEmail().isBlank()) {
+            // Throw exception
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Email cannot be null or empty"));
+        }
+
+        // Pattern for email regex
+        Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher emailMatcher = emailPattern.matcher(forgotPasswordDTO.getEmail());
+
+        if (!emailMatcher.matches()) {
+            // Throw exception
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid email format"));
+        }
+
+        return repo.getUserByEmail(forgotPasswordDTO.getEmail()).thenCompose(existingUser -> {
             if (existingUser == null) {
                 return CompletableFuture.completedFuture(1);
             }
@@ -259,7 +274,7 @@ public class AuthServiceLogic implements IAuthServiceLogic {
                     MimeMessage mimeMessage = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
                     helper.setFrom("studentgrab.service@umpsa.com.my");
-                    helper.setTo(email);
+                    helper.setTo(forgotPasswordDTO.getEmail());
                     helper.setSubject("Request for reset password");
 
                     Context thymeleafContext = new Context();
@@ -318,8 +333,23 @@ public class AuthServiceLogic implements IAuthServiceLogic {
     }
 
     @Override
-    public CompletableFuture<Boolean> verifyEmail(String email) {
-        return repo.getUserByEmail(email).thenCompose(existingUser -> {
+    public CompletableFuture<Boolean> verifyEmail(VerifyUserDTO verifyUserDTO) {
+        // Check if the request has email
+        if (verifyUserDTO.getEmail() == null || verifyUserDTO.getEmail().isBlank()) {
+            // Throw exception
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Email cannot be null or empty"));
+        }
+
+        // Pattern for email regex
+        Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher emailMatcher = emailPattern.matcher(verifyUserDTO.getEmail());
+
+        if (!emailMatcher.matches()) {
+            // Throw exception
+            return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid email format"));
+        }
+
+        return repo.getUserByEmail(verifyUserDTO.getEmail()).thenCompose(existingUser -> {
             if (existingUser == null) {
                 return CompletableFuture.completedFuture(false);
             }
@@ -341,7 +371,7 @@ public class AuthServiceLogic implements IAuthServiceLogic {
                     MimeMessage mimeMessage = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
                     helper.setFrom("studentgrab.service@umpsa.com.my");
-                    helper.setTo(email);
+                    helper.setTo(verifyUserDTO.getEmail());
                     helper.setSubject("Account Verification");
 
                     Context thymeleafContext = new Context();

@@ -192,7 +192,16 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@RequestParam String token) {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@RequestHeader("Authorization") String authHeader) {
+        // Check if the token is present and starts with "Bearer "
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return CompletableFuture.completedFuture(
+                    new ResponseEntity<>(new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, "Token is missing or malformed"), HttpStatus.BAD_REQUEST)
+            );
+        }
+
+        // Extract the token
+        String token = authHeader.substring(7);  // Remove "Bearer " from the start
         return _service.logoutUser(token).thenApply(logoutUser -> {
             HttpStatus status;
             String message;
@@ -212,8 +221,8 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestParam String email) {
-        return _service.forgotPassword(email).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        return _service.forgotPassword(forgotPasswordDTO).thenApply(result -> {
             String message;
             HttpStatus status = switch (result) {
                 case 1 -> {
@@ -236,6 +245,10 @@ public class AuthController {
 
             ApiResponse<UserDTO> response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
@@ -270,8 +283,8 @@ public class AuthController {
 
     @PostMapping("/verify-email")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(@RequestParam String email) {
-        return _service.verifyEmail(email).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(@RequestBody VerifyUserDTO verifyUserDTO) {
+        return _service.verifyEmail(verifyUserDTO).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -286,6 +299,10 @@ public class AuthController {
 
             response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         });
     }
 
