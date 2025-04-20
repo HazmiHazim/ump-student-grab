@@ -3,7 +3,7 @@ package com.webapi.ump_student_grab.Mapper;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationCreateDTO;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationDTO;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationUpdateDTO;
-import com.webapi.ump_student_grab.Model.Location;
+import com.webapi.ump_student_grab.Model.Entity.Location;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

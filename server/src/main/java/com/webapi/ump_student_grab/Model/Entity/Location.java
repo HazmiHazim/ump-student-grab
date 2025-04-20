@@ -1,32 +1,34 @@
-package com.webapi.ump_student_grab.Model;
+package com.webapi.ump_student_grab.Model.Entity;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "chats")
-public class Chat {
-
+@Table(name = "locations")
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long senderId;
+    private Long userId;
     @Column
-    private Long recipientId ;
+    private Double latitude;
     @Column
+    private Double longitude;
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     @Column
     private LocalDateTime modifiedAt;
 
     // No-argument constructor is required by JPA
-    public Chat() {}
+    public Location() {}
 
-    public Chat(Long id, Long senderId, Long recipientId, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public Location(Long id, Long userId, Double latitude, Double longitude, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
-        this.senderId = senderId;
-        this.recipientId = recipientId;
+        this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
@@ -39,20 +41,28 @@ public class Chat {
         this.id = id;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Long getRecipientId() {
-        return recipientId;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setRecipientId(Long recipientId) {
-        this.recipientId = recipientId;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public LocalDateTime getCreatedAt() {

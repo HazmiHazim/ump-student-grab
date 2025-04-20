@@ -1,9 +1,8 @@
 package com.webapi.ump_student_grab.DLL.Chat;
 
-import com.webapi.ump_student_grab.Model.Chat;
-import com.webapi.ump_student_grab.Model.Message;
+import com.webapi.ump_student_grab.Model.Entity.Chat;
+import com.webapi.ump_student_grab.Model.Entity.Message;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

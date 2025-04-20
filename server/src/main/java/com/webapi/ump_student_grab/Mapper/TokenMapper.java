@@ -1,7 +1,7 @@
 package com.webapi.ump_student_grab.Mapper;
 
 import com.webapi.ump_student_grab.DTO.TokenDTO.TokenDTO;
-import com.webapi.ump_student_grab.Model.Token;
+import com.webapi.ump_student_grab.Model.Entity.Token;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

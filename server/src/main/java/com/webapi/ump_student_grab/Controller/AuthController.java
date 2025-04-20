@@ -2,7 +2,7 @@ package com.webapi.ump_student_grab.Controller;
 
 import com.webapi.ump_student_grab.BLL.Auth.IAuthServiceLogic;
 import com.webapi.ump_student_grab.DTO.UserDTO.*;
-import com.webapi.ump_student_grab.Model.ApiResponse;
+import com.webapi.ump_student_grab.Model.Entity.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;

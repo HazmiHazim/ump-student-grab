@@ -4,9 +4,9 @@ import com.webapi.ump_student_grab.DLL.Chat.IChatRepository;
 import com.webapi.ump_student_grab.DLL.User.IUserRepository;
 import com.webapi.ump_student_grab.DTO.ChatDTO.*;
 import com.webapi.ump_student_grab.Mapper.ChatMapper;
-import com.webapi.ump_student_grab.Model.Chat;
-import com.webapi.ump_student_grab.Model.Message;
-import com.webapi.ump_student_grab.Model.User;
+import com.webapi.ump_student_grab.Model.Entity.Chat;
+import com.webapi.ump_student_grab.Model.Entity.Message;
+import com.webapi.ump_student_grab.Model.Entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -109,14 +109,21 @@ public class ChatServiceLogic implements IChatServiceLogic{
             List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = filteredChats.stream().map(chat -> {
                 // Fetch recipient and last message asynchronously
                 CompletableFuture<User> recipientFuture = _uRepo.getUserById(chat.getRecipientId());
+                CompletableFuture<User> senderFuture = _uRepo.getUserById(chat.getSenderId());
                 CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId());
 
-                // Combine both futures and map using ChatMapper
-                return recipientFuture.thenCombine(lastMessageFuture, (recipient, lastMessage) -> {
-                    // Use the mapper to create ChatDetailsDTO when both asynchronous tasks are complete
+                CompletableFuture<Void> all = CompletableFuture.allOf(senderFuture, recipientFuture, lastMessageFuture);
+
+
+                return all.thenApply(v -> {
+                    User sender = senderFuture.join();       // join is safe here since `allOf` ensures completion
+                    User recipient = recipientFuture.join();
+                    Message lastMessage = lastMessageFuture.join();
+
                     return _mapper.chatToChatDetailsDTO(
                             chat.getId(),
                             chat.getSenderId(),
+                            sender.getFullName(),
                             chat.getRecipientId(),
                             recipient.getFullName(),
                             lastMessage.getContent()

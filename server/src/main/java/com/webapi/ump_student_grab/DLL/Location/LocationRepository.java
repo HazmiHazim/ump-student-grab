@@ -1,6 +1,6 @@
 package com.webapi.ump_student_grab.DLL.Location;
 
-import com.webapi.ump_student_grab.Model.Location;
+import com.webapi.ump_student_grab.Model.Entity.Location;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;

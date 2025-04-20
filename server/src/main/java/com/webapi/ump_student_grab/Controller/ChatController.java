@@ -2,12 +2,17 @@ package com.webapi.ump_student_grab.Controller;
 
 import com.webapi.ump_student_grab.BLL.Chat.IChatServiceLogic;
 import com.webapi.ump_student_grab.DTO.ChatDTO.*;
-import com.webapi.ump_student_grab.Model.ApiResponse;
+import com.webapi.ump_student_grab.Model.Entity.ApiResponse;
+import com.webapi.ump_student_grab.Model.Enum.MessageStatus;
+import com.webapi.ump_student_grab.Model.Enum.MessageType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,16 +23,18 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/chats")
 public class ChatController {
 
-    private final IChatServiceLogic _service;
+    private final IChatServiceLogic service;
+    private final SimpMessageSendingOperations messageSendOperation;
 
-    public ChatController(IChatServiceLogic service) {
-        this._service = service;
+    public ChatController(IChatServiceLogic service, SimpMessageSendingOperations messageSendOperation) {
+        this.service = service;
+        this.messageSendOperation = messageSendOperation;
     }
 
     @PostMapping("/createChat")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> createChat(@RequestBody ChatCreateDTO chatCreateDTO) {
-        return _service.createChat(chatCreateDTO).thenApply(createdChatRoom -> {
+        return service.createChat(chatCreateDTO).thenApply(createdChatRoom -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
@@ -49,7 +56,7 @@ public class ChatController {
     @GetMapping("/getChatById/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatById(@PathVariable Long id) {
-        return _service.getChatById(id).thenApply(existingChat -> {
+        return service.getChatById(id).thenApply(existingChat -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
@@ -71,7 +78,7 @@ public class ChatController {
     @GetMapping("/getChatByParticipant")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatByParticipant(@RequestParam Long senderId, Long recipientId) {
-        return _service.getChatByParticipant(senderId, recipientId).thenApply(existingChat -> {
+        return service.getChatByParticipant(senderId, recipientId).thenApply(existingChat -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
@@ -93,7 +100,7 @@ public class ChatController {
     @GetMapping("/allChats")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDTO>>>> getAllChats() {
-        return _service.getAllChats().thenApply(chats -> {
+        return service.getAllChats().thenApply(chats -> {
             ApiResponse<List<ChatDTO>> response;
             HttpStatus status;
             String message;
@@ -115,7 +122,7 @@ public class ChatController {
     @PostMapping("/createMessage")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<MessageDTO>>> createMessage(@RequestBody MessageCreateDTO messageCreateDTO) {
-        return _service.createMessage(messageCreateDTO).thenApply(createdMessage -> {
+        return service.createMessage(messageCreateDTO).thenApply(createdMessage -> {
             String message;
             HttpStatus status = switch (createdMessage) {
                 case 1 -> {
@@ -140,7 +147,7 @@ public class ChatController {
     @GetMapping("/allMessages/{chatId}/{userId}/{participantId}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long chatId, @PathVariable Long userId, @PathVariable Long participantId) {
-        return _service.getAllMessages(chatId, userId, participantId).thenApply(messages -> {
+        return service.getAllMessages(chatId, userId, participantId).thenApply(messages -> {
             ApiResponse<List<MessageDTO>> response;
             HttpStatus status;
             String message;
@@ -163,7 +170,7 @@ public class ChatController {
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails(@PathVariable Long userId) {
         // Fetch all chats with details asynchronously and return the result
-        return _service.getAllChatsWithDetails(userId).thenApplyAsync(chats -> {
+        return service.getAllChatsWithDetails(userId).thenApplyAsync(chats -> {
             ApiResponse<List<ChatDetailsDTO>> response;
             HttpStatus status;
             String message;
@@ -182,30 +189,25 @@ public class ChatController {
         });
     }
 
-    @MessageMapping("/chatroom")
-    @SendTo("/topic/chatroom")
-    public ChatCreateDTO broadcastChat(@Payload ChatCreateDTO chatCreateDTO) {
-        // Save the message to the database
-        CompletableFuture.runAsync(() -> {
-            _service.createChat(chatCreateDTO);
-        });
+    @MessageMapping("/chat.sendMessage/{roomId}")
+    public void sendMessage(@DestinationVariable String roomId, @Payload MessageWS message, SimpMessageHeaderAccessor headerAccessor) {
+        // Automatically mark the user as online when they send a message
+        headerAccessor.getSessionAttributes().put("participantId", message.getSenderId());
+        headerAccessor.getSessionAttributes().put("participantName", message.getSenderName());
+        headerAccessor.getSessionAttributes().put("roomId", roomId);
+        message.setMessageType(MessageType.CHAT);
+        message.setMessageStatus(MessageStatus.SENT);
 
-        // Return the input DTO to be broadcasted to clients
-        return chatCreateDTO;
+        // Send the message to the specific room
+        messageSendOperation.convertAndSend("/topic/room/" + roomId, message);
     }
 
-    @MessageMapping("/chat")
-    @SendTo("/topic/chat")
-    public CompletableFuture<MessageCreateDTO> broadcastMessage(@Payload MessageCreateDTO messageCreateDTO) {
-        // Save the message to the database asynchronously
-        CompletableFuture<Void> saveTask = CompletableFuture.runAsync(() -> {
-            _service.createMessage(messageCreateDTO).join(); // Save and wait for completion in the background
-        });
-
-        // Broadcast the message asynchronously
-        return CompletableFuture.supplyAsync(() -> {
-            // Directly return the DTO for broadcasting
-            return messageCreateDTO;
-        });
+    @MessageMapping("/chat.addParticipant/{roomId}")
+    public void addParticipant(@DestinationVariable String roomId, @Payload MessageWS message, SimpMessageHeaderAccessor headerAccessor) {
+        // Add participant name in web socket session
+        headerAccessor.getSessionAttributes().put("participantName", message.getSenderName());
+        headerAccessor.getSessionAttributes().put("roomId", roomId);
+        message.setMessageType(MessageType.ONLINE);
+        messageSendOperation.convertAndSend("/topic/room/" + roomId, message);
     }
 }

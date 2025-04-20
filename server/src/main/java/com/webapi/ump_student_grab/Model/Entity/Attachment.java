@@ -1,4 +1,4 @@
-package com.webapi.ump_student_grab.Model;
+package com.webapi.ump_student_grab.Model.Entity;
 
 import jakarta.persistence.*;
 

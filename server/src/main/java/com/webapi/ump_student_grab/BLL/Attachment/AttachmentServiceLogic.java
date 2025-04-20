@@ -4,7 +4,7 @@ import com.webapi.ump_student_grab.DLL.Attachment.IAttachmentRepository;
 import com.webapi.ump_student_grab.DLL.User.IUserRepository;
 import com.webapi.ump_student_grab.DTO.AttachmentDTO.AttachmentDTO;
 import com.webapi.ump_student_grab.Mapper.AttachmentMapper;
-import com.webapi.ump_student_grab.Model.Attachment;
+import com.webapi.ump_student_grab.Model.Entity.Attachment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;

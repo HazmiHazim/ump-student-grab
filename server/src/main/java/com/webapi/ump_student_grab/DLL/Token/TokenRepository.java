@@ -1,6 +1,6 @@
 package com.webapi.ump_student_grab.DLL.Token;
 
-import com.webapi.ump_student_grab.Model.Token;
+import com.webapi.ump_student_grab.Model.Entity.Token;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;

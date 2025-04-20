@@ -1,7 +1,7 @@
 package com.webapi.ump_student_grab.Mapper;
 
 import com.webapi.ump_student_grab.DTO.AttachmentDTO.AttachmentDTO;
-import com.webapi.ump_student_grab.Model.Attachment;
+import com.webapi.ump_student_grab.Model.Entity.Attachment;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

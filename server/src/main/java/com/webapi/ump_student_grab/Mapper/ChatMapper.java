@@ -1,9 +1,8 @@
 package com.webapi.ump_student_grab.Mapper;
 
 import com.webapi.ump_student_grab.DTO.ChatDTO.*;
-import com.webapi.ump_student_grab.Model.Chat;
-import com.webapi.ump_student_grab.Model.Message;
-import com.webapi.ump_student_grab.Model.User;
+import com.webapi.ump_student_grab.Model.Entity.Chat;
+import com.webapi.ump_student_grab.Model.Entity.Message;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -19,5 +18,5 @@ public interface ChatMapper {
     List<ChatDTO> chatListToChatDTOList(List<Chat> chats);
     Message messageDTOToMessage(MessageCreateDTO messageDTO);
     List<MessageDTO> messageListToMessageDTOList(List<Message> messages);
-    ChatDetailsDTO chatToChatDetailsDTO(Long chatId, Long senderId, Long recipientId, String recipientFullName, String lastMessage);
+    ChatDetailsDTO chatToChatDetailsDTO(Long chatId, Long senderId, String senderFullName, Long recipientId, String recipientFullName, String lastMessage);
 }

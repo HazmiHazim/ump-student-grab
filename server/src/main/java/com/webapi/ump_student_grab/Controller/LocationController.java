@@ -4,7 +4,7 @@ import com.webapi.ump_student_grab.BLL.Location.ILocationServiceLogic;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationCreateDTO;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationDTO;
 import com.webapi.ump_student_grab.DTO.LocationDTO.LocationUpdateDTO;
-import com.webapi.ump_student_grab.Model.ApiResponse;
+import com.webapi.ump_student_grab.Model.Entity.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;

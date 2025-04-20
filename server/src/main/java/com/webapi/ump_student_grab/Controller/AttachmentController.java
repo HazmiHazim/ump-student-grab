@@ -2,7 +2,7 @@ package com.webapi.ump_student_grab.Controller;
 
 import com.webapi.ump_student_grab.BLL.Attachment.IAttachmentServiceLogic;
 import com.webapi.ump_student_grab.DTO.AttachmentDTO.AttachmentDTO;
-import com.webapi.ump_student_grab.Model.ApiResponse;
+import com.webapi.ump_student_grab.Model.Entity.ApiResponse;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

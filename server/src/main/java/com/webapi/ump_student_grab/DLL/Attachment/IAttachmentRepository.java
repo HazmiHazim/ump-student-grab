@@ -1,6 +1,6 @@
 package com.webapi.ump_student_grab.DLL.Attachment;
 
-import com.webapi.ump_student_grab.Model.Attachment;
+import com.webapi.ump_student_grab.Model.Entity.Attachment;
 
 import java.util.concurrent.CompletableFuture;
 

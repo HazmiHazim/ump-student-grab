@@ -1,6 +1,6 @@
 package com.webapi.ump_student_grab.DLL.User;
 
-import com.webapi.ump_student_grab.Model.User;
+import com.webapi.ump_student_grab.Model.Entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
