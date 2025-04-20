@@ -61,43 +61,58 @@ class _MainChatScreenState extends State<MainChatScreen> {
     //   {"recipientName": "Bob", "lastMessage": "See you tomorrow."},
     //   {"recipientName": "Charlie", "lastMessage": "Let's catch up soon!"},
     // ];
+    return FutureBuilder<int?>(
+      future: _getCurrentUserId(),
+      builder: (context, userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-    return Consumer<ChatService>(
-      builder: (context, chatService, child) {
-        return FutureBuilder<List<ChatResponse>>(
-          future: chatService.getAllChats(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
+        if (userSnapshot.hasError || userSnapshot.data == null) {
+          return Center(child: Text('Failed to load user'));
+        }
 
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
+        final currentUserId = userSnapshot.data!;
 
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No chats available.'));
-            }
+        return Consumer<ChatService>(
+          builder: (context, chatService, child) {
+            return FutureBuilder<List<ChatResponse>>(
+              future: chatService.getAllChats(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
 
-            final chats = snapshot.data!;
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
 
-            return SingleChildScrollView(
-              reverse: false,
-              child: Column(
-                children: chats.map((chat) {
-                  return InkWell(
-                    onTap: () => _navigateToChatRoom(context, chat),
-                    child: CustomChatList(
-                      recipientName: chat.recipientName,
-                      lastMessage: chat.lastMessage,
-                    ),
-                  );
-                }).toList(),
-              ),
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No chats available.'));
+                }
+
+                final chats = snapshot.data!;
+
+                return SingleChildScrollView(
+                  reverse: false,
+                  child: Column(
+                    children: chats.map((chat) {
+                      return InkWell(
+                        onTap: () => _navigateToChatRoom(context, chat),
+                        child: CustomChatList(
+                          recipientName: chat.senderId == currentUserId ? chat
+                              .recipientName : chat.senderName,
+                          lastMessage: chat.lastMessage,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
             );
           },
         );
-      },
+      }
     );
   }
 }

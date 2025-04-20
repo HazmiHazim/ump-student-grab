@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/BL/chat_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
+import 'package:ump_student_grab_mobile/Model/chat_message.dart';
 import 'package:ump_student_grab_mobile/Model/message_response.dart';
+import 'package:ump_student_grab_mobile/Model/message_websocket.dart';
 import '../../Model/user.dart';
 import '../../util/shared_preferences_util.dart';
 
@@ -18,7 +20,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late int chatId;
   late int recipientId;
   final TextEditingController chatInputController = TextEditingController();
-  final List<MessageResponse> messages = [];
+  //final List<MessageWebsocket> messages = [];
+  final List<ChatMessage> messages = [];
   late ChatWebsocketService chatWebsocketService;
 
   @override
@@ -30,13 +33,14 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
 
     // Initialize ChatWebsocketService
     chatWebsocketService = Provider.of<ChatWebsocketService>(context, listen: false);
-    chatWebsocketService.startConnection();
+    chatWebsocketService.startConnection(chatId.toString());
 
     // Subscribe to WebSocket messages
     chatWebsocketService.addListener(() {
       setState(() {
-        messages.clear();
-        messages.addAll(chatWebsocketService.messages);
+        //messages.clear();
+        //messages.addAll(chatWebsocketService.messages);
+        messages.add(chatWebsocketService.latestMessage);
       });
     });
 
@@ -49,7 +53,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     final fetchedMessages = await chatService.getAllMessages(chatId, recipientId);
     if (fetchedMessages != null) {
       setState(() {
-        messages.addAll(fetchedMessages);
+        messages.addAll(fetchedMessages.map((msg) => ChatMessage.fromMessageResponse(msg)));
       });
     }
   }
@@ -79,6 +83,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           }
 
           int currentUserId = userSnapshot.data!.id;
+          String currentUserName = userSnapshot.data!.fullName;
 
           return Column(
             children: [
@@ -135,32 +140,13 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       icon: Icon(Icons.send, color: Color.fromRGBO(0, 159, 160, 100)),
                       onPressed: () {
                         if (chatInputController.text.isNotEmpty) {
-                          DateTime now = DateTime.now();
-
-                          // Create a temporary message that will be displayed immediately
-                          final newMessage = MessageResponse(
-                            status: 1,
-                            content: chatInputController.text,
-                            attachment: "",
-                            userId: currentUserId,
-                            createdAt: now,
-                            modifiedAt: now,
-                            isSuccess: true,
-                            responseMessage: "Message Sent",
-                          );
-
-                          // Temporarily add the message to the list for instant UI update
-                          setState(() {
-                            messages.add(newMessage);
-                          });
-
+                          // Send message via WebSocket
                           chatWebsocketService.sendMessage(
-                            chatInputController.text,
-                            "",
                             currentUserId,
-                            chatId,
+                            currentUserName,
+                            chatInputController.text,
                           );
-
+                          // Clear the input box
                           chatInputController.clear();
                         }
                       },

@@ -31,7 +31,7 @@ class AuthService with ChangeNotifier {
 
   // Sign up service
   Future<AuthResponse> signup(String email, String password, String fullName, String matricNo, String phoneNo, String role) async {
-    final url = Uri.parse("http://$appDomain:$appPort/api/users/create");
+    final url = Uri.parse("http://$appDomain:$appPort/api/users");
     final response = await http.post(
         url,
         headers: {
@@ -119,12 +119,15 @@ class AuthService with ChangeNotifier {
 
   // Logout service
   Future<AuthResponse> logout(String userToken) async {
+    String? token = user?.token;
+    print("Token: $token");
 
-    final url = Uri.parse("http://$appDomain:$appPort/api/users/logout/$userToken");
+    final url = Uri.parse("http://$appDomain:$appPort/api/users/logout");
     final response = await http.post(
         url,
         headers: {
           "Content-Type": "application/json",
+          "Authorization": "Bearer ${user?.token}",
         }
     );
 
@@ -152,12 +155,15 @@ class AuthService with ChangeNotifier {
 
   // Forgot password service
   Future<AuthResponse> forgotPassword(String email) async {
-    final url = Uri.parse("http://$appDomain:$appPort/api/users/forgotPassword?email=$email");
+    final url = Uri.parse("http://$appDomain:$appPort/api/users/forgot-password");
     final response = await http.post(
         url,
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+        body: json.encode({
+          "email": email,
+        })
     );
 
     final responseJson = json.decode(response.body);

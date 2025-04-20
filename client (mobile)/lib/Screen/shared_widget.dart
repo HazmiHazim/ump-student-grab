@@ -64,7 +64,7 @@ class _SharedWidgetState extends State<SharedWidget> with SingleTickerProviderSt
     final chatWebsocketService = Provider.of<ChatWebsocketService>(context, listen: false);
 
     if (_selectedScreen == 2) {
-      chatWebsocketService.startConnection();
+      //chatWebsocketService.startConnection();
     } else {
       chatWebsocketService.stopConnection();
     }

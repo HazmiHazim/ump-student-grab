@@ -42,6 +42,7 @@ class ChatService with ChangeNotifier {
       for (var chat in responseJson["data"]) {
         int chatId = chat["chatId"];
         int senderId = chat["senderId"];
+        String senderName = chat["senderFullName"] ?? "";
         int recipientId = chat["recipientId"];
         String recipientName = chat["recipientFullName"] ?? "";
         String lastMessage = chat["lastMessage"] ?? "";
@@ -49,6 +50,7 @@ class ChatService with ChangeNotifier {
           status: response.statusCode,
           chatId: chatId,
           senderId: senderId,
+          senderName: senderName,
           recipientId: recipientId,
           recipientName: recipientName,
           lastMessage: lastMessage,
