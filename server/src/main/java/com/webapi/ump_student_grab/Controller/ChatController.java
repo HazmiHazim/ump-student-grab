@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
@@ -31,7 +30,7 @@ public class ChatController {
         this.messageSendOperation = messageSendOperation;
     }
 
-    @PostMapping("/createChat")
+    @PostMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> createChat(@RequestBody ChatCreateDTO chatCreateDTO) {
         return service.createChat(chatCreateDTO).thenApply(createdChatRoom -> {
@@ -53,7 +52,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/getChatById/{id}")
+    @GetMapping("/{id}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatById(@PathVariable Long id) {
         return service.getChatById(id).thenApply(existingChat -> {
@@ -75,7 +74,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/getChatByParticipant")
+    @GetMapping("/participant")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatByParticipant(@RequestParam Long senderId, Long recipientId) {
         return service.getChatByParticipant(senderId, recipientId).thenApply(existingChat -> {
@@ -97,7 +96,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/allChats")
+    @GetMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDTO>>>> getAllChats() {
         return service.getAllChats().thenApply(chats -> {
@@ -119,7 +118,7 @@ public class ChatController {
         });
     }
 
-    @PostMapping("/createMessage")
+    @PostMapping("/message")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<MessageDTO>>> createMessage(@RequestBody MessageCreateDTO messageCreateDTO) {
         return service.createMessage(messageCreateDTO).thenApply(createdMessage -> {
@@ -144,7 +143,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/allMessages/{chatId}/{userId}/{participantId}")
+    @GetMapping("/message/{chatId}/{userId}/{participantId}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long chatId, @PathVariable Long userId, @PathVariable Long participantId) {
         return service.getAllMessages(chatId, userId, participantId).thenApply(messages -> {
@@ -166,7 +165,7 @@ public class ChatController {
         });
     }
 
-    @GetMapping("/allChatsDetails/{userId}")
+    @GetMapping("/details/{userId}")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails(@PathVariable Long userId) {
         // Fetch all chats with details asynchronously and return the result
@@ -197,6 +196,7 @@ public class ChatController {
         headerAccessor.getSessionAttributes().put("roomId", roomId);
         message.setMessageType(MessageType.CHAT);
         message.setMessageStatus(MessageStatus.SENT);
+        service.messageBuffer(message);
 
         // Send the message to the specific room
         messageSendOperation.convertAndSend("/topic/room/" + roomId, message);

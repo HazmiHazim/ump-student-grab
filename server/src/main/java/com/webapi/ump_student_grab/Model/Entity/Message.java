@@ -77,6 +77,10 @@ public class Message {
         this.chatId = chatId;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -87,7 +91,6 @@ public class Message {
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
 

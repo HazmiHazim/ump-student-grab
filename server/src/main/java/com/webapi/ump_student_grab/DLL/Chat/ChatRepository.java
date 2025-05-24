@@ -100,4 +100,17 @@ public class ChatRepository implements IChatRepository {
 
         return CompletableFuture.completedFuture(message);
     }
+
+    @Override
+    @Async
+    @Transactional
+    public CompletableFuture<Void> batchInsertAllMessages(List<Message> messages) {
+        for (Message message : messages) {
+            entityManager.persist(message);
+            entityManager.flush();
+            entityManager.clear();
+        }
+
+        return CompletableFuture.completedFuture(null);
+    }
 }

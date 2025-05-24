@@ -11,45 +11,51 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 @Service
 public class ChatServiceLogic implements IChatServiceLogic{
 
-    private IChatRepository _repo;
-    private ChatMapper _mapper;
-    private IUserRepository _uRepo;
+    private final IChatRepository repo;
+    private final ChatMapper mapper;
+    private final IUserRepository uRepo;
+    private final Queue<Message> messageQueue;
+    private long lastFlushTime;
 
     public ChatServiceLogic(IChatRepository repo, ChatMapper mapper, IUserRepository uRepo) {
-        this._repo = repo;
-        this._mapper = mapper;
-        this._uRepo = uRepo;
+        this.repo = repo;
+        this.mapper = mapper;
+        this.uRepo = uRepo;
+        this.messageQueue = new ConcurrentLinkedQueue<>();
+        this.lastFlushTime = System.currentTimeMillis();
     }
 
     @Override
     public CompletableFuture<ChatDTO> createChat(ChatCreateDTO chatCreateDTO) {
-        return _repo.getChatByParticipant(chatCreateDTO.getSenderId(), chatCreateDTO.getRecipientId())
+        return repo.getChatByParticipant(chatCreateDTO.getSenderId(), chatCreateDTO.getRecipientId())
                 .thenCompose(existingChat -> {
                     if (existingChat != null) {
                         return CompletableFuture.completedFuture(null);
                     }
 
-                    return _uRepo.getUserById(chatCreateDTO.getSenderId()).thenCompose(user1 -> {
+                    return uRepo.getUserById(chatCreateDTO.getSenderId()).thenCompose(user1 -> {
                         if (user1 == null) {
                             return CompletableFuture.completedFuture(null);
                         }
 
-                        return _uRepo.getUserById(chatCreateDTO.getRecipientId()).thenCompose(user2 -> {
+                        return uRepo.getUserById(chatCreateDTO.getRecipientId()).thenCompose(user2 -> {
                             if (user2 == null) {
                                 return CompletableFuture.completedFuture(null);
                             }
 
                             // Map ChatCreateDTO to Chat entity
-                            Chat chat = _mapper.chatCreateDTOToChat(chatCreateDTO);
+                            Chat chat = mapper.chatCreateDTOToChat(chatCreateDTO);
 
                             // Create chat and map the created chat entity to ChatDTO
-                            return _repo.createChat(chat).thenApply(_mapper::chatToChatDTO);
+                            return repo.createChat(chat).thenApply(mapper::chatToChatDTO);
                         });
                     });
                 });
@@ -57,45 +63,45 @@ public class ChatServiceLogic implements IChatServiceLogic{
 
     @Override
     public CompletableFuture<ChatDTO> getChatById(Long id) {
-        return _repo.getChatById(id).thenApply(_mapper::chatToChatDTO);
+        return repo.getChatById(id).thenApply(mapper::chatToChatDTO);
     }
 
     @Override
     public CompletableFuture<ChatDTO> getChatByParticipant(Long senderId, Long recipientId) {
-        return _repo.getChatByParticipant(senderId, recipientId).thenApply(_mapper::chatToChatDTO);
+        return repo.getChatByParticipant(senderId, recipientId).thenApply(mapper::chatToChatDTO);
     }
 
     @Override
     public CompletableFuture<List<ChatDTO>> getAllChats() {
-        return _repo.getAllChats().thenApply(_mapper::chatListToChatDTOList);
+        return repo.getAllChats().thenApply(mapper::chatListToChatDTOList);
     }
 
     @Override
     public CompletableFuture<Integer> createMessage(MessageCreateDTO messageCreateDTO) {
-        return _uRepo.getUserById(messageCreateDTO.getUserId()).thenCompose(user -> {
+        return uRepo.getUserById(messageCreateDTO.getUserId()).thenCompose(user -> {
             if (user == null) {
                 return CompletableFuture.completedFuture(1);
             }
 
-            return _repo.getChatById(messageCreateDTO.getChatId()).thenCompose(chat -> {
+            return repo.getChatById(messageCreateDTO.getChatId()).thenCompose(chat -> {
                 if (chat == null) {
                     return CompletableFuture.completedFuture(2);
                 }
 
-                return _repo.createMessage(_mapper.messageDTOToMessage(messageCreateDTO)).thenApply(v -> 0);
+                return repo.createMessage(mapper.messageDTOToMessage(messageCreateDTO)).thenApply(v -> 0);
             });
         });
     }
 
     @Override
     public CompletableFuture<List<MessageDTO>> getAllMessages(Long chatId, Long userId, Long participantId) {
-        return _repo.getAllMessages(chatId, userId, participantId).thenApply(_mapper::messageListToMessageDTOList);
+        return repo.getAllMessages(chatId, userId, participantId).thenApply(mapper::messageListToMessageDTOList);
     }
 
     @Override
     public CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails(Long userId) {
         // Get all chats asynchronously from the repository
-        return _repo.getAllChats().thenCompose(chats -> {
+        return repo.getAllChats().thenCompose(chats -> {
             if (chats == null || chats.isEmpty()) {
                 return CompletableFuture.completedFuture(new ArrayList<ChatDetailsDTO>());  // Return empty list if no chats
             }
@@ -108,9 +114,9 @@ public class ChatServiceLogic implements IChatServiceLogic{
             // List to store all CompletableFutures for chat details
             List<CompletableFuture<ChatDetailsDTO>> futureChatDetailsList = filteredChats.stream().map(chat -> {
                 // Fetch recipient and last message asynchronously
-                CompletableFuture<User> recipientFuture = _uRepo.getUserById(chat.getRecipientId());
-                CompletableFuture<User> senderFuture = _uRepo.getUserById(chat.getSenderId());
-                CompletableFuture<Message> lastMessageFuture = _repo.getLastMessage(chat.getId());
+                CompletableFuture<User> recipientFuture = uRepo.getUserById(chat.getRecipientId());
+                CompletableFuture<User> senderFuture = uRepo.getUserById(chat.getSenderId());
+                CompletableFuture<Message> lastMessageFuture = repo.getLastMessage(chat.getId());
 
                 CompletableFuture<Void> all = CompletableFuture.allOf(senderFuture, recipientFuture, lastMessageFuture);
 
@@ -120,7 +126,7 @@ public class ChatServiceLogic implements IChatServiceLogic{
                     User recipient = recipientFuture.join();
                     Message lastMessage = lastMessageFuture.join();
 
-                    return _mapper.chatToChatDetailsDTO(
+                    return mapper.chatToChatDetailsDTO(
                             chat.getId(),
                             chat.getSenderId(),
                             sender.getFullName(),
@@ -137,5 +143,23 @@ public class ChatServiceLogic implements IChatServiceLogic{
                             .map(CompletableFuture::join)  // Join each CompletableFuture to get the result
                             .collect(Collectors.toList()));  // Collect the results in a list
         });
+    }
+
+    // Use synchronized because only one thread at a time can execute this method on the same instance of this class.
+    public synchronized void messageBuffer(MessageWS messageWS) {
+        Message message = mapper.messageWSToMessage(messageWS);
+        messageQueue.add(message);
+
+        // Get current time
+        long currentTime = System.currentTimeMillis();
+        long timeSinceLastFlush = currentTime - lastFlushTime;
+
+        int MAX_SIZE_MESSAGE_BUFFER = 5;
+        if (messageQueue.size() >= MAX_SIZE_MESSAGE_BUFFER || timeSinceLastFlush >= 5000) {
+            List<Message> messageList = new ArrayList<>(messageQueue);
+            messageQueue.clear();
+            lastFlushTime = currentTime; // Update flush time
+            repo.batchInsertMessages(messageList);
+        }
     }
 }
