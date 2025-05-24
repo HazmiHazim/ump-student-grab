@@ -159,7 +159,7 @@ public class ChatServiceLogic implements IChatServiceLogic{
             List<Message> messageList = new ArrayList<>(messageQueue);
             messageQueue.clear();
             lastFlushTime = currentTime; // Update flush time
-            repo.batchInsertMessages(messageList);
+            repo.batchInsertAllMessages(messageList);
         }
     }
 }
