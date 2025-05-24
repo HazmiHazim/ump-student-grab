@@ -85,13 +85,12 @@ public class Message {
         return createdAt;
     }
 
-    public LocalDateTime getModifiedAt() {
-        return modifiedAt;
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.modifiedAt = LocalDateTime.now();
+    public LocalDateTime getModifiedAt() {
+        return modifiedAt;
     }
 
     @PreUpdate

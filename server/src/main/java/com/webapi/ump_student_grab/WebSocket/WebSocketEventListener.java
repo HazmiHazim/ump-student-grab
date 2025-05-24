@@ -20,12 +20,12 @@ public class WebSocketEventListener {
         String participantName = (String) headerAccessor.getSessionAttributes().get("participantName");
         String roomId = (String) headerAccessor.getSessionAttributes().get("roomId");
 
-        if (participantName != null) {
-            MessageWS messageWS = new MessageWS();
-            messageWS.setMessageType(MessageType.OFFLINE);
-            messageWS.setSenderName(participantName);
-
-            messageTemplate.convertAndSend("/topic/room/" + roomId, messageWS);
-        }
+//        if (participantName != null) {
+//            MessageWS messageWS = new MessageWS();
+//            messageWS.setMessageType(MessageType.OFFLINE);
+//            messageWS.setSenderName(participantName);
+//
+//            messageTemplate.convertAndSend("/topic/room/" + roomId, messageWS);
+//        }
     }
 }

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -64,6 +65,14 @@ public class ChatRepository implements IChatRepository {
     @Async
     @Transactional
     public CompletableFuture<Message> createMessage(Message message) {
+        if (message.getCreatedAt() == null) {
+            message.setCreatedAt(LocalDateTime.now());
+        }
+
+        if (message.getModifiedAt() == null) {
+            message.setModifiedAt(LocalDateTime.now());
+        }
+
         entityManager.persist(message);
         entityManager.flush();
         return CompletableFuture.completedFuture(message);

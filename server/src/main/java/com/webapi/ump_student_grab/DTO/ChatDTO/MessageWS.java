@@ -4,10 +4,9 @@ import com.webapi.ump_student_grab.Model.Enum.MessageStatus;
 import com.webapi.ump_student_grab.Model.Enum.MessageType;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class MessageWS {
-    private String id;
+    private Long chatId;
     private Long senderId;
     private String senderName;
     private String content;
@@ -17,13 +16,8 @@ public class MessageWS {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-    // Default constructor
-    public MessageWS() {
-        this.id = UUID.randomUUID().toString(); // Generate a random UUID
-    }
-
-    public MessageWS(Long senderId, String senderName, String content, MessageStatus messageStatus, MessageType messageType, Boolean isRead, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = UUID.randomUUID().toString(); // Generate a random UUID
+    public MessageWS(Long chatId, Long senderId, String senderName, String content, MessageStatus messageStatus, MessageType messageType, Boolean isRead, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.chatId = chatId;
         this.senderId = senderId;
         this.senderName = senderName;
         this.content = content;
@@ -34,12 +28,12 @@ public class MessageWS {
         this.modifiedAt = modifiedAt;
     }
 
-    public String getId() {
-        return id;
+    public Long getChatId() {
+        return chatId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public Long getSenderId() {
