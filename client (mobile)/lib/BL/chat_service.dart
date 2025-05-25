@@ -26,7 +26,7 @@ class ChatService with ChangeNotifier {
     final userId = user.id;
     //print("Current user id: $userId");
 
-    final url = Uri.parse("http://$appDomain:$appPort/api/chats/allChatsDetails/$userId");
+    final url = Uri.parse("http://$appDomain:$appPort/api/chats/details/$userId");
     final response = await http.get(
         url,
         headers: { "Content-Type": "application/json" }
@@ -74,7 +74,7 @@ class ChatService with ChangeNotifier {
 
     final userId = user.id;
     //print("User ID: $userId");
-    final url = Uri.parse("http://$appDomain:$appPort/api/chats/allMessages/$chatId/$userId/$participantId");
+    final url = Uri.parse("http://$appDomain:$appPort/api/chats/message/$chatId/$userId/$participantId");
     final response = await http.get(
         url,
         headers: { "Content-Type": "application/json" }

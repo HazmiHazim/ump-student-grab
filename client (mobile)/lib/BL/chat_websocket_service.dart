@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:ump_student_grab_mobile/Model/chat_message.dart';
-import 'package:ump_student_grab_mobile/Model/message_response.dart';
 import 'package:ump_student_grab_mobile/Model/message_websocket.dart';
 
 class ChatWebsocketService with ChangeNotifier {
@@ -12,11 +11,7 @@ class ChatWebsocketService with ChangeNotifier {
   final String appPort = dotenv.get("APP_PORT");
   late StompClient stompClient;
   late StompFrame stompFrame;
-  //List<MessageResponse> _messages = [];
   String? _roomId; // store roomId here
-
-  // Getter to access the chats list
-  //List<MessageResponse> get messages => _messages;
 
   List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
@@ -54,7 +49,6 @@ class ChatWebsocketService with ChangeNotifier {
 
   // Called when a message is received from the server
   void onMessageReceived(StompFrame frame) {
-    print("HEHEHEHEHHE");
     print('Received message: ${frame.body}');
     try {
       // final List<dynamic> data = jsonDecode(frame.body!);
@@ -88,10 +82,11 @@ class ChatWebsocketService with ChangeNotifier {
   }
 
   // Send a message via WebSocket
-  void sendMessage(int userId, String senderName, String messageContent) {
+  void sendMessage(int chatId, int userId, String senderName, String messageContent) {
     DateTime now = DateTime.now();
 
     final message = {
+      "chatId": chatId,
       "senderId": userId,
       "senderName": senderName,
       "content": messageContent,

@@ -90,6 +90,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ) : Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
+        width: double.infinity,
         height: 80,
         color: Colors.white,
         child: Row(

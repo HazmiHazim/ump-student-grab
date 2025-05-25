@@ -1,5 +1,4 @@
 class MessageWebsocket {
-  final String id;
   final int senderId;
   final String senderName;
   final String content;
@@ -10,7 +9,6 @@ class MessageWebsocket {
   final DateTime modifiedAt;
 
   MessageWebsocket({
-    required this.id,
     required this.senderId,
     required this.senderName,
     required this.content,
@@ -24,7 +22,6 @@ class MessageWebsocket {
   // Factory constructor to create from JSON
   factory MessageWebsocket.fromJson(Map<String, dynamic> json) {
     return MessageWebsocket(
-        id: json["id"],
         senderId: json["senderId"],
         senderName: json["senderName"],
         content: json["content"],

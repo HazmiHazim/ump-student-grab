@@ -31,7 +31,7 @@ class User {
         role: json["role"],
         attachmentId: json["attachmentId"],
         isVerified: json["isVerified"],
-      token: json["token"]
+        token: json["token"]
     );
   }
 }

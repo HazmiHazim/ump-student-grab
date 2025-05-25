@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/BL/chat_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
 import 'package:ump_student_grab_mobile/Model/chat_message.dart';
-import 'package:ump_student_grab_mobile/Model/message_response.dart';
-import 'package:ump_student_grab_mobile/Model/message_websocket.dart';
 import '../../Model/user.dart';
 import '../../util/shared_preferences_util.dart';
 
@@ -20,32 +18,45 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late int chatId;
   late int recipientId;
   final TextEditingController chatInputController = TextEditingController();
-  //final List<MessageWebsocket> messages = [];
   final List<ChatMessage> messages = [];
   late ChatWebsocketService chatWebsocketService;
+  late Future<User?> userFuture;
+  final ScrollController scrollController = ScrollController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    chatId = arguments['chatId'];
-    recipientId = arguments['recipientId'];
+  void initState() {
+    super.initState();
+    userFuture = SharedPreferencesUtil.loadUser();
 
-    // Initialize ChatWebsocketService
-    chatWebsocketService = Provider.of<ChatWebsocketService>(context, listen: false);
-    chatWebsocketService.startConnection(chatId.toString());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      chatId = args['chatId'];
+      recipientId = args['recipientId'];
 
-    // Subscribe to WebSocket messages
-    chatWebsocketService.addListener(() {
-      setState(() {
-        //messages.clear();
-        //messages.addAll(chatWebsocketService.messages);
-        messages.add(chatWebsocketService.latestMessage);
+      chatWebsocketService = Provider.of<ChatWebsocketService>(context, listen: false);
+      chatWebsocketService.startConnection(chatId.toString());
+
+      chatWebsocketService.addListener(() {
+        final newMessage = chatWebsocketService.latestMessage;
+
+        // Check if the message already exists in the list (by ID)
+        final exists = messages.any((msg) => msg.createdAt == newMessage.createdAt);
+
+        if (!exists) {
+          setState(() {
+            messages.add(newMessage);
+          });
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (scrollController.hasClients) {
+              scrollController.jumpTo(scrollController.position.minScrollExtent);
+            }
+          });
+        }
       });
-    });
 
-    // Fetch initial messages
-    fetchInitialMessages();
+      fetchInitialMessages();
+    });
   }
 
   Future<void> fetchInitialMessages() async {
@@ -55,12 +66,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       setState(() {
         messages.addAll(fetchedMessages.map((msg) => ChatMessage.fromMessageResponse(msg)));
       });
+
+      // Scroll to bottom after loading messages
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      }
     }
   }
 
   @override
   void dispose() {
     chatInputController.dispose();
+    scrollController.dispose();
     chatWebsocketService.stopConnection();
     super.dispose();
   }
@@ -68,53 +85,43 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Test Chat Room"),
-      ),
+      appBar: AppBar(title: Text("Test Chat Room")),
       body: FutureBuilder<User?>(
-        future: SharedPreferencesUtil.loadUser(),
+        future: userFuture,
         builder: (context, userSnapshot) {
           if (userSnapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-
           if (userSnapshot.hasError || !userSnapshot.hasData) {
             return Center(child: Text('Error: ${userSnapshot.error}'));
           }
 
-          int currentUserId = userSnapshot.data!.id;
-          String currentUserName = userSnapshot.data!.fullName;
+          final currentUserId = userSnapshot.data!.id;
+          final currentUserName = userSnapshot.data!.fullName;
 
           return Column(
             children: [
               Expanded(
-                child: SingleChildScrollView(
+                child: ListView.builder(
+                  controller: scrollController,
                   reverse: true,
-                  child: Column(
-                    children: messages.map((message) {
-                      bool isUserMessage = message.userId == currentUserId;
-
-                      return Align(
-                        alignment: isUserMessage
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.all(8.0),
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: isUserMessage
-                                ? Colors.green
-                                : Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Text(
-                            message.content,
-                            style: TextStyle(color: Colors.white),
-                          ),
+                  itemCount: messages.length,
+                  itemBuilder: (ctx, index) {
+                    final message = messages[messages.length - 1 - index]; // reverse order
+                    final isUserMessage = message.userId == currentUserId;
+                    return Align(
+                      alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: isUserMessage ? Colors.green : Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                      );
-                    }).toList(),
-                  ),
+                        child: Text(message.content, style: TextStyle(color: Colors.white)),
+                      ),
+                    );
+                  },
                 ),
               ),
               Padding(
@@ -142,6 +149,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                         if (chatInputController.text.isNotEmpty) {
                           // Send message via WebSocket
                           chatWebsocketService.sendMessage(
+                            chatId,
                             currentUserId,
                             currentUserName,
                             chatInputController.text,
@@ -161,3 +169,4 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
     );
   }
 }
+
