@@ -24,7 +24,7 @@ class CustomDraggableBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       initialChildSize: 0.4,  // Start at 40% of screen height
-      minChildSize: 0.4,      // Minimum when dragged down
+      minChildSize: 0.2,      // Minimum when dragged down
       maxChildSize: 0.65,      // Maximum when dragged up
       builder: (BuildContext context, scrollController) {
         return Container(
