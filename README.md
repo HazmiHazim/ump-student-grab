@@ -12,9 +12,11 @@
 <img src="images/welcome-page-3.png" width="150px" height="250px">
 </p>
 
-- **Login**
+- **Authentication**
 <p align="left">
-<img src="images/login.png" width="150px" height="250px">
+<img src="images/login-2.png" width="150px" height="250px">
+<img src="images/sign-up-page-1.png" width="150px" height="250px">
+<img src="images/sign-up-page-2.png" width="150px" height="250px">
 </p>
 
 - **Landing Page**
@@ -24,7 +26,8 @@
 
 - **Google Map (Location)**
 <p align="left">
-<img src="images/gmap.png" width="150px" height="250px">
+<img src="images/book-1.png" width="150px" height="250px">
+<img src="images/book-2.png" width="150px" height="250px">
 </p>
 
 - **Booking**
