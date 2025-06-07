@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/BL/chat_service.dart';
 import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
 import 'package:ump_student_grab_mobile/Model/chat_message.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import '../../Model/user.dart';
 import '../../util/shared_preferences_util.dart';
 
@@ -136,7 +137,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                           hintStyle: TextStyle(color: Colors.grey),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(color: Color.fromRGBO(0, 159, 160, 100)),
+                            borderSide: BorderSide(color: AppColor.primary),
                           ),
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
@@ -144,7 +145,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.send, color: Color.fromRGBO(0, 159, 160, 100)),
+                      icon: Icon(Icons.send, color: AppColor.primary),
                       onPressed: () {
                         if (chatInputController.text.isNotEmpty) {
                           // Send message via WebSocket

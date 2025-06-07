@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_booking_list_history.dart';
 
 class MainBookingScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class MainBookingScreen extends StatelessWidget {
             height: 350,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 159, 160, 245),
+              color: AppColor.transparentPrimary,
             ),
             child: Column(
               children: [
@@ -47,7 +48,7 @@ class MainBookingScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
+                      backgroundColor: AppColor.primary,
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, "/map-screen");

@@ -5,6 +5,7 @@ import 'package:ump_student_grab_mobile/Screen/shared_widget.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 import 'package:ump_student_grab_mobile/widget/custom_loading.dart';
 import '../../BL/auth_service.dart';
+import '../../theme/app_color.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(width: 5),
-              Text(text, style: const TextStyle(color: Color.fromRGBO(0, 159, 160, 100))),
+              Text(text, style: const TextStyle(color: AppColor.primary)),
             ],
           ),
         ),
@@ -147,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25),
                               ),
-                              backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
+                              backgroundColor: AppColor.primary,
                             ),
                             onPressed: _handleLogin,
                             child: const Text(
@@ -164,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: const Text(
                                   "Forgot password?",
-                                  style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                  style: TextStyle(color: AppColor.primary)
                               )
                           ),
                         ),
@@ -199,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: const Text(
                                       "Register",
-                                      style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                      style: TextStyle(color: AppColor.primary)
                                   )
                               ),
                             ],

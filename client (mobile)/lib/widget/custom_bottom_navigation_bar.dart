@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedScreen;
@@ -36,14 +37,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
                       : IconThemeData(color: Colors.black)
           ),
           labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
-                (Set<WidgetState> states) => states.contains(WidgetState.selected)
-                    ? const TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
-                    : const TextStyle(color: Colors.black),
+                (Set<WidgetState> states) => TextStyle(
+              color: states.contains(WidgetState.selected)
+                  ? AppColor.primary
+                  : AppColor.black,
+            ),
           ),
         ),
         child: NavigationBar(
           backgroundColor: Colors.white,
-          indicatorColor: Color.fromRGBO(0, 159, 160, 100),
+          indicatorColor: AppColor.primary,
           selectedIndex: selectedScreen,
           onDestinationSelected: onDestinationSelected,
           destinations: [

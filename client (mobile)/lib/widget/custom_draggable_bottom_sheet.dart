@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
 class CustomDraggableBottomSheet extends StatelessWidget {
   final DraggableScrollableController draggableController;
@@ -59,7 +60,7 @@ class CustomDraggableBottomSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                     backgroundColor: enableBookButton
-                        ? const Color.fromRGBO(0, 159, 160, 100)
+                        ? AppColor.primary
                         : Colors.grey.shade400, // Dimmed when disabled
                     minimumSize: const Size(double.infinity, 50), // Full width button
                   ),

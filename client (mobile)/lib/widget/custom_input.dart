@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
 class CustomInput extends StatefulWidget {
   final TextEditingController userInput;
@@ -57,7 +58,7 @@ class _CustomInputState extends State<CustomInput> {
             autofocus: false,
             obscureText: _obscureText,
             cursorHeight: 16.0,
-            cursorColor: const Color.fromRGBO(0, 159, 160, 100),
+            cursorColor: AppColor.primary,
             style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 105, 105, 105)),
             decoration: InputDecoration(
               labelText: widget.hintText,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ump_student_grab_mobile/Model/auth_response.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 import 'package:ump_student_grab_mobile/widget/custom_loading.dart';
 import '../../BL/auth_service.dart';
@@ -101,7 +102,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
+                                backgroundColor: AppColor.primary,
                               ),
                               onPressed: _handleForgotPassword,
                               child: const Text(
@@ -120,10 +121,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   },
                                   child: const Row(
                                     children: [
-                                      Icon(Icons.arrow_back, color: Color.fromRGBO(0, 159, 160, 100)),
+                                      Icon(Icons.arrow_back, color: AppColor.primary),
                                       Text(
                                         "Back to login",
-                                        style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                        style: TextStyle(color: AppColor.primary)
                                       )
                                     ],
                                   )

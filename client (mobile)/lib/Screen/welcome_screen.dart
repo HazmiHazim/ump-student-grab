@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/login_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_welcome_screen_container.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)
               ),
-              backgroundColor: Color.fromRGBO(0, 159, 160, 100),
+              backgroundColor: AppColor.primary,
               minimumSize: const Size.fromHeight(60)
             ),
             onPressed: () {
@@ -110,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 effect: WormEffect(
                   spacing: 15,
                   dotColor: Colors.blueGrey.shade300,
-                  activeDotColor: Color.fromRGBO(0, 159, 160, 100),
+                  activeDotColor: AppColor.primary,
                 ),
                 controller: pageController,
                 count: 4

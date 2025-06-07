@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -172,8 +173,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                backgroundColor: const Color.fromRGBO(0, 159, 160, 100),
-                                disabledBackgroundColor: const Color.fromRGBO(168, 196, 197, 100),
+                                backgroundColor: AppColor.primary,
+                                disabledBackgroundColor: AppColor.greyPrimary,
                               ),
                               onPressed: isButtonEnabled ? _handleFirstLayerSignup : null, // Disable if empty,
                               child: const Text(
@@ -192,10 +193,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   },
                                   child: const Row(
                                     children: [
-                                      Icon(Icons.arrow_back, color: Color.fromRGBO(0, 159, 160, 100)),
+                                      Icon(Icons.arrow_back, color: AppColor.primary),
                                       Text(
                                           "Back to login",
-                                          style: TextStyle(color: Color.fromRGBO(0, 159, 160, 100))
+                                          style: TextStyle(color: AppColor.primary)
                                       )
                                     ],
                                   )
