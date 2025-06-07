@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ump_student_grab_mobile/theme/app_color.dart';
+import "package:flutter_google_maps_webservices/places.dart";
 
 class CustomDraggableBottomSheet extends StatelessWidget {
   final DraggableScrollableController draggableController;
   final Radius borderRadiusTopLeft;
   final Radius borderRadiusTopRight;
   final bool enableBookButton;
+  final List<PlacesSearchResult> searchResults;
+  final void Function(String, double?, double?) onPlaceSelected;
 
   const CustomDraggableBottomSheet({
     super.key,
@@ -14,11 +16,16 @@ class CustomDraggableBottomSheet extends StatelessWidget {
     this.borderRadiusTopLeft = const Radius.circular(25.0),
     this.borderRadiusTopRight = const Radius.circular(25.0),
     required this.enableBookButton, // Parent controls this value
+    required this.searchResults,
+    required this.onPlaceSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      initialChildSize: 0.4,  // Start at 40% of screen height
+      minChildSize: 0.4,      // Minimum when dragged down
+      maxChildSize: 0.65,      // Maximum when dragged up
       builder: (BuildContext context, scrollController) {
         return Container(
           clipBehavior: Clip.hardEdge,
@@ -46,46 +53,22 @@ class CustomDraggableBottomSheet extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),
-                    const ListTile(title: Text('Jane Doe')),
-                    const ListTile(title: Text('Jack Reacher')),
+                    ...searchResults.map((place) => Material(
+                      color: Colors.transparent, // Use to keep the background clean
+                      child: InkWell(
+                        onTap: () => onPlaceSelected(place.placeId, place.geometry?.location.lat, place.geometry?.location.lng),
+                        child: ListTile(
+                          title: Text(place.name ?? "Unknown"),
+                        ),
+                      ),
+                    )),
                   ],
-                ),
-              ),
-              // Fixed ElevatedButton at the bottom
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    backgroundColor: enableBookButton
-                        ? AppColor.primary
-                        : Colors.grey.shade400, // Dimmed when disabled
-                    minimumSize: const Size(double.infinity, 50), // Full width button
-                  ),
-                  onPressed: enableBookButton ? () => _onButtonPressed(context) : null, // Disable when false
-                  child: const Text(
-                    "Book",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
         );
       },
-    );
-  }
-
-  void _onButtonPressed(BuildContext context) {
-    // Handle button press action
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Button Pressed")),
     );
   }
 }
