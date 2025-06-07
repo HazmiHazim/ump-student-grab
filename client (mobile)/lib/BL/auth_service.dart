@@ -118,16 +118,17 @@ class AuthService with ChangeNotifier {
   }
 
   // Logout service
-  Future<AuthResponse> logout(String userToken) async {
-    String? token = user?.token;
-    print("Token: $token");
+  Future<AuthResponse> logout()  async {
+  // Retrieve user from SharedPreferences
+  final user = await SharedPreferencesUtil.loadUser();
+  final token = user?.token;
 
     final url = Uri.parse("http://$appDomain:$appPort/api/users/logout");
     final response = await http.post(
         url,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${user?.token}",
+          "Authorization": "Bearer $token",
         }
     );
 

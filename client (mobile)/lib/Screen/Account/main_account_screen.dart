@@ -110,11 +110,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                       barrierDismissible: false,
                       builder: (ctx) => const Center(child: CustomLoading()));
 
-                  // Retrieve token from SharedPreferences
-                  final user = await SharedPreferencesUtil.loadUser(); // Assuming a method to load token
-                  final token = user?.token;
-
-                  AuthResponse response = await Provider.of<AuthService>(context, listen: false).logout(token!);
+                  AuthResponse response = await Provider.of<AuthService>(context, listen: false).logout();
 
                   // Close the loading dialog after logout is complete
                   Navigator.of(context).pop();
