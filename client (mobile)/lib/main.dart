@@ -8,6 +8,7 @@ import 'package:ump_student_grab_mobile/BL/chat_websocket_service.dart';
 import 'package:ump_student_grab_mobile/BL/location_service.dart';
 import 'package:ump_student_grab_mobile/Screen//welcome_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Account/main_account_screen.dart';
+import 'package:ump_student_grab_mobile/Screen/Account/personal_information_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/create_password_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/forgot_password_screen.dart';
 import 'package:ump_student_grab_mobile/Screen/Auth/login_screen.dart';
@@ -80,7 +81,8 @@ class MyApp extends StatelessWidget {
           "/main-chat-screen": (context) => MainChatScreen(),
           "/main-account-screen": (context) => MainAccountScreen(),
           "/chat-room-screen": (context) => ChatRoomScreen(),
-          "/map-screen": (context) => MapScreen()
+          "/map-screen": (context) => MapScreen(),
+          "/personal-information-screen": (context) => PersonalInformationScreen()
         },
       ),
     );

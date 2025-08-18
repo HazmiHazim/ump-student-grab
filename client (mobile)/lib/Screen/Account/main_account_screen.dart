@@ -74,7 +74,9 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
             child: Divider(thickness: 0.5),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, "/personal-information-screen");
+            },
             child: CustomAccountList(icon: Icons.person, title: "Personal Information", colour: Colors.deepPurpleAccent,)
           ),
           InkWell(

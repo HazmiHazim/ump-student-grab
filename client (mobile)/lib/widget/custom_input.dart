@@ -8,6 +8,8 @@ class CustomInput extends StatefulWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final String? errorText;
+  final bool showBorder;
+  final double? borderRadius;
   final Function(String)? onChanged; // Add this
 
   const CustomInput({
@@ -18,6 +20,8 @@ class CustomInput extends StatefulWidget {
     this.obscureText = false,
     this.errorText,
     this.onChanged, // Add this
+    this.showBorder = false,
+    this.borderRadius,
   });
 
   @override
@@ -41,6 +45,8 @@ class _CustomInputState extends State<CustomInput> {
 
   @override
   Widget build(BuildContext context) {
+    final double effectiveRadius = widget.borderRadius ?? 30;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -49,7 +55,8 @@ class _CustomInputState extends State<CustomInput> {
           margin: EdgeInsets.only(bottom: widget.errorText != null ? 5 : 15),
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 246, 246, 246),
-            borderRadius: BorderRadius.circular(30),
+            border: widget.showBorder ? Border.all(color: Colors.black54, width: 1) : null,
+            borderRadius: BorderRadius.circular(effectiveRadius),
           ),
           child: TextField(
             controller: widget.userInput,
