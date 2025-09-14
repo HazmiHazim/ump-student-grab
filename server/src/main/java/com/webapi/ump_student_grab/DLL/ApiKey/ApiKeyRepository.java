@@ -27,11 +27,11 @@ public class ApiKeyRepository implements IApiKeyRepository {
     @Override
     @Async
     public CompletableFuture<ApiKey> getApiKey(String apiKey) {
-        ApiKey key = entityManager.createQuery("SELECT k FROM ApiKey k WHERE k.apiKey = :apiKey", ApiKey.class)
+        List<ApiKey> apiKeys = entityManager.createQuery("SELECT k FROM ApiKey k WHERE k.apiKey = :apiKey", ApiKey.class)
                 .setParameter("apiKey", apiKey)
-                .getSingleResult();
+                .getResultList();
 
-        return CompletableFuture.completedFuture(key);
+        return CompletableFuture.completedFuture(apiKeys.isEmpty() ? null : apiKeys.getFirst());
     }
 
     @Override

@@ -23,8 +23,16 @@ public class AuthController {
 
     @PostMapping("")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> createUser(@RequestBody UserCreateDTO userCreateDTO) {
-        return service.createUser(userCreateDTO).thenApply(createdUser -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> createUser(
+            @RequestBody UserCreateDTO userCreateDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        if (apiKey == null || apiKey.isBlank()) {
+            ApiResponse<UserDTO> response = new ApiResponse<>(401, null, "Invalid or missing API key.");
+            return CompletableFuture.completedFuture(new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED));
+        }
+
+        return service.createUser(userCreateDTO, apiKey).thenApply(createdUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -49,8 +57,11 @@ public class AuthController {
 
     @GetMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserById(@PathVariable Long id) {
-        return service.getUserById(id).thenApply(user -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserById(
+            @PathVariable Long id,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getUserById(id, apiKey).thenApply(user -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -66,13 +77,20 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/email/{email}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserByEmail(@PathVariable String email) {
-        return service.getUserByEmail(email).thenApply(user -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> getUserByEmail(
+            @PathVariable String email,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getUserByEmail(email, apiKey).thenApply(user -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -97,8 +115,10 @@ public class AuthController {
 
     @GetMapping("")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<UserDTO>>>> getAllUsers() {
-        return service.getAllUsers().thenApply(users -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<UserDTO>>>> getAllUsers(
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getAllUsers(apiKey).thenApply(users -> {
             ApiResponse<List<UserDTO>> response;
             HttpStatus status;
             String message;
@@ -114,13 +134,21 @@ public class AuthController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<List<UserDTO>> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @PutMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) {
-        return service.updateUser(id, userUpdateDTO).thenApply(updatedUser -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateDTO userUpdateDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.updateUser(id, userUpdateDTO, apiKey).thenApply(updatedUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -145,8 +173,11 @@ public class AuthController {
 
     @DeleteMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> deleteUser(@PathVariable Long id) {
-        return service.deleteUser(id).thenApply(deletedUser -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> deleteUser(
+            @PathVariable Long id,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.deleteUser(id, apiKey).thenApply(deletedUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -161,13 +192,20 @@ public class AuthController {
 
             response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @PostMapping("/login")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> loginUser(@RequestBody AuthDTO authDTO) {
-        return service.loginUser(authDTO).thenApply(loginUser -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> loginUser(
+            @RequestBody AuthDTO authDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.loginUser(authDTO, apiKey).thenApply(loginUser -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -192,7 +230,10 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(@RequestHeader("Authorization") String authHeader) {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> logoutUser(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
         // Check if the token is present and starts with "Bearer "
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return CompletableFuture.completedFuture(
@@ -202,7 +243,7 @@ public class AuthController {
 
         // Extract the token
         String token = authHeader.substring(7);  // Remove "Bearer " from the start
-        return service.logoutUser(token).thenApply(logoutUser -> {
+        return service.logoutUser(token, apiKey).thenApply(logoutUser -> {
             HttpStatus status;
             String message;
 
@@ -216,13 +257,20 @@ public class AuthController {
 
             ApiResponse<UserDTO> response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @PostMapping("/forgot-password")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
-        return service.forgotPassword(forgotPasswordDTO).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> forgotPassword(
+            @RequestBody ForgotPasswordDTO forgotPasswordDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.forgotPassword(forgotPasswordDTO, apiKey).thenApply(result -> {
             String message;
             HttpStatus status = switch (result) {
                 case 1 -> {
@@ -254,8 +302,11 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> resetPassword(@RequestBody UserResetPassDTO userResetPassDTO) {
-        return service.resetPassword(userResetPassDTO).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> resetPassword(
+            @RequestBody UserResetPassDTO userResetPassDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.resetPassword(userResetPassDTO, apiKey).thenApply(result -> {
             String message;
             HttpStatus status = switch (result) {
                 case 1 -> {
@@ -278,13 +329,20 @@ public class AuthController {
 
             ApiResponse<UserDTO> response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @PostMapping("/verify-email")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(@RequestBody VerifyUserDTO verifyUserDTO) {
-        return service.verifyEmail(verifyUserDTO).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyEmail(
+            @RequestBody VerifyUserDTO verifyUserDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.verifyEmail(verifyUserDTO, apiKey).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -308,8 +366,11 @@ public class AuthController {
 
     @PostMapping("/verify-user")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(@RequestParam String token) {
-        return service.verifyUser(token).thenApply(result -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<UserDTO>>> verifyUser(
+            @RequestParam String token,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.verifyUser(token, apiKey).thenApply(result -> {
             ApiResponse<UserDTO> response;
             HttpStatus status;
             String message;
@@ -324,6 +385,10 @@ public class AuthController {
 
             response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<UserDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
