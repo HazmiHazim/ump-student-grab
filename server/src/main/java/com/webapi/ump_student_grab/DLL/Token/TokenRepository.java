@@ -37,6 +37,18 @@ public class TokenRepository implements ITokenRepository{
     public CompletableFuture<Token> getTokenByToken(String token) {
         List<Token> tokens = entityManager.createQuery("SELECT t FROM Token t WHERE t.token = :token", Token.class)
                 .setParameter("token", token)
+                .setMaxResults(1)
+                .getResultList();
+
+        return CompletableFuture.completedFuture(tokens.isEmpty() ? null : tokens.getFirst());
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<Token> getTokenByUserId(Long userId) {
+        List<Token> tokens = entityManager.createQuery("SELECT t FROM Token t WHERE t.userId = :userId ORDER BY t.createdAt DESC", Token.class)
+                .setParameter("userId", userId)
+                .setMaxResults(1)
                 .getResultList();
 
         return CompletableFuture.completedFuture(tokens.isEmpty() ? null : tokens.getFirst());

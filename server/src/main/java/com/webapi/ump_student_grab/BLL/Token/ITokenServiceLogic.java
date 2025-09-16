@@ -10,6 +10,7 @@ public interface ITokenServiceLogic {
     CompletableFuture<TokenDTO> createToken(Long userId, LocalDateTime expiredAt);
     CompletableFuture<TokenDTO> getTokenById(Long id);
     CompletableFuture<TokenDTO> getTokenByToken(String token);
+    CompletableFuture<TokenDTO> getTokenByUserId(Long userId);
     CompletableFuture<List<TokenDTO>> getAllTokens();
     CompletableFuture<TokenDTO> expireToken(String token);
     CompletableFuture<TokenDTO> refreshToken(Long userId);

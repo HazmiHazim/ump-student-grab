@@ -42,6 +42,12 @@ public class TokenServiceLogic implements ITokenServiceLogic{
     }
 
     @Override
+    public CompletableFuture<TokenDTO> getTokenByUserId(Long userId) {
+        // Get the data from repository and map token model to TokenDTO
+        return repo.getTokenByUserId(userId).thenApply(mapper::tokenToTokenDTO);
+    }
+
+    @Override
     public CompletableFuture<TokenDTO> getTokenByToken(String token) {
         // Get the data from repository and map token model to TokenDTO
         return repo.getTokenByToken(token).thenApply(mapper::tokenToTokenDTO);
@@ -66,7 +72,7 @@ public class TokenServiceLogic implements ITokenServiceLogic{
 
     @Override
     public CompletableFuture<TokenDTO> refreshToken(Long userId) {
-        return repo.getTokenById(userId).thenCompose(existingToken -> {
+        return repo.getTokenByUserId(userId).thenCompose(existingToken -> {
             if (existingToken != null) {
                 existingToken.setExpiredAt(LocalDateTime.now());
                 return repo.updateToken(existingToken).thenCompose(updated -> createToken(userId, null)); // new token after expiring old

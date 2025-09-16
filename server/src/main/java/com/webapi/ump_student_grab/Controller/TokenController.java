@@ -65,6 +65,28 @@ public class TokenController {
         });
     }
 
+    @GetMapping("/token/user/{userId}")
+    @Async
+    public CompletableFuture<ResponseEntity<ApiResponse<TokenDTO>>> getTokenByUserId(@PathVariable Long userId) {
+        return service.getTokenByUserId(userId).thenApply(existingToken -> {
+            ApiResponse<TokenDTO> response;
+            HttpStatus status;
+            String message;
+
+            if (existingToken == null) {
+                status = HttpStatus.NOT_FOUND;
+                message = "Token not found.";
+                response = new ApiResponse<>(status.value(), null, message);
+            } else {
+                status = HttpStatus.OK;
+                message = "Token found.";
+                response = new ApiResponse<>(status.value(), existingToken, message);
+            }
+
+            return new ResponseEntity<>(response, status);
+        });
+    }
+
     @GetMapping("")
     @Async
     public CompletableFuture<ResponseEntity<ApiResponse<List<TokenDTO>>>> getAllTokens() {

@@ -9,6 +9,7 @@ public interface ITokenRepository {
     CompletableFuture<Token> createToken(Token token);
     CompletableFuture<Token> getTokenById(Long id);
     CompletableFuture<Token> getTokenByToken(String token);
+    CompletableFuture<Token> getTokenByUserId(Long id);
     CompletableFuture<List<Token>> getAllTokens();
     CompletableFuture<Token> updateToken(Token token);
 }
