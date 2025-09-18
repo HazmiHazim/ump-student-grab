@@ -73,7 +73,7 @@ class _CustomInputState extends State<CustomInput> {
               floatingLabelStyle: const TextStyle(fontSize: 14, color: Color.fromARGB(255, 157, 157, 157)),
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
               suffixIcon: widget.keyboardType == TextInputType.visiblePassword
                   ? IconButton(
                 icon: Icon(

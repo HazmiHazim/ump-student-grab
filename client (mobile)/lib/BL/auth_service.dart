@@ -10,6 +10,7 @@ class AuthService with ChangeNotifier {
 
   final String appDomain = dotenv.get("APP_DOMAIN");
   final String appPort = dotenv.get("APP_PORT");
+  final String apiKey = dotenv.get("API_KEY");
 
   User? _user;
 
@@ -36,6 +37,7 @@ class AuthService with ChangeNotifier {
         url,
         headers: {
           "Content-Type": "application/json",
+          "X-Api-Key": apiKey
         },
         body: json.encode({
           "email": email,
@@ -75,6 +77,7 @@ class AuthService with ChangeNotifier {
           url,
           headers: {
             "Content-Type": "application/json",
+            "X-Api-Key": apiKey
           },
           body: json.encode({
             "email": email,
@@ -129,6 +132,7 @@ class AuthService with ChangeNotifier {
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
+          "X-Api-Key": apiKey
         }
     );
 
@@ -161,6 +165,7 @@ class AuthService with ChangeNotifier {
         url,
         headers: {
           "Content-Type": "application/json",
+          "X-Api-Key": apiKey
         },
         body: json.encode({
           "email": email,

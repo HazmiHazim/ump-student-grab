@@ -13,6 +13,7 @@ class ChatService with ChangeNotifier {
 
   final String appDomain = dotenv.get("APP_DOMAIN");
   final String appPort = dotenv.get("APP_PORT");
+  final String apiKey = dotenv.get("API_KEY");
 
   // Get all chats service
   Future<List<ChatResponse>> getAllChats() async {
@@ -29,7 +30,10 @@ class ChatService with ChangeNotifier {
     final url = Uri.parse("http://$appDomain:$appPort/api/chats/details/$userId");
     final response = await http.get(
         url,
-        headers: { "Content-Type": "application/json" }
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": apiKey
+        }
     );
 
     List<ChatResponse> chats = [];
@@ -77,7 +81,10 @@ class ChatService with ChangeNotifier {
     final url = Uri.parse("http://$appDomain:$appPort/api/chats/message/$chatId/$userId/$participantId");
     final response = await http.get(
         url,
-        headers: { "Content-Type": "application/json" }
+        headers: {
+          "Content-Type": "application/json",
+          "X-Api-Key": apiKey
+        }
     );
 
     List<MessageResponse> messages = [];

@@ -102,6 +102,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Container(
               width: double.infinity,
+              height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
