@@ -32,14 +32,17 @@ public class ChatController {
 
     @PostMapping("")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> createChat(@RequestBody ChatCreateDTO chatCreateDTO) {
-        return service.createChat(chatCreateDTO).thenApply(createdChatRoom -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> createChat(
+            @RequestBody ChatCreateDTO chatCreateDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.createChat(chatCreateDTO, apiKey).thenApply(createdChatRoom -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
 
             if (createdChatRoom == null) {
-                status = HttpStatus.NOT_FOUND;
+                status = HttpStatus.CONFLICT;
                 message = "Failed to create chat.";
                 response = new ApiResponse<>(status.value(), null, message);
             } else {
@@ -49,13 +52,20 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<ChatDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatById(@PathVariable Long id) {
-        return service.getChatById(id).thenApply(existingChat -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatById(
+            @PathVariable Long id,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getChatById(id, apiKey).thenApply(existingChat -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
@@ -71,13 +81,20 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<ChatDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/participant")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatByParticipant(@RequestParam Long senderId, Long recipientId) {
-        return service.getChatByParticipant(senderId, recipientId).thenApply(existingChat -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<ChatDTO>>> getChatByParticipant(
+            @RequestParam Long senderId, Long recipientId,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getChatByParticipant(senderId, recipientId, apiKey).thenApply(existingChat -> {
             ApiResponse<ChatDTO> response;
             HttpStatus status;
             String message;
@@ -93,13 +110,19 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<ChatDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDTO>>>> getAllChats() {
-        return service.getAllChats().thenApply(chats -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDTO>>>> getAllChats(
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getAllChats(apiKey).thenApply(chats -> {
             ApiResponse<List<ChatDTO>> response;
             HttpStatus status;
             String message;
@@ -115,13 +138,20 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<List<ChatDTO>> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @PostMapping("/message")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<MessageDTO>>> createMessage(@RequestBody MessageCreateDTO messageCreateDTO) {
-        return service.createMessage(messageCreateDTO).thenApply(createdMessage -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<MessageDTO>>> createMessage(
+            @RequestBody MessageCreateDTO messageCreateDTO,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.createMessage(messageCreateDTO, apiKey).thenApply(createdMessage -> {
             String message;
             HttpStatus status = switch (createdMessage) {
                 case 1 -> {
@@ -140,13 +170,22 @@ public class ChatController {
 
             ApiResponse<MessageDTO> response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<MessageDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/message/{chatId}/{userId}/{participantId}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(@PathVariable Long chatId, @PathVariable Long userId, @PathVariable Long participantId) {
-        return service.getAllMessages(chatId, userId, participantId).thenApply(messages -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<MessageDTO>>>> getAllMessages(
+            @PathVariable Long chatId,
+            @PathVariable Long userId,
+            @PathVariable Long participantId,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getAllMessages(chatId, userId, participantId, apiKey).thenApply(messages -> {
             ApiResponse<List<MessageDTO>> response;
             HttpStatus status;
             String message;
@@ -162,14 +201,20 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<List<MessageDTO>> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/details/{userId}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails(@PathVariable Long userId) {
+    public CompletableFuture<ResponseEntity<ApiResponse<List<ChatDetailsDTO>>>> getAllChatsWithDetails(
+            @PathVariable Long userId,
+            @RequestHeader("X-Api-Key") String apiKey) {
         // Fetch all chats with details asynchronously and return the result
-        return service.getAllChatsWithDetails(userId).thenApplyAsync(chats -> {
+        return service.getAllChatsWithDetails(userId, apiKey).thenApplyAsync(chats -> {
             ApiResponse<List<ChatDetailsDTO>> response;
             HttpStatus status;
             String message;
@@ -185,6 +230,10 @@ public class ChatController {
             }
 
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<List<ChatDetailsDTO>> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 

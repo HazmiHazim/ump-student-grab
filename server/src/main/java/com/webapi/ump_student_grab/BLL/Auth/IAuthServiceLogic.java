@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IAuthServiceLogic {
     CompletableFuture<UserDTO> createUser(UserCreateDTO userCreateDTO, String apiKey);
+    CompletableFuture<UserDTO> getUserById(Long id);
     CompletableFuture<UserDTO> getUserById(Long id, String apiKey);
     CompletableFuture<UserDTO> getUserByEmail(String email, String apiKey);
     CompletableFuture<List<UserDTO>> getAllUsers(String apiKey);

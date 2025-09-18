@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.concurrent.CompletableFuture;
 
 public interface IAttachmentServiceLogic {
-    CompletableFuture<AttachmentDTO> saveFile(MultipartFile file, Long userId);
-    CompletableFuture<Resource> getFileById(Long id);
-    CompletableFuture<Boolean> deleteFile(Long id);
+    CompletableFuture<AttachmentDTO> saveFile(MultipartFile file, Long userId, String apiKey);
+    CompletableFuture<Resource> getFileById(Long id, String apiKey);
+    CompletableFuture<Boolean> deleteFile(Long id, String apiKey);
 }

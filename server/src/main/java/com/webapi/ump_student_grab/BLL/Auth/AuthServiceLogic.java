@@ -86,6 +86,12 @@ public class AuthServiceLogic implements IAuthServiceLogic {
     }
 
     @Override
+    public CompletableFuture<UserDTO> getUserById(Long id) {
+        // Get the data from repository and map User model to UserDTO
+        return repo.getUserById(id).thenApply(mapper::userToUserDTO);
+    }
+
+    @Override
     public CompletableFuture<UserDTO> getUserById(Long id, String apiKey) {
         return apiService.checkApiKey(apiKey).thenCompose(isValid -> {
             if (!isValid) {

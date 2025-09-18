@@ -30,8 +30,12 @@ public class AttachmentController {
 
     @PostMapping("")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> saveFile(@RequestParam("file")MultipartFile file, @RequestParam Long userId) {
-        return service.saveFile(file, userId).thenApply(savedFile -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> saveFile(
+            @RequestParam("file")MultipartFile file,
+            @RequestParam Long userId,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.saveFile(file, userId, apiKey).thenApply(savedFile -> {
             ApiResponse<AttachmentDTO> response;
             HttpStatus status;
             String message;
@@ -46,13 +50,20 @@ public class AttachmentController {
 
             response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<AttachmentDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @GetMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<?>> getFileById(@PathVariable Long id) {
-        return service.getFileById(id).thenApply(resource -> {
+    public CompletableFuture<ResponseEntity<?>> getFileById(
+            @PathVariable Long id,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.getFileById(id, apiKey).thenApply(resource -> {
             if (resource == null) {
                 ApiResponse<String> response = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), null, "File not found.");
                 return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -85,13 +96,20 @@ public class AttachmentController {
                 ApiResponse<String> errorResponse = new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, "Error reading file.");
                 return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<AttachmentDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 
     @DeleteMapping("/{id}")
     @Async
-    public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> deleteFile(@PathVariable Long id) {
-        return service.deleteFile(id).thenApply(deletedFile -> {
+    public CompletableFuture<ResponseEntity<ApiResponse<AttachmentDTO>>> deleteFile(
+            @PathVariable Long id,
+            @RequestHeader("X-Api-Key") String apiKey) {
+
+        return service.deleteFile(id, apiKey).thenApply(deletedFile -> {
             ApiResponse<AttachmentDTO> response;
             HttpStatus status;
             String message;
@@ -106,6 +124,10 @@ public class AttachmentController {
 
             response = new ApiResponse<>(status.value(), null, message);
             return new ResponseEntity<>(response, status);
+        }).exceptionally(ex -> {
+            String message = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            ApiResponse<AttachmentDTO> response = new ApiResponse<>(HttpStatus.UNAUTHORIZED.value(), null, message);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         });
     }
 }

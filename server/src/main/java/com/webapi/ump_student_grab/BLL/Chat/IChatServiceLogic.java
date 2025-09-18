@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface IChatServiceLogic {
-    CompletableFuture<ChatDTO> createChat(ChatCreateDTO chatCreateDTO);
-    CompletableFuture<ChatDTO> getChatById(Long id);
-    CompletableFuture<ChatDTO> getChatByParticipant(Long senderId, Long recipientId);
-    CompletableFuture<List<ChatDTO>> getAllChats();
-    CompletableFuture<Integer> createMessage(MessageCreateDTO messageCreateDTO);
-    CompletableFuture<List<MessageDTO>> getAllMessages(Long chatId, Long userId, Long participantId);
-    CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails(Long userId);
+    CompletableFuture<ChatDTO> createChat(ChatCreateDTO chatCreateDTO, String apiKey);
+    CompletableFuture<ChatDTO> getChatById(Long id, String apiKey);
+    CompletableFuture<ChatDTO> getChatByParticipant(Long senderId, Long recipientId, String apiKey);
+    CompletableFuture<List<ChatDTO>> getAllChats(String apiKey);
+    CompletableFuture<Integer> createMessage(MessageCreateDTO messageCreateDTO, String apiKey);
+    CompletableFuture<List<MessageDTO>> getAllMessages(Long chatId, Long userId, Long participantId, String apiKey);
+    CompletableFuture<List<ChatDetailsDTO>> getAllChatsWithDetails(Long userId, String apiKey);
     void messageBuffer(MessageWS message);
 }
