@@ -44,6 +44,7 @@
 - **My Account**
 <p align="left">
 <img src="images/my-account-page.png" width="150px" height="250px">
+<img src="images/personal-information.png" width="150px" height="250px">
 </p>
 
 ## Configuration before you can use the app (Server)
