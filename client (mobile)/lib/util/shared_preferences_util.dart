@@ -17,6 +17,8 @@ class SharedPreferencesUtil {
       "id": user.id,
       "email": user.email,
       "fullName": user.fullName,
+      "gender": user.gender,
+      "birthDate": user.birthDate,
       "matricNo": user.matricNo,
       "phoneNo": user.phoneNo,
       "role": user.role,

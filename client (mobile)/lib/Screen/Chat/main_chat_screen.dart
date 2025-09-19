@@ -42,14 +42,18 @@ class _MainChatScreenState extends State<MainChatScreen> {
 
     // Update recipientId if it matches the current user ID
     int recipientId = chat.recipientId;
+    String recipientName = chat.recipientName;
+
     if (recipientId == currentUserId) {
       recipientId = chat.senderId;
+      recipientName = chat.senderName;
     }
 
     // Navigate to chat room with updated recipientId
     Navigator.pushNamed(context, "/chat-room-screen", arguments: {
       'chatId': chat.chatId,
       'recipientId': recipientId,
+      'recipientName': recipientName,
     });
   }
 

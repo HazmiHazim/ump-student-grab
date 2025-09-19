@@ -18,6 +18,7 @@ class ChatRoomScreen extends StatefulWidget {
 class _ChatRoomScreenState extends State<ChatRoomScreen> {
   late int chatId;
   late int recipientId;
+  String? recipientName;
   final TextEditingController chatInputController = TextEditingController();
   final List<ChatMessage> messages = [];
   late ChatWebsocketService chatWebsocketService;
@@ -33,6 +34,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
       final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
       chatId = args['chatId'];
       recipientId = args['recipientId'];
+      recipientName = args['recipientName'];
 
       chatWebsocketService = Provider.of<ChatWebsocketService>(context, listen: false);
       chatWebsocketService.startConnection(chatId.toString());
@@ -86,7 +88,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Test Chat Room")),
+      appBar: AppBar(title: Text(recipientName ?? "Loading...")),
       body: FutureBuilder<User?>(
         future: userFuture,
         builder: (context, userSnapshot) {

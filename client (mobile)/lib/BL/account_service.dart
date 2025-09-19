@@ -14,24 +14,37 @@ class AccountService with ChangeNotifier {
   final String apiKey = dotenv.get("API_KEY");
 
   Future<Uint8List?> getUserImage(int imageId) async {
-    final url = Uri.parse("http://$appDomain:$appPort/api/attachments/getFileById/$imageId");
-    final response = await http.get(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": apiKey
+    try {
+      final url = Uri.parse("http://$appDomain:$appPort/api/attachments/$imageId");
+
+      final response = await http.get(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+            "X-Api-Key": apiKey
+          }
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Returning the file data as Uint8List
+        return response.bodyBytes;
+      } else {
+        print("File missing or error: ${response.statusCode}");
+        return null;
       }
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // Returning the file data as Uint8List
-      return response.bodyBytes;
-    } else {
-      print("File missing or error: ${response.statusCode}");
+    } catch (exception) {
       return null;
     }
   }
 
-  Future<AuthResponse> updatePersonalInfo(String fullName, String matricNo, String phoneNo, String email) async {
+  Future<AuthResponse> updatePersonalInfo(
+      String? fullName,
+      String? matricNo,
+      String? dateOfBirth,
+      String? gender,
+      String? phoneNo,
+      String? email) async {
+
     // Load user from SharedPreferences using the utility method
     User? user = await SharedPreferencesUtil.loadUser();
 
@@ -44,18 +57,22 @@ class AccountService with ChangeNotifier {
     try {
       final url = Uri.parse("http://$appDomain:$appPort/api/users/$userId");
 
+      final body = {
+        if (fullName != null) "fullName": fullName,
+        if (matricNo != null) "matricNo": matricNo,
+        if (dateOfBirth != null) "birthDate": dateOfBirth,
+        if (gender != null) "gender": gender,
+        if (phoneNo != null) "phoneNo": phoneNo,
+        if (email != null) "email": email,
+      };
+
       final response = await http.put(
           url,
           headers: {
             "Content-Type": "application/json",
             "X-Api-Key": apiKey
           },
-          body: json.encode({
-            "fullName": fullName,
-            "matricNo": matricNo,
-            "phoneNo": phoneNo,
-            "email": email,
-          })
+          body: json.encode(body)
       );
 
       final responseJson = json.decode(response.body);
@@ -82,6 +99,36 @@ class AccountService with ChangeNotifier {
         isSuccess: false,
         message: "An unexpected error occurred: ${exception.toString()}",
       );
+    }
+  }
+
+  Future<User?> getPersonalDetails()  async {
+    // Retrieve user from SharedPreferences
+    final user = await SharedPreferencesUtil.loadUser();
+    final userId = user?.id;
+    final token = user?.token;
+
+    try {
+      final url = Uri.parse("http://$appDomain:$appPort/api/users/$userId");
+      final response = await http.get(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token",
+            "X-Api-Key": apiKey
+          }
+      );
+
+      final responseJson = json.decode(response.body);
+      final userData = responseJson["data"];
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return User.fromJson(userData);
+      } else {
+        return null;
+      }
+    } catch (exception) {
+      return null;
     }
   }
 }

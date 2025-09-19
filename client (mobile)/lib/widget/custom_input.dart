@@ -10,7 +10,9 @@ class CustomInput extends StatefulWidget {
   final String? errorText;
   final bool showBorder;
   final double? borderRadius;
-  final Function(String)? onChanged; // Add this
+  final Icon? icon;
+  final bool isDatePicker;
+  final Function(String)? onChanged;
 
   const CustomInput({
     super.key,
@@ -22,6 +24,8 @@ class CustomInput extends StatefulWidget {
     this.onChanged, // Add this
     this.showBorder = false,
     this.borderRadius,
+    this.icon,
+    this.isDatePicker = false,
   });
 
   @override
@@ -43,6 +47,22 @@ class _CustomInputState extends State<CustomInput> {
     });
   }
 
+  Future<void> _pickDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      widget.userInput.text = "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+      if (widget.onChanged != null) {
+        widget.onChanged!(widget.userInput.text);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double effectiveRadius = widget.borderRadius ?? 30;
@@ -60,6 +80,8 @@ class _CustomInputState extends State<CustomInput> {
           ),
           child: TextField(
             controller: widget.userInput,
+            readOnly: widget.isDatePicker,
+            onTap: widget.isDatePicker ? () => _pickDate(context) : null,
             autocorrect: false,
             enableSuggestions: false,
             autofocus: false,
@@ -82,7 +104,7 @@ class _CustomInputState extends State<CustomInput> {
                 ),
                 onPressed: _togglePasswordVisibility,
               )
-                  : null,
+                  : widget.icon,
             ),
             keyboardType: widget.keyboardType,
             onChanged: widget.onChanged, // This will remove error text when typing
