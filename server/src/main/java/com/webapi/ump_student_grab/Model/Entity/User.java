@@ -3,6 +3,7 @@ package com.webapi.ump_student_grab.Model.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,6 +19,10 @@ public class User {
     private String password;
     @Column
     private String fullName;
+    @Column
+    private String gender;
+    @Column
+    private LocalDate birthDate;
     @Column
     private String matricNo;
     @Column
@@ -38,11 +43,15 @@ public class User {
     // No-argument constructor is required by JPA
     public User() {}
 
-    public User(Long id, String email, String password, String fullName, String matricNo, String phoneNo, String role, Long attachmentId, Boolean isVerified, String token, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public User(Long id, String email, String password, String fullName, String gender, LocalDate birthDate,
+                String matricNo, String phoneNo, String role, Long attachmentId, Boolean isVerified, String token,
+                LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.gender = gender;
+        this.birthDate = birthDate;
         this.matricNo = matricNo;
         this.phoneNo = phoneNo;
         this.role = role;
@@ -83,6 +92,22 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getMatricNo() {

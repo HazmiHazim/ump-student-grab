@@ -178,6 +178,12 @@ public class AuthServiceLogic implements IAuthServiceLogic {
                 if (userUpdateDTO.getFullName() != null) {
                     existingUser.setFullName(userUpdateDTO.getFullName());
                 }
+                if (userUpdateDTO.getGender() != null) {
+                    existingUser.setGender(userUpdateDTO.getGender());
+                }
+                if (userUpdateDTO.getBirthDate() != null) {
+                    existingUser.setBirthDate(userUpdateDTO.getBirthDate());
+                }
                 if (userUpdateDTO.getMatricNo() != null) {
                     existingUser.setMatricNo(userUpdateDTO.getMatricNo());
                 }
