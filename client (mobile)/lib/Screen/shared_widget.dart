@@ -98,15 +98,7 @@ class _SharedWidgetState extends State<SharedWidget> with SingleTickerProviderSt
           ),
         ),
       ),
-      body: IndexedStack(
-        index: _selectedScreen,
-        children: [
-          HomeScreen(),
-          MainBookingScreen(),
-          MainChatScreen(),
-          MainAccountScreen()
-        ],
-      ),
+      body: _navigationScreenTab(),
       bottomNavigationBar: CustomBottomNavigationBar(
         selectedScreen: _selectedScreen,
         onDestinationSelected: _onScreenSelected,
@@ -114,5 +106,20 @@ class _SharedWidgetState extends State<SharedWidget> with SingleTickerProviderSt
         unreadMessages: _unreadMessages
       ),
     );
+  }
+
+  Widget _navigationScreenTab() {
+    switch (_selectedScreen) {
+      case 0:
+        return HomeScreen();
+      case 1:
+        return MainBookingScreen();
+      case 2:
+        return MainChatScreen();
+      case 3:
+        return MainAccountScreen();
+      default:
+        return HomeScreen();
+    }
   }
 }

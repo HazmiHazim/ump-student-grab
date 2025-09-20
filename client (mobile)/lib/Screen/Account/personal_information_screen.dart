@@ -120,31 +120,41 @@ class _PersonalInformationScreen extends State<PersonalInformationScreen> {
                     borderRadius: 10,
                     icon: const Icon(Icons.calendar_month_rounded),
                   ),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: CustomRadioButton(
-                          label: "Male",
-                          selected: selectedGender == "Male",
-                          onChanged: (value) {
-                            setState(() {
-                              selectedGender = "Male";
-                            });
-                          },
-                        ),
+                      const Text(
+                        "Gender",
+                        style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 157, 157, 157)),
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: CustomRadioButton(
-                          label: "Female",
-                          selected: selectedGender == "Female",
-                          onChanged: (value) {
-                            setState(() {
-                              selectedGender = "Female";
-                            });
-                          },
-                        ),
-                      )
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomRadioButton(
+                              label: "Male",
+                              selected: selectedGender == "Male",
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedGender = "Male";
+                                });
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: CustomRadioButton(
+                              label: "Female",
+                              selected: selectedGender == "Female",
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedGender = "Female";
+                                });
+                              },
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ],

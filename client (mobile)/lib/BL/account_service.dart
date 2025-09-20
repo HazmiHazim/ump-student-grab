@@ -76,6 +76,11 @@ class AccountService with ChangeNotifier {
       );
 
       final responseJson = json.decode(response.body);
+      // Parse user data from the response
+      final userData = responseJson["data"];
+      final user = User.fromJson(userData);
+      // Save the user data to shared preferences
+      await SharedPreferencesUtil.saveUser(user);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return AuthResponse(
