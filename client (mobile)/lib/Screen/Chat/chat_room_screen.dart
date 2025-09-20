@@ -128,21 +128,32 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: chatInputController,
-                        decoration: InputDecoration(
-                          hintText: "Type a message",
-                          hintStyle: TextStyle(color: Colors.grey),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(color: AppColor.primary),
+                      child: Container(
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 246, 246, 246),
+                          border: Border.all(color: AppColor.primary, width: 1),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: TextField(
+                          controller: chatInputController,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                          autofocus: false,
+                          cursorColor: AppColor.primary,
+                          style: const TextStyle(fontSize: 16, color: Color.fromARGB(255, 105, 105, 105)),
+                          maxLines: null,
+                          decoration: const InputDecoration(
+                            hintText: "Type a message",
+                            hintStyle: TextStyle(fontSize: 16, color: Color.fromARGB(255, 157, 157, 157)),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 12),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 15),
+                          keyboardType: TextInputType.text,
                         ),
                       ),
                     ),

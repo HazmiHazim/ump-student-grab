@@ -24,7 +24,7 @@ class _SharedWidgetState extends State<SharedWidget> with SingleTickerProviderSt
   final List<String> _appBarTitles = [
     'Home',  // Title for HomeScreen
     'Bookings',  // Title for MainBookingScreen
-    'Messages',  // Title for MainChatScreen
+    'Chat',  // Title for MainChatScreen
     'My Account',  // Title for MainAccountScreen
   ];
 
