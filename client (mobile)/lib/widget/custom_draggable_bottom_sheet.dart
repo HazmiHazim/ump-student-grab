@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import "package:flutter_google_maps_webservices/places.dart";
+import 'package:ump_student_grab_mobile/Model/place_result.dart';
 
 class CustomDraggableBottomSheet extends StatelessWidget {
   final DraggableScrollableController draggableController;
   final Radius borderRadiusTopLeft;
   final Radius borderRadiusTopRight;
   final bool enableBookButton;
-  final List<PlacesSearchResult> searchResults;
+  final List<PlaceResult> searchResults;
   final void Function(String, double?, double?) onPlaceSelected;
 
   const CustomDraggableBottomSheet({
@@ -15,7 +15,7 @@ class CustomDraggableBottomSheet extends StatelessWidget {
     required this.draggableController,
     this.borderRadiusTopLeft = const Radius.circular(25.0),
     this.borderRadiusTopRight = const Radius.circular(25.0),
-    required this.enableBookButton, // Parent controls this value
+    required this.enableBookButton,
     required this.searchResults,
     required this.onPlaceSelected,
   });
@@ -23,9 +23,9 @@ class CustomDraggableBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.4,  // Start at 40% of screen height
-      minChildSize: 0.2,      // Minimum when dragged down
-      maxChildSize: 0.65,      // Maximum when dragged up
+      initialChildSize: 0.4,
+      minChildSize: 0.2,
+      maxChildSize: 0.65,
       builder: (BuildContext context, scrollController) {
         return Container(
           clipBehavior: Clip.hardEdge,
@@ -48,20 +48,20 @@ class CustomDraggableBottomSheet extends StatelessWidget {
                           color: Theme.of(context).hintColor,
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                         ),
-                        height: 10.0, // Replace with actual value
-                        width: 40.0, // Replace with actual value
+                        height: 10.0,
+                        width: 40.0,
                         margin: const EdgeInsets.symmetric(vertical: 10),
                       ),
                     ),
                     ...searchResults.map((place) => Material(
-                      color: Colors.transparent, // Use to keep the background clean
-                      child: InkWell(
-                        onTap: () => onPlaceSelected(place.placeId, place.geometry?.location.lat, place.geometry?.location.lng),
-                        child: ListTile(
-                          title: Text(place.name ?? "Unknown"),
-                        ),
-                      ),
-                    )),
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => onPlaceSelected(place.placeId, place.lat, place.lng),
+                            child: ListTile(
+                              title: Text(place.name),
+                            ),
+                          ),
+                        )),
                   ],
                 ),
               ),

@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:ump_student_grab_mobile/BL/places_service.dart';
+import 'package:ump_student_grab_mobile/Model/place_result.dart';
 import 'package:ump_student_grab_mobile/Model/user.dart';
 import 'package:ump_student_grab_mobile/util/location_manager_util.dart';
 import 'package:ump_student_grab_mobile/util/shared_preferences_util.dart';
 import 'package:ump_student_grab_mobile/widget/custom_draggable_bottom_sheet.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import "package:flutter_google_maps_webservices/places.dart";
-import "package:flutter_google_maps_webservices/directions.dart" as gmapswebservice;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapScreen extends StatefulWidget {
@@ -22,10 +21,10 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   String query = "";
-  final FocusNode _searchFocusNode = FocusNode(); // FocusNode for the TextField
-  List<String> _recommendedSearchList = []; // List to hold search results
-  bool isSearchCompleted = false; // Track whether the search is completed
-  List<PlacesSearchResult> _searchResult = [];
+  final FocusNode _searchFocusNode = FocusNode();
+  List<String> _recommendedSearchList = [];
+  bool isSearchCompleted = false;
+  List<PlaceResult> _searchResult = [];
 
   // For geolocation
   Set<gmaps.Marker> markers = Set();
@@ -37,32 +36,25 @@ class _MapScreenState extends State<MapScreen> {
 
   late gmaps.CameraPosition _initialCameraPosition;
 
-  late final String gMapApiKey;
-  late final GoogleMapsPlaces gMapPlaces;
-  late final gmapswebservice.GoogleMapsDirections gMapDirections;
+  final PlacesService _placesService = PlacesService();
 
   Timer? _debounce;
   Set<gmaps.Polyline> _polylines = {};
 
-  late String _markerDestinationId = ""; // To save the destination id to remove old marker
+  late String _markerDestinationId = "";
 
   @override
   void initState() {
     super.initState();
-    // Automatically request focus when the screen is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _searchFocusNode.requestFocus();
     });
-
     _initializeGMap();
-    gMapApiKey = dotenv.get("GOOGLE_MAP_API_KEY");
-    gMapPlaces = GoogleMapsPlaces(apiKey: gMapApiKey);
-    gMapDirections = gmapswebservice.GoogleMapsDirections(apiKey: gMapApiKey);
   }
 
   @override
   void dispose() {
-    _searchFocusNode.dispose(); // Dispose FocusNode to avoid memory leaks
+    _searchFocusNode.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -71,8 +63,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 70.0, // Adjust the height to fit the design
-        automaticallyImplyLeading: false, // Disable default back arrow
+        toolbarHeight: 70.0,
+        automaticallyImplyLeading: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,37 +72,34 @@ class _MapScreenState extends State<MapScreen> {
               children: [
                 IconButton(
                   icon: Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.pop(context), // Navigate back
+                  onPressed: () => Navigator.pop(context),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add left and right gaps
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: TextField(
-                      focusNode: _searchFocusNode, // Assign the FocusNode
+                      focusNode: _searchFocusNode,
                       decoration: InputDecoration(
                         hintText: "Type to search...",
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.search), // Add the search icon
+                        prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide.none, // Remove border for cleaner look
+                          borderSide: BorderSide.none,
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
                       ),
                       onChanged: _onSearchChanged,
-                      onSubmitted: (value) {
-                        _onSearchResultSubmitted(value);
-                      },
+                      onSubmitted: _onSearchResultSubmitted,
                       onTap: () {
-                        _searchFocusNode.unfocus(); // dismiss keyboard
+                        _searchFocusNode.unfocus();
                       },
                     ),
                   ),
                 )
               ],
             ),
-            // Suggestion List
           ],
         ),
       ),
@@ -125,21 +114,20 @@ class _MapScreenState extends State<MapScreen> {
             markers: markers,
             polylines: _polylines,
           ),
-          // Suggestions list that overlaps the map
           if (!isSearchCompleted && query.isNotEmpty && _recommendedSearchList.isNotEmpty)
             Positioned(
-              top: 10.0, // Position below the search bar
+              top: 10.0,
               left: 16.0,
               right: 16.0,
               child: Container(
-                height: 250.0, // Limit the height for the suggestions list
+                height: 250.0,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
                   boxShadow: [BoxShadow(blurRadius: 4.0, color: Colors.black26)],
                 ),
                 child: ListView.builder(
-                  itemCount: _recommendedSearchList.take(5).length, // Show up to 5 results
+                  itemCount: _recommendedSearchList.take(5).length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(_recommendedSearchList[index]),
@@ -150,12 +138,12 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           Positioned(
-            top: 16.0, // Center vertically
-            right: 4.0, // Place near the right edge
+            top: 16.0,
+            right: 4.0,
             child: FloatingActionButton(
               onPressed: _goToMe,
               backgroundColor: Colors.white,
-              child: const Icon(Icons.my_location), // Change to a pin-like icon
+              child: const Icon(Icons.my_location),
             ),
           ),
           CustomDraggableBottomSheet(
@@ -163,42 +151,29 @@ class _MapScreenState extends State<MapScreen> {
             enableBookButton: true,
             searchResults: _searchResult,
             onPlaceSelected: (destinationId, latitude, longitude) async {
-              // Covert current position to string
-              final String currentPositionStr = "${currentPosition.latitude},${currentPosition.longitude}";
+              final String origin = "${currentPosition.latitude},${currentPosition.longitude}";
+              final String destination = "place_id:$destinationId";
               final gmaps.LatLng destinationLocation = gmaps.LatLng(latitude ?? 3.1529, longitude ?? 101.7039);
 
-              final directionResp = await gMapDirections.directions(
-                currentPositionStr, // Origin
-                "place_id:$destinationId", // Destination
-              );
+              final encodedPolyline = await _placesService.getDirections(origin, destination);
 
-              if (directionResp.isOkay && directionResp.routes.isNotEmpty) {
-                final encodedPolyline = directionResp.routes[0].overviewPolyline.points;
-
-                /// Decode to points using PolylinePoints
-                PolylinePoints polylinePoints = PolylinePoints();
-                List<PointLatLng> decodedPoints = polylinePoints.decodePolyline(encodedPolyline);
-
-                /// Convert to google_maps_flutter LatLng
-                List<gmaps.LatLng> polylineCoordinates = decodedPoints
+              if (encodedPolyline != null && encodedPolyline.isNotEmpty) {
+                final decodedPoints = PolylinePoints().decodePolyline(encodedPolyline);
+                final polylineCoordinates = decodedPoints
                     .map((p) => gmaps.LatLng(p.latitude, p.longitude))
                     .toList();
 
                 setState(() {
-                  _polylines.clear();
-                  _polylines.clear();
-                  _polylines.add(
-                    gmaps.Polyline(
+                  _polylines
+                    ..clear()
+                    ..add(gmaps.Polyline(
                       polylineId: gmaps.PolylineId("route"),
                       points: polylineCoordinates,
                       color: Colors.blue,
                       width: 5,
-                    ),
-                  );
-
+                    ));
                   addMarker(destinationId, destinationLocation);
                   _markerDestinationId = destinationId;
-                  // Animate camera after marker is set
                   moveCameraTo(destinationLocation);
                 });
               }
@@ -221,54 +196,37 @@ class _MapScreenState extends State<MapScreen> {
         return;
       }
 
-      PlacesAutocompleteResponse autoCompleteResp = await gMapPlaces.autocomplete(value, region: "MY");
+      final suggestions = await _placesService.autocomplete(value);
 
-      if (autoCompleteResp.isOkay && autoCompleteResp.predictions.isNotEmpty) {
-        var predictions = autoCompleteResp.predictions;
-
-        setState(() {
-          query = value;
-          _recommendedSearchList = predictions.map((p) => p.description ?? "").toList();
-          isSearchCompleted = false;
-        });
-      } else {
-        setState(() {
-          _recommendedSearchList = List.generate(10, (index) => "Result ${index + 1} for \"$value\"");
-          isSearchCompleted = false;
-        });
-      }
+      setState(() {
+        query = value;
+        _recommendedSearchList = suggestions.map((s) => s.description).toList();
+        isSearchCompleted = false;
+      });
     });
   }
 
-  // Handle selection of a search result
   void _onSearchResultSubmitted(String result) async {
-    final placesSearchResp = await gMapPlaces.searchByText(result, region: "MY");
+    final results = await _placesService.searchByText(result);
 
-    if (placesSearchResp.isOkay && placesSearchResp.results.isNotEmpty) {
-      final results = placesSearchResp.results;
-      setState(() {
-        _searchResult = results;
-        query = result;
-        isSearchCompleted = true;
-      });
-    }
+    setState(() {
+      _searchResult = results;
+      query = result;
+      isSearchCompleted = true;
+    });
   }
 
   Future<void> _goToMe() async {
     final gmaps.GoogleMapController controller = await _gMapController.future;
     await controller.animateCamera(gmaps.CameraUpdate.newCameraPosition(
-        gmaps.CameraPosition(target: currentPosition, zoom: 16.8491)
-    ));
+        gmaps.CameraPosition(target: currentPosition, zoom: 16.8491)));
   }
 
   void addMarker(String userId, gmaps.LatLng position) {
     var markerId = gmaps.MarkerId(userId);
 
     setState(() {
-      // Remove any previous destination markers (excluding current location marker)
       markers.removeWhere((m) => m.markerId == gmaps.MarkerId(_markerDestinationId));
-
-      // Add the new destination marker
       markers.add(
         gmaps.Marker(
           markerId: markerId,
@@ -293,7 +251,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _initializeGMap() async {
-    // Load user
     User? user = await SharedPreferencesUtil.loadUser();
     var userId = user?.id;
 
@@ -302,8 +259,6 @@ class _MapScreenState extends State<MapScreen> {
     currentPosition = gmaps.LatLng(lat, lng);
     _initialCameraPosition = gmaps.CameraPosition(target: currentPosition, zoom: 16.8491);
 
-    //getMarkerIcon();
-    // Load the marker icon first, then add the marker
     await getMarkerIcon();
     addMarker(userId.toString(), currentPosition);
 
@@ -313,22 +268,19 @@ class _MapScreenState extends State<MapScreen> {
         var newPosition = gmaps.LatLng(newLocation.latitude, newLocation.longitude);
         markers = {
           gmaps.Marker(
-              markerId: markerId,
-              position: newPosition,
-              icon: gmaps.BitmapDescriptor.defaultMarker,
-              rotation: LocationManagerUtil.calculateDegrees(currentPosition, newPosition),
-              anchor: const Offset(0.5, 0.5)
+            markerId: markerId,
+            position: newPosition,
+            icon: gmaps.BitmapDescriptor.defaultMarker,
+            rotation: LocationManagerUtil.calculateDegrees(currentPosition, newPosition),
+            anchor: const Offset(0.5, 0.5),
           )
         };
         currentPosition = newPosition;
-        setState(() {
-
-        });
+        setState(() {});
       }
     });
   }
 
-  // Function to move camera
   Future<void> moveCameraTo(gmaps.LatLng position) async {
     final gmaps.GoogleMapController controller = await _gMapController.future;
     controller.animateCamera(gmaps.CameraUpdate.newCameraPosition(
