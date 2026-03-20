@@ -1,0 +1,11 @@
+# Claude
+.claude/
+
+# Markdown docs (keep only root README.md)
+*.md
+!README.md
+
+# Environment secrets
+.env
+**/.env
+**/application.properties
