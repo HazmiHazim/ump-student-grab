@@ -16,7 +16,7 @@ public class ApiKey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
+    private Long id;
 
     private String apiKey;
     private Long createdBy;

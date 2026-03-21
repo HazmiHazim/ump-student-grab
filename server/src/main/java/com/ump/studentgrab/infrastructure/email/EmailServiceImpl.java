@@ -4,6 +4,7 @@ import com.ump.studentgrab.application.port.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,7 +19,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private static final String FROM_ADDRESS = "studentgrab.service@umpsa.com.my";
+    @Value("${spring.mail.from}")
+    private String fromAddress;
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
@@ -55,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
 
-            helper.setFrom(FROM_ADDRESS);
+            helper.setFrom(fromAddress);
             helper.setTo(to);
             helper.setSubject(subject);
 

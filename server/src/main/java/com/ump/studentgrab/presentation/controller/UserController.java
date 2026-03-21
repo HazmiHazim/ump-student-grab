@@ -4,6 +4,7 @@ import com.ump.studentgrab.application.dto.request.UpdateUserRequest;
 import com.ump.studentgrab.application.dto.response.UserResponse;
 import com.ump.studentgrab.application.service.UserService;
 import com.ump.studentgrab.presentation.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
             @PathVariable Long id,
-            @RequestBody UpdateUserRequest request) {
+            @Valid @RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok(ApiResponse.success("User updated successfully", userService.updateUser(id, request)));
     }
 

@@ -9,7 +9,6 @@ import com.ump.studentgrab.domain.model.User;
 import com.ump.studentgrab.domain.repository.ApiKeyRepository;
 import com.ump.studentgrab.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +25,8 @@ public class ApiKeyService {
     private final UserRepository userRepository;
     private final ApiKeyMapper apiKeyMapper;
 
-    @Value("${app.secret-key}")
-    private String appSecretKey;
-
     @Transactional
-    public ApiKeyResponse generateApiKey(String secretKey, Long userId) {
-        validateSecretKey(secretKey);
-
+    public ApiKeyResponse generateApiKey(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
@@ -57,15 +51,8 @@ public class ApiKeyService {
         }
     }
 
-    public List<ApiKeyResponse> getAllApiKeys(String secretKey) {
-        validateSecretKey(secretKey);
+    public List<ApiKeyResponse> getAllApiKeys() {
         return apiKeyMapper.toResponseList(apiKeyRepository.findAll());
-    }
-
-    private void validateSecretKey(String secretKey) {
-        if (!appSecretKey.equals(secretKey)) {
-            throw new UnauthorizedException("Invalid secret key");
-        }
     }
 
     private String generateSecureKey() {

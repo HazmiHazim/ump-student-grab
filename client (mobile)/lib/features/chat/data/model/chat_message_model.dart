@@ -15,7 +15,9 @@ class ChatMessageModel {
     return ChatMessageModel(
       userId: json['userId'] as int,
       content: json['content'] as String? ?? '',
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -23,7 +25,9 @@ class ChatMessageModel {
     return ChatMessageModel(
       userId: json['senderId'] as int,
       content: json['content'] as String? ?? '',
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
     );
   }
 

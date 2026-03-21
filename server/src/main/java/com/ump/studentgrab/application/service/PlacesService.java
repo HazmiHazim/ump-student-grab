@@ -61,6 +61,8 @@ public class PlacesService {
 
         return results.stream()
                 .map(r -> (Map<?, ?>) r)
+                .filter(r -> r.get("geometry") instanceof Map<?, ?> g
+                        && g.get("location") instanceof Map<?, ?>)
                 .map(r -> {
                     Map<?, ?> geometry = (Map<?, ?>) r.get("geometry");
                     Map<?, ?> location = (Map<?, ?>) geometry.get("location");
@@ -91,9 +93,13 @@ public class PlacesService {
         }
 
         Map<?, ?> route = (Map<?, ?>) routes.get(0);
-        Map<?, ?> overviewPolyline = (Map<?, ?>) route.get("overview_polyline");
-        String encodedPolyline = (String) overviewPolyline.get("points");
+        Map<?, ?> overviewPolyline = route.get("overview_polyline") instanceof Map<?, ?> p ? p : null;
 
+        if (overviewPolyline == null || overviewPolyline.get("points") == null) {
+            throw new ResourceNotFoundException("Route found but polyline data is missing");
+        }
+
+        String encodedPolyline = (String) overviewPolyline.get("points");
         return new DirectionsResponse(encodedPolyline);
     }
 }

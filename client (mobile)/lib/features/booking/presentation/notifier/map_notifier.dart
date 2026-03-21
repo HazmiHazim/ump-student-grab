@@ -1,3 +1,4 @@
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ump_student_grab_mobile/features/booking/domain/entity/place.dart';
@@ -72,13 +73,14 @@ class MapNotifier extends Notifier<MapState> {
         .read(bookingRepositoryProvider)
         .getDirections(origin, destination);
     result.fold(
-      (_) {},
+      (_) => state = state.copyWith(polylinePoints: []),
       (encodedPolyline) {
         if (encodedPolyline == null || encodedPolyline.isEmpty) return;
-        // Decoding happens in the screen using flutter_polyline_points
-        state = state.copyWith(
-          // Store raw encoded polyline, decode in screen
-        );
+        final decoded = PolylinePoints()
+            .decodePolyline(encodedPolyline)
+            .map((p) => LatLng(p.latitude, p.longitude))
+            .toList();
+        state = state.copyWith(polylinePoints: decoded);
       },
     );
   }

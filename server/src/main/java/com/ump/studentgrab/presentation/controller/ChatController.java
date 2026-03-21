@@ -7,6 +7,7 @@ import com.ump.studentgrab.application.dto.response.ChatResponse;
 import com.ump.studentgrab.application.dto.response.MessageResponse;
 import com.ump.studentgrab.application.service.ChatService;
 import com.ump.studentgrab.presentation.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ChatResponse>> createChat(@RequestBody CreateChatRequest request) {
+    public ResponseEntity<ApiResponse<ChatResponse>> createChat(@Valid @RequestBody CreateChatRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created("Chat created successfully", chatService.createChat(request)));
     }
@@ -52,7 +53,7 @@ public class ChatController {
     @PostMapping("/{chatId}/messages")
     public ResponseEntity<ApiResponse<MessageResponse>> createMessage(
             @PathVariable Long chatId,
-            @RequestBody CreateMessageRequest request) {
+            @Valid @RequestBody CreateMessageRequest request) {
         CreateMessageRequest withChatId = new CreateMessageRequest(request.content(), request.attachment(), request.userId(), chatId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created("Message sent", chatService.createMessage(withChatId)));

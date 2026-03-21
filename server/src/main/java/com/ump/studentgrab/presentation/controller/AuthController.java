@@ -4,6 +4,7 @@ import com.ump.studentgrab.application.dto.request.*;
 import com.ump.studentgrab.application.dto.response.UserResponse;
 import com.ump.studentgrab.application.service.AuthService;
 import com.ump.studentgrab.presentation.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse user = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created("User registered successfully", user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> login(@Valid @RequestBody LoginRequest request) {
         UserResponse user = authService.login(request);
         return ResponseEntity.ok(ApiResponse.success("Login successful", user));
     }
@@ -36,19 +37,19 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
         authService.forgotPassword(request);
         return ResponseEntity.ok(ApiResponse.success("Password reset link sent to your email", null));
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         authService.resetPassword(request);
         return ResponseEntity.ok(ApiResponse.success("Password reset successfully", null));
     }
 
     @PostMapping("/verify-email")
-    public ResponseEntity<ApiResponse<Void>> sendVerificationEmail(@RequestBody VerifyEmailRequest request) {
+    public ResponseEntity<ApiResponse<Void>> sendVerificationEmail(@Valid @RequestBody VerifyEmailRequest request) {
         authService.sendVerificationEmail(request);
         return ResponseEntity.ok(ApiResponse.success("Verification email sent", null));
     }

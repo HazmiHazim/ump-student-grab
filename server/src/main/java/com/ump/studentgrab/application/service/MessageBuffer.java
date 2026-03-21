@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @RequiredArgsConstructor
 public class MessageBuffer {
 
+    /** Flush to DB after this many messages to balance write frequency vs. memory usage. */
     private static final int FLUSH_THRESHOLD = 5;
 
     private final MessageRepository messageRepository;

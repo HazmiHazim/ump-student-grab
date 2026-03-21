@@ -19,6 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String fullName;
@@ -29,6 +30,7 @@ public class User {
     private String role;
     private Long attachmentId;
 
+    @Column(nullable = false)
     @Builder.Default
     private Boolean isVerified = false;
 

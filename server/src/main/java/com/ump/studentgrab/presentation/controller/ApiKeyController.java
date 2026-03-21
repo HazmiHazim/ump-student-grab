@@ -18,16 +18,14 @@ public class ApiKeyController {
     private final ApiKeyService apiKeyService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ApiKeyResponse>> generateApiKey(
-            @RequestParam String secretKey,
-            @RequestParam Long userId) {
-        ApiKeyResponse response = apiKeyService.generateApiKey(secretKey, userId);
+    public ResponseEntity<ApiResponse<ApiKeyResponse>> generateApiKey(@RequestParam Long userId) {
+        ApiKeyResponse response = apiKeyService.generateApiKey(userId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.created("API key generated successfully", response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ApiKeyResponse>>> getAllApiKeys(@RequestParam String secretKey) {
-        return ResponseEntity.ok(ApiResponse.success(apiKeyService.getAllApiKeys(secretKey)));
+    public ResponseEntity<ApiResponse<List<ApiKeyResponse>>> getAllApiKeys() {
+        return ResponseEntity.ok(ApiResponse.success(apiKeyService.getAllApiKeys()));
     }
 }

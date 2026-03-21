@@ -20,6 +20,8 @@ class ChatWebsocketDataSourceImpl implements ChatWebsocketDataSource {
   @override
   Stream<ChatMessage> subscribeToRoom(String roomId) {
     _currentRoomId = roomId;
+    _stompClient?.deactivate();
+    _stompClient = null;
     _streamController?.close();
     _streamController = StreamController<ChatMessage>.broadcast();
 
