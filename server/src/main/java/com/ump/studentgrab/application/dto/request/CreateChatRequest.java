@@ -1,3 +1,8 @@
 package com.ump.studentgrab.application.dto.request;
 
-public record CreateChatRequest(Long senderId, Long recipientId) {}
+import jakarta.validation.constraints.NotNull;
+
+public record CreateChatRequest(
+        @NotNull(message = "Sender ID is required") Long senderId,
+        @NotNull(message = "Recipient ID is required") Long recipientId
+) {}

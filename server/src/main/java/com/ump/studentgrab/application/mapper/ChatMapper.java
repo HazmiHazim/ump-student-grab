@@ -28,5 +28,7 @@ public interface ChatMapper {
     List<MessageResponse> toMessageResponseList(List<Message> messages);
 
     @Mapping(source = "senderId", target = "userId")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "attachment", ignore = true)
     Message toEntity(ChatMessageWS messageWS);
 }

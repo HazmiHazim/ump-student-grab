@@ -1,12 +1,16 @@
 package com.ump.studentgrab.domain.model;
 
+import com.ump.studentgrab.domain.enums.MessageStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "messages", indexes = {
+    @Index(name = "idx_message_chat_id", columnList = "chatId"),
+    @Index(name = "idx_message_user_id", columnList = "userId")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +29,14 @@ public class Message {
 
     private Long userId;
     private Long chatId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MessageStatus messageStatus = MessageStatus.SENT;
+
+    @Column(nullable = false)
+    private Boolean isRead = false;
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 

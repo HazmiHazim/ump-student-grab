@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -30,12 +31,21 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public String store(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        if (fileName == null || fileName.isBlank() || file.getSize() == 0) {
+        String originalName = file.getOriginalFilename();
+        if (originalName == null || originalName.isBlank() || file.getSize() == 0) {
             throw new IllegalArgumentException("Invalid file: name is empty or file has no content");
         }
 
+        // Sanitize: use UUID prefix to prevent path traversal and name collisions
+        String extension = originalName.contains(".")
+                ? originalName.substring(originalName.lastIndexOf('.'))
+                : "";
+        String fileName = UUID.randomUUID() + extension;
+
         Path targetPath = storageLocation.resolve(fileName).normalize();
+        if (!targetPath.startsWith(storageLocation)) {
+            throw new IllegalArgumentException("Invalid file path");
+        }
         try {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {

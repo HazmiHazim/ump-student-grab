@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    @Query("SELECT m FROM Message m WHERE m.chatId = :chatId AND (m.userId = :userId OR m.userId = :participantId)")
+    @Query("SELECT m FROM Message m WHERE m.chatId = :chatId AND (m.userId = :userId OR m.userId = :participantId) ORDER BY m.createdAt ASC")
     List<Message> findByChatAndParticipants(
             @Param("chatId") Long chatId,
             @Param("userId") Long userId,

@@ -34,6 +34,7 @@ public class PlacesService {
                 .toUriString();
 
         Map<?, ?> body = restClient.get().uri(url).retrieve().body(Map.class);
+        if (body == null) return List.of();
         List<?> predictions = (List<?>) body.get("predictions");
 
         if (predictions == null || predictions.isEmpty()) return List.of();
@@ -55,6 +56,7 @@ public class PlacesService {
                 .toUriString();
 
         Map<?, ?> body = restClient.get().uri(url).retrieve().body(Map.class);
+        if (body == null) return List.of();
         List<?> results = (List<?>) body.get("results");
 
         if (results == null || results.isEmpty()) return List.of();
@@ -86,6 +88,9 @@ public class PlacesService {
                 .toUriString();
 
         Map<?, ?> body = restClient.get().uri(url).retrieve().body(Map.class);
+        if (body == null) {
+            throw new ResourceNotFoundException("No response from directions API");
+        }
         List<?> routes = (List<?>) body.get("routes");
 
         if (routes == null || routes.isEmpty()) {

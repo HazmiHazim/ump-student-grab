@@ -71,8 +71,7 @@ public class ChatService {
     }
 
     public List<ChatDetailsResponse> getChatDetailsForUser(Long userId) {
-        return chatRepository.findAll().stream()
-                .filter(chat -> chat.getSenderId().equals(userId) || chat.getRecipientId().equals(userId))
+        return chatRepository.findByUserId(userId).stream()
                 .map(this::buildChatDetails)
                 .toList();
     }

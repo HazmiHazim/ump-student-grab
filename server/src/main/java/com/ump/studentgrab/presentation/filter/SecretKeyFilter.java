@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 
 @Component
 public class SecretKeyFilter extends OncePerRequestFilter {
@@ -27,7 +28,7 @@ public class SecretKeyFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (!appSecretKey.equals(secretKey)) {
+        if (!MessageDigest.isEqual(appSecretKey.getBytes(), secretKey.getBytes())) {
             sendUnauthorized(response, "Invalid secret key");
             return;
         }
@@ -43,8 +44,9 @@ public class SecretKeyFilter extends OncePerRequestFilter {
     private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
+        String safeMessage = message.replace("\\", "\\\\").replace("\"", "\\\"");
         response.getWriter().write(
-                "{\"status\":401,\"message\":\"" + message + "\",\"data\":null}"
+                "{\"status\":401,\"message\":\"" + safeMessage + "\",\"data\":null}"
         );
     }
 }

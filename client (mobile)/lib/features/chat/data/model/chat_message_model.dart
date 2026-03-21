@@ -1,11 +1,13 @@
 import 'package:ump_student_grab_mobile/features/chat/domain/entity/chat_message.dart';
 
 class ChatMessageModel {
+  final int? id;
   final int userId;
   final String content;
   final DateTime createdAt;
 
   const ChatMessageModel({
+    this.id,
     required this.userId,
     required this.content,
     required this.createdAt,
@@ -13,6 +15,7 @@ class ChatMessageModel {
 
   factory ChatMessageModel.fromRestJson(Map<String, dynamic> json) {
     return ChatMessageModel(
+      id: json['id'] as int?,
       userId: json['userId'] as int,
       content: json['content'] as String? ?? '',
       createdAt: json['createdAt'] != null
@@ -31,6 +34,10 @@ class ChatMessageModel {
     );
   }
 
-  ChatMessage toEntity() =>
-      ChatMessage(userId: userId, content: content, createdAt: createdAt);
+  ChatMessage toEntity() => ChatMessage(
+        id: id,
+        userId: userId,
+        content: content,
+        createdAt: createdAt,
+      );
 }

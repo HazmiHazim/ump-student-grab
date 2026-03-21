@@ -59,7 +59,7 @@ public class TokenService {
             existing.setExpiredAt(LocalDateTime.now());
             tokenRepository.save(existing);
         });
-        return createToken(userId, null);
+        return createToken(userId, LocalDateTime.now().plusDays(7));
     }
 
     // Internal — returns entity for use within the application layer

@@ -46,7 +46,7 @@ public class ApiKeyService {
         ApiKey apiKey = apiKeyRepository.findByApiKey(key)
                 .orElseThrow(() -> new UnauthorizedException("Invalid API key"));
 
-        if (apiKey.getExpiredAt().isBefore(LocalDateTime.now())) {
+        if (apiKey.getExpiredAt() != null && apiKey.getExpiredAt().isBefore(LocalDateTime.now())) {
             throw new UnauthorizedException("API key has expired");
         }
     }

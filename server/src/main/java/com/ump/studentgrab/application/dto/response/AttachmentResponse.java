@@ -7,7 +7,6 @@ public record AttachmentResponse(
         String fileName,
         Long fileSize,
         String fileType,
-        String filePath,
         Long uploadedBy,
         LocalDateTime createdAt
 ) {}

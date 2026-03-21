@@ -46,8 +46,10 @@ class ChatRoomNotifier extends FamilyNotifier<ChatRoomState, int> {
 
     // Subscribe to live messages
     _subscription = repo.subscribeToRoom(_chatId.toString()).listen((msg) {
-      final alreadyExists =
-          state.messages.any((m) => m.createdAt == msg.createdAt);
+      final alreadyExists = state.messages.any((m) =>
+          m.createdAt == msg.createdAt &&
+          m.userId == msg.userId &&
+          m.content == msg.content);
       if (!alreadyExists) {
         state = state.copyWith(messages: [...state.messages, msg]);
       }
