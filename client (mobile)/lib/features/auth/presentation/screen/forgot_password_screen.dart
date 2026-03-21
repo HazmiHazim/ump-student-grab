@@ -33,104 +33,85 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 150,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image:
-                                  AssetImage('assets/images/forgot-password.png'),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        const Text(
-                          'Forgot your password',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 75, 75, 75),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                          child: Text(
-                            "Please enter the email associated with your account and we'll send you a password reset link.",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 175, 175, 175),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CustomInput(
-                          userInput: _emailController,
-                          hintText: 'Email',
-                          keyboardType: TextInputType.emailAddress,
-                          errorText: _emailError,
-                          onChanged: (_) => setState(() => _emailError = null),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 55,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
-                              backgroundColor: AppColor.primary,
-                            ),
-                            onPressed: isLoading ? null : _handleForgotPassword,
-                            child: isLoading
-                                ? const CustomLoading()
-                                : const Text(
-                                    'Request Reset Link',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white),
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: () => context.pop(),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.arrow_back, color: AppColor.primary),
-                              Text('Back to login',
-                                  style: TextStyle(color: AppColor.primary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 160),
+                child: Image.asset(
+                  'assets/images/forgot-password.png',
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              const SizedBox(height: 15),
+              const Text(
+                'Forgot your password',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 75, 75, 75),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 12, left: 20, right: 20),
+                child: Text(
+                  "Please enter the email associated with your account and we'll send you a password reset link.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 175, 175, 175),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              CustomInput(
+                userInput: _emailController,
+                hintText: 'Email',
+                keyboardType: TextInputType.emailAddress,
+                errorText: _emailError,
+                onChanged: (_) => setState(() => _emailError = null),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 55,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: AppColor.primary,
+                  ),
+                  onPressed: isLoading ? null : _handleForgotPassword,
+                  child: isLoading
+                      ? const CustomLoading()
+                      : const Text(
+                          'Request Reset Link',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back, color: AppColor.primary),
+                    Text('Back to login',
+                        style: TextStyle(color: AppColor.primary)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
       ),

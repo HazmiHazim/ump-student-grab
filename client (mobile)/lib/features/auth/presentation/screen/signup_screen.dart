@@ -60,133 +60,104 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 150,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: AssetImage(
-                                  'assets/images/create-account-2.png'),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        const Text(
-                          'Create Account',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 75, 75, 75),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                          child: Text(
-                            'Please provide all required details to continue creating your account.',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 175, 175, 175),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomInput(
-                            userInput: _emailController,
-                            hintText: 'Email',
-                            keyboardType: TextInputType.emailAddress,
-                            errorText: _emailError,
-                            onChanged: (_) => setState(() => _emailError = null),
-                          ),
-                          const SizedBox(height: 5),
-                          CustomInput(
-                            userInput: _fullNameController,
-                            hintText: 'Full Name',
-                            keyboardType: TextInputType.text,
-                            errorText: _fullNameError,
-                            onChanged: (_) =>
-                                setState(() => _fullNameError = null),
-                          ),
-                          const SizedBox(height: 5),
-                          CustomInput(
-                            userInput: _matricNoController,
-                            hintText: 'Matric No.',
-                            keyboardType: TextInputType.text,
-                            errorText: _matricNoError,
-                            onChanged: (_) =>
-                                setState(() => _matricNoError = null),
-                          ),
-                          const SizedBox(height: 5),
-                          CustomInput(
-                            userInput: _phoneNoController,
-                            hintText: 'Mobile Phone No.',
-                            keyboardType: TextInputType.phone,
-                            errorText: _phoneNoError,
-                            onChanged: (_) =>
-                                setState(() => _phoneNoError = null),
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 55,
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25)),
-                                backgroundColor: AppColor.primary,
-                                disabledBackgroundColor: AppColor.greyPrimary,
-                              ),
-                              onPressed: _isButtonEnabled ? _handleNext : null,
-                              child: const Text(
-                                'Next',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          TextButton(
-                            onPressed: () => context.push('/auth/login'),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.arrow_back, color: AppColor.primary),
-                                Text('Back to login',
-                                    style: TextStyle(color: AppColor.primary)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 160),
+                child: Image.asset(
+                  'assets/images/create-account-2.png',
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              const SizedBox(height: 15),
+              const Text(
+                'Create Account',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 75, 75, 75),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 12, left: 20, right: 20),
+                child: Text(
+                  'Please provide all required details to continue creating your account.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 175, 175, 175),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              CustomInput(
+                userInput: _emailController,
+                hintText: 'Email',
+                keyboardType: TextInputType.emailAddress,
+                errorText: _emailError,
+                onChanged: (_) => setState(() => _emailError = null),
+              ),
+              CustomInput(
+                userInput: _fullNameController,
+                hintText: 'Full Name',
+                keyboardType: TextInputType.text,
+                errorText: _fullNameError,
+                onChanged: (_) => setState(() => _fullNameError = null),
+              ),
+              CustomInput(
+                userInput: _matricNoController,
+                hintText: 'Matric No.',
+                keyboardType: TextInputType.text,
+                errorText: _matricNoError,
+                onChanged: (_) => setState(() => _matricNoError = null),
+              ),
+              CustomInput(
+                userInput: _phoneNoController,
+                hintText: 'Mobile Phone No.',
+                keyboardType: TextInputType.phone,
+                errorText: _phoneNoError,
+                onChanged: (_) => setState(() => _phoneNoError = null),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 55,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: AppColor.primary,
+                    disabledBackgroundColor: AppColor.greyPrimary,
+                  ),
+                  onPressed: _isButtonEnabled ? _handleNext : null,
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => context.push('/auth/login'),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back, color: AppColor.primary),
+                    Text('Back to login',
+                        style: TextStyle(color: AppColor.primary)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
       ),

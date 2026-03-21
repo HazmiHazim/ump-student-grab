@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
@@ -29,7 +28,7 @@ class CustomInput extends StatefulWidget {
   });
 
   @override
-  _CustomInputState createState() => _CustomInputState();
+  State<CustomInput> createState() => _CustomInputState();
 }
 
 class _CustomInputState extends State<CustomInput> {

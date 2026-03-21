@@ -57,7 +57,7 @@ class _AppShellState extends ConsumerState<AppShell>
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 blurRadius: 10,
                 spreadRadius: 1,
                 offset: const Offset(0, 1),

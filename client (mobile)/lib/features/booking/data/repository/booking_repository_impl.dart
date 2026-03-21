@@ -13,7 +13,7 @@ class BookingRepositoryImpl implements BookingRepository {
   Future<Either<Failure, List<PlaceSuggestion>>> autocomplete(String query) async {
     try {
       final results = await _remote.autocomplete(query);
-      return Right(results);
+      return Right(results.map((m) => m.toEntity()).toList());
     } on DioException catch (e) {
       return Left(ServerFailure(
         e.response?.data['message'] as String? ?? 'Autocomplete failed',
@@ -28,7 +28,7 @@ class BookingRepositoryImpl implements BookingRepository {
   Future<Either<Failure, List<Place>>> searchByText(String query) async {
     try {
       final results = await _remote.searchByText(query);
-      return Right(results);
+      return Right(results.map((m) => m.toEntity()).toList());
     } on DioException catch (e) {
       return Left(ServerFailure(
         e.response?.data['message'] as String? ?? 'Search failed',

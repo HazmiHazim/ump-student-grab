@@ -28,7 +28,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Set<gmaps.Marker> _markers = {};
   late gmaps.LatLng _currentPosition;
   late gmaps.CameraPosition _initialCameraPosition;
-  Set<gmaps.Polyline> _polylines = {};
+  final Set<gmaps.Polyline> _polylines = {};
   gmaps.BitmapDescriptor? _markerIcon;
   String _markerDestinationId = '';
 
@@ -214,20 +214,25 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               top: 10,
               left: 16,
               right: 16,
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 4, color: Colors.black26)
-                  ],
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.3,
                 ),
-                child: ListView.builder(
-                  itemCount: _suggestionLabels.take(5).length,
-                  itemBuilder: (ctx, i) => ListTile(
-                    title: Text(_suggestionLabels[i]),
-                    onTap: () => _onSearchSubmitted(_suggestionLabels[i]),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 4, color: Colors.black26)
+                    ],
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _suggestionLabels.take(5).length,
+                    itemBuilder: (ctx, i) => ListTile(
+                      title: Text(_suggestionLabels[i]),
+                      onTap: () => _onSearchSubmitted(_suggestionLabels[i]),
+                    ),
                   ),
                 ),
               ),

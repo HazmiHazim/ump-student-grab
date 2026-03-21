@@ -38,122 +38,100 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 150,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: AssetImage(
-                                  'assets/images/create-password-2.png'),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        const Text(
-                          'Create Password',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 75, 75, 75),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Password Requirements:',
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 75, 75, 75),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold)),
-                              _Requirement('Password must be at least 6 characters long.'),
-                              _Requirement('Password must contain at least 1 capital letter.'),
-                              _Requirement('Password must contain at least 1 number.'),
-                              _Requirement(r'Password must contain at least 1 special character (@,#,$,%,*).'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CustomInput(
-                          userInput: _passwordController,
-                          hintText: 'New Password',
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: true,
-                          errorText: _passwordError,
-                          onChanged: (_) =>
-                              setState(() => _passwordError = null),
-                        ),
-                        const SizedBox(height: 5),
-                        CustomInput(
-                          userInput: _confirmPasswordController,
-                          hintText: 'Confirm Password',
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: true,
-                          errorText: _confirmPasswordError,
-                          onChanged: (_) =>
-                              setState(() => _confirmPasswordError = null),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 55,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
-                              backgroundColor: AppColor.primary,
-                            ),
-                            onPressed: isLoading ? null : _handleSignup,
-                            child: isLoading
-                                ? const CustomLoading()
-                                : const Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white),
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextButton(
-                          onPressed: () => context.go('/auth/login'),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.arrow_back, color: AppColor.primary),
-                              Text('Back to login',
-                                  style: TextStyle(color: AppColor.primary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 24),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 160),
+                child: Image.asset(
+                  'assets/images/create-password-2.png',
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
+              const SizedBox(height: 15),
+              const Text(
+                'Create Password',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 75, 75, 75),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Password Requirements:',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 75, 75, 75),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
+                    _Requirement('Password must be at least 6 characters long.'),
+                    _Requirement('Password must contain at least 1 capital letter.'),
+                    _Requirement('Password must contain at least 1 number.'),
+                    _Requirement(r'Password must contain at least 1 special character (@,#,$,%,*).'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              CustomInput(
+                userInput: _passwordController,
+                hintText: 'New Password',
+                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
+                errorText: _passwordError,
+                onChanged: (_) => setState(() => _passwordError = null),
+              ),
+              CustomInput(
+                userInput: _confirmPasswordController,
+                hintText: 'Confirm Password',
+                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
+                errorText: _confirmPasswordError,
+                onChanged: (_) => setState(() => _confirmPasswordError = null),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 55,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: AppColor.primary,
+                  ),
+                  onPressed: isLoading ? null : _handleSignup,
+                  child: isLoading
+                      ? const CustomLoading()
+                      : const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => context.go('/auth/login'),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back, color: AppColor.primary),
+                    Text('Back to login',
+                        style: TextStyle(color: AppColor.primary)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
       ),
@@ -225,6 +203,7 @@ class _Requirement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('- ',
             style: TextStyle(

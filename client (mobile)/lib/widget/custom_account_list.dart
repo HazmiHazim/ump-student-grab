@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomAccountList extends StatelessWidget {
@@ -23,14 +22,14 @@ class CustomAccountList extends StatelessWidget {
       leading: Container(
         width: width,
         height: height,
-        child: Icon(icon, color: colour),
         decoration: BoxDecoration(
-          color: colour.withOpacity(0.09),
+          color: colour.withValues(alpha: 0.09),
           borderRadius: BorderRadius.circular(18)
         ),
+        child: Icon(icon, color: colour),
       ),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
-      trailing: Icon(Icons.arrow_forward_ios, color: Colors.black, size: 20),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.black, size: 20),
     );
   }
 }

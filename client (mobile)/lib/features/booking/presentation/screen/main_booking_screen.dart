@@ -8,25 +8,27 @@ class MainBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return SingleChildScrollView(
       child: Column(
         children: [
           Container(
-            height: 350,
             width: double.infinity,
+            height: screenHeight * 0.35,
             decoration: const BoxDecoration(
               color: AppColor.transparentPrimary,
             ),
             child: Column(
               children: [
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 200,
-                  child: Image.asset('assets/images/book-now.png',
-                      fit: BoxFit.cover),
-                ),
                 const SizedBox(height: 20),
+                Expanded(
+                  child: Image.asset(
+                    'assets/images/book-now.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 12),
                 const Text(
                   'Plan your journey now!',
                   style: TextStyle(
@@ -35,9 +37,9 @@ class MainBookingScreen extends StatelessWidget {
                     fontWeight: FontWeight.w300,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 SizedBox(
-                  width: 200,
+                  width: MediaQuery.of(context).size.width * 0.5,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -54,15 +56,16 @@ class MainBookingScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),
-          ListTile(
-            leading: const Text(
+          const ListTile(
+            leading: Text(
               'Past Bookings',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            trailing: const Icon(Icons.sort, color: Colors.black, size: 30),
+            trailing: Icon(Icons.sort, color: Colors.black, size: 30),
           ),
           const SizedBox(height: 10),
           CustomBookingListHistory(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomChatList extends StatelessWidget {
@@ -14,7 +13,7 @@ class CustomChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(child: Text("A")),
+      leading: const CircleAvatar(child: Text("A")),
       title: Text(recipientName),
       subtitle: Text(lastMessage),
     );

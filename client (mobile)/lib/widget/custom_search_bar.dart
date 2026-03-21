@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomSearchBar extends StatelessWidget {
@@ -32,7 +31,7 @@ class CustomSearchBar extends StatelessWidget {
           child: Row(
             children: [
               Icon(icon, color: Colors.black),
-              SizedBox(width: 10.0),
+              const SizedBox(width: 10.0),
               Text(
                 hintText,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
@@ -19,7 +18,7 @@ class CustomRadioButton extends StatefulWidget {
   });
 
   @override
-  _CustomRadioButtonState createState() => _CustomRadioButtonState();
+  State<CustomRadioButton> createState() => _CustomRadioButtonState();
 }
 
 class _CustomRadioButtonState extends State<CustomRadioButton> {

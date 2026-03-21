@@ -6,10 +6,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           CustomSearchBar(hintText: 'Search places...'),
         ],
       ),
