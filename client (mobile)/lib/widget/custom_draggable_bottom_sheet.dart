@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ump_student_grab_mobile/Model/place_result.dart';
+import 'package:ump_student_grab_mobile/features/booking/domain/entity/place.dart';
 
 class CustomDraggableBottomSheet extends StatelessWidget {
   final DraggableScrollableController draggableController;
   final Radius borderRadiusTopLeft;
   final Radius borderRadiusTopRight;
   final bool enableBookButton;
-  final List<PlaceResult> searchResults;
+  final List<Place> searchResults;
   final void Function(String, double?, double?) onPlaceSelected;
 
   const CustomDraggableBottomSheet({
