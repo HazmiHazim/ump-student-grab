@@ -18,6 +18,8 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
   final _inputController = TextEditingController();
   final _scrollController = ScrollController();
   bool _initialized = false;
+  int? _currentUserId;
+  String _currentUserName = '';
 
   @override
   void initState() {
@@ -28,6 +30,15 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
   Future<void> _initialize() async {
     if (_initialized) return;
     _initialized = true;
+
+    final userJson = await ref.read(localStorageProvider).getUser();
+    if (mounted) {
+      setState(() {
+        _currentUserId = userJson?['id'] as int?;
+        _currentUserName = userJson?['fullName'] as String? ?? '';
+      });
+    }
+
     await ref
         .read(chatRoomNotifierProvider(widget.args.chatId).notifier)
         .initialize(widget.args.recipientId);
@@ -60,97 +71,88 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(widget.args.recipientName)),
-      body: FutureBuilder<Map<String, dynamic>?>(
-        future: ref.read(localStorageProvider).getUser(),
-        builder: (context, userSnapshot) {
-          final currentUserId = userSnapshot.data?['id'] as int?;
-          final currentUserName =
-              userSnapshot.data?['fullName'] as String? ?? '';
-
-          return Column(
-            children: [
-              Expanded(
-                child: chatState.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ListView.builder(
-                        controller: _scrollController,
-                        itemCount: chatState.messages.length,
-                        itemBuilder: (ctx, index) {
-                          final msg = chatState.messages[index];
-                          final isMe = msg.userId == currentUserId;
-                          return Align(
-                            alignment: isMe
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Container(
-                              margin: const EdgeInsets.all(8),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color:
-                                    isMe ? Colors.green : Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                msg.content,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 8, right: 8, bottom: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 55,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 246, 246, 246),
-                          border: Border.all(color: AppColor.primary),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: TextField(
-                          controller: _inputController,
-                          autocorrect: false,
-                          enableSuggestions: false,
-                          cursorColor: AppColor.primary,
-                          maxLines: null,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 105, 105, 105)),
-                          decoration: const InputDecoration(
-                            hintText: 'Type a message',
-                            hintStyle: TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 157, 157, 157)),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 12),
+      body: Column(
+        children: [
+          Expanded(
+            child: chatState.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: chatState.messages.length,
+                    itemBuilder: (ctx, index) {
+                      final msg = chatState.messages[index];
+                      final isMe = msg.userId == _currentUserId;
+                      return Align(
+                        alignment: isMe
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color:
+                                isMe ? Colors.green : Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            msg.content,
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
+                      );
+                    },
+                  ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 8, right: 8, bottom: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 246, 246, 246),
+                      border: Border.all(color: AppColor.primary),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: TextField(
+                      controller: _inputController,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      cursorColor: AppColor.primary,
+                      maxLines: null,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          color: Color.fromARGB(255, 105, 105, 105)),
+                      decoration: const InputDecoration(
+                        hintText: 'Type a message',
+                        hintStyle: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 157, 157, 157)),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 12),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.send, color: AppColor.primary),
-                      onPressed: () {
-                        final text = _inputController.text.trim();
-                        if (text.isEmpty || currentUserId == null) return;
-                        ref
-                            .read(chatRoomNotifierProvider(widget.args.chatId)
-                                .notifier)
-                            .sendMessage(currentUserId, currentUserName, text);
-                        _inputController.clear();
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+                IconButton(
+                  icon: const Icon(Icons.send, color: AppColor.primary),
+                  onPressed: () {
+                    final text = _inputController.text.trim();
+                    if (text.isEmpty || _currentUserId == null) return;
+                    ref
+                        .read(chatRoomNotifierProvider(widget.args.chatId)
+                            .notifier)
+                        .sendMessage(_currentUserId!, _currentUserName, text);
+                    _inputController.clear();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -6,6 +6,7 @@ import com.ump.studentgrab.application.mapper.TokenMapper;
 import com.ump.studentgrab.domain.model.Token;
 import com.ump.studentgrab.domain.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TokenService {
@@ -22,12 +24,15 @@ public class TokenService {
 
     @Transactional
     public TokenResponse createToken(Long userId, LocalDateTime expiredAt) {
+        log.info("Creating token for userId={}, expiresAt={}", userId, expiredAt);
         Token token = Token.builder()
                 .token(generateTokenValue())
                 .userId(userId)
                 .expiredAt(expiredAt)
                 .build();
-        return tokenMapper.toResponse(tokenRepository.save(token));
+        TokenResponse response = tokenMapper.toResponse(tokenRepository.save(token));
+        log.info("Token created for userId={}", userId);
+        return response;
     }
 
     public TokenResponse getTokenById(Long id) {
@@ -48,13 +53,16 @@ public class TokenService {
 
     @Transactional
     public void expireToken(String tokenValue) {
+        log.info("Expiring token");
         Token token = findByValue(tokenValue);
         token.setExpiredAt(LocalDateTime.now());
         tokenRepository.save(token);
+        log.info("Token expired for userId={}", token.getUserId());
     }
 
     @Transactional
     public TokenResponse refreshToken(Long userId) {
+        log.info("Refreshing token for userId={}", userId);
         tokenRepository.findTopByUserIdOrderByCreatedAtDesc(userId).ifPresent(existing -> {
             existing.setExpiredAt(LocalDateTime.now());
             tokenRepository.save(existing);

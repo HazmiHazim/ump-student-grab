@@ -7,12 +7,14 @@ import com.ump.studentgrab.application.mapper.UserMapper;
 import com.ump.studentgrab.domain.model.User;
 import com.ump.studentgrab.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,15 +40,20 @@ public class UserService {
 
     @Transactional
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
+        log.info("Updating user: id={}", id);
         User user = findById(id);
         applyUpdates(user, request);
-        return userMapper.toResponse(userRepository.save(user));
+        UserResponse response = userMapper.toResponse(userRepository.save(user));
+        log.info("User updated: id={}", id);
+        return response;
     }
 
     @Transactional
     public void deleteUser(Long id) {
+        log.info("Deleting user: id={}", id);
         User user = findById(id);
         userRepository.delete(user);
+        log.info("User deleted: id={}", id);
     }
 
     // Internal — returns entity for use within the application layer

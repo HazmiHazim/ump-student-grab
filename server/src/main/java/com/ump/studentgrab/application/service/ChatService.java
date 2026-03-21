@@ -14,11 +14,13 @@ import com.ump.studentgrab.domain.model.User;
 import com.ump.studentgrab.domain.repository.ChatRepository;
 import com.ump.studentgrab.domain.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -30,6 +32,7 @@ public class ChatService {
 
     @Transactional
     public ChatResponse createChat(CreateChatRequest request) {
+        log.info("Creating chat between senderId={} and recipientId={}", request.senderId(), request.recipientId());
         chatRepository.findByParticipants(request.senderId(), request.recipientId())
                 .ifPresent(existing -> {
                     throw new DuplicateResourceException("Chat already exists between these users");
@@ -39,7 +42,9 @@ public class ChatService {
         userService.findById(request.recipientId());
 
         Chat chat = chatMapper.toEntity(request);
-        return chatMapper.toResponse(chatRepository.save(chat));
+        ChatResponse response = chatMapper.toResponse(chatRepository.save(chat));
+        log.info("Chat created: id={}", response.id());
+        return response;
     }
 
     public ChatResponse getChatById(Long id) {
@@ -58,11 +63,14 @@ public class ChatService {
 
     @Transactional
     public MessageResponse createMessage(CreateMessageRequest request) {
+        log.info("Creating message in chatId={} from userId={}", request.chatId(), request.userId());
         userService.findById(request.userId());
         findById(request.chatId());
 
         Message message = chatMapper.toEntity(request);
-        return chatMapper.toMessageResponse(messageRepository.save(message));
+        MessageResponse response = chatMapper.toMessageResponse(messageRepository.save(message));
+        log.info("Message created: id={}", response.id());
+        return response;
     }
 
     public List<MessageResponse> getMessages(Long chatId, Long userId, Long participantId) {
@@ -71,6 +79,7 @@ public class ChatService {
     }
 
     public List<ChatDetailsResponse> getChatDetailsForUser(Long userId) {
+        log.debug("Fetching chat details for userId={}", userId);
         return chatRepository.findByUserId(userId).stream()
                 .map(this::buildChatDetails)
                 .toList();

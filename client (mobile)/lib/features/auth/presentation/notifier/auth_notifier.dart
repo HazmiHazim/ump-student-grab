@@ -20,7 +20,14 @@ class AuthNotifier extends AsyncNotifier<User?> {
     _signupUseCase = ref.read(signupUseCaseProvider);
     _logoutUseCase = ref.read(logoutUseCaseProvider);
     _forgotPasswordUseCase = ref.read(forgotPasswordUseCaseProvider);
-    return ref.read(authRepositoryProvider).getCachedUser();
+
+    final repo = ref.read(authRepositoryProvider);
+    final cachedUser = await repo.getCachedUser();
+    if (cachedUser == null) return null;
+
+    // Validate cached session against server
+    final isValid = await repo.validateSession();
+    return isValid ? cachedUser : null;
   }
 
   Future<Failure?> login(String email, String password) async {

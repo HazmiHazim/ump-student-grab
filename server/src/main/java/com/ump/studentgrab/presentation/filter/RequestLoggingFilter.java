@@ -24,21 +24,21 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
 
+        long duration = System.currentTimeMillis() - startTime;
         int status = response.getStatus();
-        if (status >= 300) {
-            long duration = System.currentTimeMillis() - startTime;
-            String method = request.getMethod();
-            String uri = request.getRequestURI();
-            String query = request.getQueryString();
-            String fullUri = query != null ? uri + "?" + query : uri;
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+        String query = request.getQueryString();
+        String fullUri = query != null ? uri + "?" + query : uri;
 
-            if (status >= 500) {
-                log.error("[{}] {} {} — {}ms", status, method, fullUri, duration);
-            } else if (status >= 400) {
-                log.warn("[{}] {} {} — {}ms", status, method, fullUri, duration);
-            } else {
-                log.info("[{}] {} {} — {}ms", status, method, fullUri, duration);
-            }
+        if (status >= 500) {
+            log.error("[{}] {} {} — {}ms", status, method, fullUri, duration);
+        } else if (status >= 400) {
+            log.warn("[{}] {} {} — {}ms", status, method, fullUri, duration);
+        } else if (status >= 300) {
+            log.info("[{}] {} {} — {}ms", status, method, fullUri, duration);
+        } else {
+            log.debug("[{}] {} {} — {}ms", status, method, fullUri, duration);
         }
     }
 }

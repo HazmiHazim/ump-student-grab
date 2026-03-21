@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationManager {
   static final LocationManager _instance = LocationManager._internal();
@@ -38,7 +37,6 @@ class LocationManager {
         .listen((position) {
       currentPosition = position;
       FBroadcast.instance().broadcast('update_location', value: position);
-      _savePosition(position);
       debugPrint('Location: ${position.latitude}, ${position.longitude}');
     });
   }
@@ -46,12 +44,6 @@ class LocationManager {
   void stop() {
     _positionStream?.cancel();
     _positionStream = null;
-  }
-
-  Future<void> _savePosition(Position position) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('latitude', position.latitude);
-    await prefs.setDouble('longitude', position.longitude);
   }
 
   static double calculateBearing(LatLng from, LatLng to) {

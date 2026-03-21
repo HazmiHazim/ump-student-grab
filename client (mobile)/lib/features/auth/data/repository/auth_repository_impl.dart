@@ -93,6 +93,32 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<User?> getCachedUser() => _local.getUser();
 
+  @override
+  Future<bool> validateSession() async {
+    try {
+      final user = await _local.getUser();
+      if (user == null) return false;
+      await _remote.validateSession(user.id);
+      return true;
+    } on DioException catch (e) {
+      // Network/timeout errors: trust the cache, don't clear
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.connectionError) {
+        return true;
+      }
+      // Server explicitly rejected (401, 403, 404): clear stale session
+      await _local.clearUser();
+      return false;
+    } catch (_) {
+      // Unknown error: trust the cache
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> isFirstTime() => _local.isFirstTime();
+
   String? _extractMessage(DioException e) {
     try {
       return e.response?.data['message'] as String?;

@@ -2,6 +2,7 @@ package com.ump.studentgrab.infrastructure.storage;
 
 import com.ump.studentgrab.application.exception.ResourceNotFoundException;
 import com.ump.studentgrab.application.port.FileStorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
@@ -24,7 +26,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         this.storageLocation = Paths.get(storagePath).toAbsolutePath().normalize();
         try {
             Files.createDirectories(storageLocation);
+            log.info("File storage initialized at: {}", storageLocation);
         } catch (IOException e) {
+            log.error("Could not create file storage directory: {}", storagePath, e);
             throw new RuntimeException("Could not create file storage directory: " + storagePath, e);
         }
     }
@@ -48,7 +52,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
         try {
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("File stored: {}", fileName);
         } catch (IOException e) {
+            log.error("Failed to store file: {}", fileName, e);
             throw new RuntimeException("Failed to store file: " + fileName, e);
         }
 
@@ -68,7 +74,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     public void delete(String filePath) {
         try {
             Files.deleteIfExists(Paths.get(filePath));
+            log.info("File deleted: {}", filePath);
         } catch (IOException e) {
+            log.error("Failed to delete file: {}", filePath, e);
             throw new RuntimeException("Failed to delete file: " + filePath, e);
         }
     }

@@ -15,4 +15,6 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, void>> forgotPassword(String email);
   Future<User?> getCachedUser();
+  Future<bool> validateSession();
+  Future<bool> isFirstTime();
 }

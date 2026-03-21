@@ -14,6 +14,7 @@ abstract class AuthRemoteDataSource {
   });
   Future<void> logout();
   Future<String> forgotPassword(String email);
+  Future<void> validateSession(int userId);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -64,5 +65,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       data: {'email': email},
     );
     return response.data['message'] as String;
+  }
+
+  @override
+  Future<void> validateSession(int userId) async {
+    await _dio.get(ApiEndpoints.userById(userId));
   }
 }

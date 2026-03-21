@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:ump_student_grab_mobile/router/app_router.dart';
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_welcome_screen_container.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   final _pageController = PageController();
   bool _isLastPage = false;
 
@@ -68,7 +70,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     backgroundColor: AppColor.primary,
                     minimumSize: const Size.fromHeight(60),
                   ),
-                  onPressed: () => context.go('/auth/login'),
+                  onPressed: () {
+                    ref.read(routerNotifierProvider).welcomeDone();
+                    context.go('/auth/login');
+                  },
                   child: const Text('Get Started',
                       style: TextStyle(fontSize: 20, color: Colors.white)),
                 ),
@@ -83,7 +88,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () => context.go('/auth/login'),
+                    onPressed: () {
+                      ref.read(routerNotifierProvider).welcomeDone();
+                      context.go('/auth/login');
+                    },
                     child: const Text('Skip', style: TextStyle(fontSize: 18)),
                   ),
                   SmoothPageIndicator(

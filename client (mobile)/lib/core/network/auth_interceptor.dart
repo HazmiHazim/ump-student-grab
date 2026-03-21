@@ -20,9 +20,10 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
       debugPrint('AuthInterceptor: 401 Unauthorized — ${err.requestOptions.path}');
+      await _storage.clearUser();
     } else {
       debugPrint('AuthInterceptor: HTTP ${err.response?.statusCode} — ${err.message}');
     }

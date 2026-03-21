@@ -9,6 +9,7 @@ import com.ump.studentgrab.domain.model.User;
 import com.ump.studentgrab.domain.repository.ApiKeyRepository;
 import com.ump.studentgrab.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ApiKeyService {
@@ -27,10 +29,12 @@ public class ApiKeyService {
 
     @Transactional
     public ApiKeyResponse generateApiKey(Long userId) {
+        log.info("Generating API key for userId={}", userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         if (!"Super Admin".equals(user.getRole())) {
+            log.warn("API key generation denied — userId={} is not Super Admin", userId);
             throw new UnauthorizedException("Only Super Admins can generate API keys");
         }
 
@@ -39,14 +43,20 @@ public class ApiKeyService {
                 .createdBy(userId)
                 .build();
 
-        return apiKeyMapper.toResponse(apiKeyRepository.save(apiKey));
+        ApiKeyResponse response = apiKeyMapper.toResponse(apiKeyRepository.save(apiKey));
+        log.info("API key generated: id={} by userId={}", response.id(), userId);
+        return response;
     }
 
     public void validateApiKey(String key) {
         ApiKey apiKey = apiKeyRepository.findByApiKey(key)
-                .orElseThrow(() -> new UnauthorizedException("Invalid API key"));
+                .orElseThrow(() -> {
+                    log.warn("API key validation failed — invalid key");
+                    return new UnauthorizedException("Invalid API key");
+                });
 
         if (apiKey.getExpiredAt() != null && apiKey.getExpiredAt().isBefore(LocalDateTime.now())) {
+            log.warn("API key validation failed — expired key id={}", apiKey.getId());
             throw new UnauthorizedException("API key has expired");
         }
     }

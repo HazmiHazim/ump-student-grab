@@ -6,6 +6,7 @@ import com.ump.studentgrab.domain.model.Message;
 import com.ump.studentgrab.domain.repository.ChatRepository;
 import com.ump.studentgrab.domain.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MessageBuffer {
@@ -31,6 +33,7 @@ public class MessageBuffer {
 
     public synchronized void add(ChatMessageWS messageWS) {
         queue.add(chatMapper.toEntity(messageWS));
+        log.debug("Message buffered for chatId={}, queue size={}", messageWS.getChatId(), queue.size());
 
         if (queue.size() >= FLUSH_THRESHOLD) {
             flush();
@@ -50,9 +53,11 @@ public class MessageBuffer {
         while ((msg = queue.poll()) != null) {
             batch.add(msg);
         }
+        log.info("Flushing {} buffered messages to DB", batch.size());
         try {
             messageRepository.saveAll(batch);
         } catch (Exception e) {
+            log.error("Failed to flush {} messages, re-queuing", batch.size(), e);
             queue.addAll(batch);
             throw e;
         }

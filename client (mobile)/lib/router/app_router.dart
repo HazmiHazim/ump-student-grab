@@ -21,25 +21,52 @@ import 'package:ump_student_grab_mobile/features/home/presentation/shell/app_she
 
 class _RouterNotifier extends ChangeNotifier {
   final Ref _ref;
+  bool _showWelcome = false;
+
   _RouterNotifier(this._ref) {
     _ref.listen<AsyncValue<User?>>(authNotifierProvider, (_, __) {
       notifyListeners();
     });
+    _checkFirstTime();
+  }
+
+  Future<void> _checkFirstTime() async {
+    final repo = _ref.read(authRepositoryProvider);
+    _showWelcome = await repo.isFirstTime();
+    notifyListeners();
+  }
+
+  void welcomeDone() {
+    _showWelcome = false;
+    notifyListeners();
   }
 
   bool get isLoggedIn =>
       _ref.read(authNotifierProvider).valueOrNull != null;
 }
 
+final routerNotifierProvider = Provider<_RouterNotifier>((ref) {
+  return _RouterNotifier(ref);
+});
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final notifier = _RouterNotifier(ref);
+  final notifier = ref.read(routerNotifierProvider);
 
   return GoRouter(
     refreshListenable: notifier,
-    initialLocation: '/auth/login',
+    initialLocation: '/auth/welcome',
     redirect: (context, state) {
       final loggedIn = notifier.isLoggedIn;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
+      final isWelcome = state.matchedLocation == '/auth/welcome';
+
+      // First-time user: show welcome screen
+      if (notifier._showWelcome) {
+        return isWelcome ? null : '/auth/welcome';
+      }
+
+      // Not first time but on welcome: skip to login
+      if (isWelcome) return '/auth/login';
 
       if (!loggedIn && !isAuthRoute) return '/auth/login';
       if (loggedIn && isAuthRoute) return '/home';
@@ -65,8 +92,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/auth/create-password',
-        builder: (_, state) {
-          final args = state.extra as SignupArgs;
+        builder: (context, state) {
+          final args = state.extra;
+          if (args is! SignupArgs) {
+            return _ErrorPage(
+              message: 'Something went wrong. Please try again.',
+              onRetry: () => context.go('/auth/signup'),
+            );
+          }
           return CreatePasswordScreen(args: args);
         },
       ),
@@ -100,8 +133,14 @@ final routerProvider = Provider<GoRouter>((ref) {
               routes: [
                 GoRoute(
                   path: 'room',
-                  builder: (_, state) {
-                    final args = state.extra as ChatRoomArgs;
+                  builder: (context, state) {
+                    final args = state.extra;
+                    if (args is! ChatRoomArgs) {
+                      return _ErrorPage(
+                        message: 'Could not open chat. Please try again.',
+                        onRetry: () => context.go('/chat'),
+                      );
+                    }
                     return ChatRoomScreen(args: args);
                   },
                 ),
@@ -125,3 +164,38 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+class _ErrorPage extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _ErrorPage({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: onRetry,
+                child: const Text('Go Back'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -11,12 +11,17 @@ abstract class LocalStorage {
 
 class SharedPrefsLocalStorage implements LocalStorage {
   static const _userKey = 'loggedInUser';
+  static const _tokenKey = 'authToken';
   static const _firstTimeKey = 'isFirstTime';
 
   @override
   Future<void> saveUser(Map<String, dynamic> userJson) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_userKey, json.encode(userJson));
+    final token = userJson['token'] as String?;
+    if (token != null) {
+      await prefs.setString(_tokenKey, token);
+    }
   }
 
   @override
@@ -29,14 +34,15 @@ class SharedPrefsLocalStorage implements LocalStorage {
 
   @override
   Future<String?> getToken() async {
-    final user = await getUser();
-    return user?['token'] as String?;
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_tokenKey);
   }
 
   @override
   Future<void> clearUser() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_userKey);
+    await prefs.remove(_tokenKey);
   }
 
   @override

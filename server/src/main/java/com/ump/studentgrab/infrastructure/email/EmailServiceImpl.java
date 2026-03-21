@@ -4,6 +4,7 @@ import com.ump.studentgrab.application.port.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,6 +16,7 @@ import org.thymeleaf.context.Context;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
@@ -53,6 +55,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void sendEmail(String to, String subject, String template, String token, Map<String, String> inlineImages) {
+        log.info("Sending email: to={}, subject='{}'", to, subject);
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
@@ -70,7 +73,9 @@ public class EmailServiceImpl implements EmailService {
             }
 
             mailSender.send(mimeMessage);
+            log.info("Email sent successfully: to={}", to);
         } catch (MessagingException e) {
+            log.error("Failed to send email: to={}, subject='{}'", to, subject, e);
             throw new RuntimeException("Failed to send email to " + to, e);
         }
     }

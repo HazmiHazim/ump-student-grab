@@ -4,6 +4,7 @@ import com.ump.studentgrab.application.dto.response.DirectionsResponse;
 import com.ump.studentgrab.application.dto.response.PlaceSearchResponse;
 import com.ump.studentgrab.application.dto.response.PlaceSuggestionResponse;
 import com.ump.studentgrab.application.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -12,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class PlacesService {
 
@@ -27,6 +29,7 @@ public class PlacesService {
     }
 
     public List<PlaceSuggestionResponse> autocomplete(String query, String region) {
+        log.debug("Places autocomplete: query='{}', region='{}'", query, region);
         String url = UriComponentsBuilder.fromHttpUrl(PLACES_BASE_URL + "/autocomplete/json")
                 .queryParam("input", query)
                 .queryParam("region", region)
@@ -49,6 +52,7 @@ public class PlacesService {
     }
 
     public List<PlaceSearchResponse> searchByText(String query, String region) {
+        log.debug("Places text search: query='{}', region='{}'", query, region);
         String url = UriComponentsBuilder.fromHttpUrl(PLACES_BASE_URL + "/textsearch/json")
                 .queryParam("query", query)
                 .queryParam("region", region)
@@ -81,6 +85,7 @@ public class PlacesService {
     }
 
     public DirectionsResponse getDirections(String origin, String destination) {
+        log.debug("Directions request: origin='{}', destination='{}'", origin, destination);
         String url = UriComponentsBuilder.fromHttpUrl(DIRECTIONS_BASE_URL + "/json")
                 .queryParam("origin", origin)
                 .queryParam("destination", destination)

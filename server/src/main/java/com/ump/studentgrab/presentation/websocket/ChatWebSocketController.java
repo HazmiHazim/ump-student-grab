@@ -5,6 +5,7 @@ import com.ump.studentgrab.application.service.MessageBuffer;
 import com.ump.studentgrab.domain.enums.MessageStatus;
 import com.ump.studentgrab.domain.enums.MessageType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -12,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatWebSocketController {
@@ -34,6 +36,7 @@ public class ChatWebSocketController {
 
         messageBuffer.add(message);
         messagingTemplate.convertAndSend("/topic/room/" + roomId, message);
+        log.info("WebSocket message sent: roomId={}, senderId={}", roomId, message.getSenderId());
     }
 
     @MessageMapping("/chat.addParticipant/{roomId}")
@@ -47,5 +50,6 @@ public class ChatWebSocketController {
 
         message.setMessageType(MessageType.ONLINE);
         messagingTemplate.convertAndSend("/topic/room/" + roomId, message);
+        log.info("Participant joined: roomId={}, name={}", roomId, message.getSenderName());
     }
 }

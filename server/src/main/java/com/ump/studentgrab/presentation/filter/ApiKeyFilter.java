@@ -7,11 +7,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ApiKeyFilter extends OncePerRequestFilter {
@@ -25,6 +27,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         String apiKey = request.getHeader("X-Api-Key");
 
         if (apiKey == null || apiKey.isBlank()) {
+            log.warn("Request rejected — missing X-Api-Key: {} {}", request.getMethod(), request.getRequestURI());
             sendUnauthorized(response, "Missing X-Api-Key header");
             return;
         }
@@ -32,6 +35,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         try {
             apiKeyService.validateApiKey(apiKey);
         } catch (UnauthorizedException ex) {
+            log.warn("Request rejected — invalid API key: {} {}", request.getMethod(), request.getRequestURI());
             sendUnauthorized(response, ex.getMessage());
             return;
         }
@@ -42,7 +46,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return uri.startsWith("/api/keys") || uri.startsWith("/ws");
+        return uri.startsWith("/api/keys") || uri.startsWith("/api/setup") || uri.startsWith("/ws");
     }
 
     private void sendUnauthorized(HttpServletResponse response, String message) throws IOException {
