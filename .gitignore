@@ -1,10 +1,9 @@
 # Claude
 .claude/
 
-# Markdown docs (keep only root README.md and CLAUDE.md)
+# Markdown docs (keep only root README.md)
 *.md
 !README.md
-!CLAUDE.md
 
 # Environment secrets
 .env
