@@ -1,9 +1,9 @@
 class ApiEndpoints {
   // Auth
-  static const String signup = '/api/users';
-  static const String login = '/api/users/login';
-  static const String logout = '/api/users/logout';
-  static const String forgotPassword = '/api/users/forgot-password';
+  static const String signup = '/api/auth/register';
+  static const String login = '/api/auth/login';
+  static const String logout = '/api/auth/logout';
+  static const String forgotPassword = '/api/auth/forgot-password';
   static String userById(int id) => '/api/users/$id';
 
   // Attachments
