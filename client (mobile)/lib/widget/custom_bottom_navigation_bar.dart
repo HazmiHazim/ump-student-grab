@@ -32,7 +32,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         data: NavigationBarThemeData(
           iconTheme: WidgetStateProperty.resolveWith<IconThemeData>(
                   (Set<WidgetState> states) => states.contains(WidgetState.selected)
-                      ? const IconThemeData(color: Color.fromRGBO(26, 71, 143, 100))
+                      ? const IconThemeData(color: Colors.white)
                       : const IconThemeData(color: Colors.black)
           ),
           labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(

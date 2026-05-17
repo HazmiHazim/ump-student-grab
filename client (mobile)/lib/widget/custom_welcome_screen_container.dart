@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ump_student_grab_mobile/theme/app_color.dart';
 
 class CustomWelcomeScreenContainer extends StatelessWidget {
   final Color color;
@@ -35,7 +36,7 @@ class CustomWelcomeScreenContainer extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: Colors.red,
+                color: AppColor.primary,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
