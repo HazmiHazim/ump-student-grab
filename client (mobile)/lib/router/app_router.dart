@@ -24,8 +24,10 @@ class _RouterNotifier extends ChangeNotifier {
   bool _showWelcome = false;
 
   _RouterNotifier(this._ref) {
-    _ref.listen<AsyncValue<User?>>(authNotifierProvider, (_, __) {
-      notifyListeners();
+    _ref.listen<AsyncValue<User?>>(authNotifierProvider, (prev, next) {
+      final wasLoggedIn = prev?.valueOrNull != null;
+      final isLoggedIn = next.valueOrNull != null;
+      if (wasLoggedIn != isLoggedIn) notifyListeners();
     });
     _checkFirstTime();
   }
