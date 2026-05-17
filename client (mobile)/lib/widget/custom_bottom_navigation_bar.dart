@@ -56,7 +56,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             ),
             const NavigationDestination(
               icon: Icon(Icons.directions_car),
-              label: "Bookings",
+              label: "Rides",
               selectedIcon: Icon(Icons.directions_car),
             ),
             NavigationDestination(

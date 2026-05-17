@@ -46,7 +46,7 @@ class MainBookingScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(25)),
                       backgroundColor: AppColor.primary,
                     ),
-                    onPressed: () => context.push('/booking/map'),
+                    onPressed: () => context.push('/rides/map'),
                     child: const Text(
                       'Book now',
                       style: TextStyle(

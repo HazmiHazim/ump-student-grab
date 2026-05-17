@@ -17,7 +17,7 @@ class _AppShellState extends ConsumerState<AppShell>
 
   final List<String> _appBarTitles = [
     'Home',
-    'Bookings',
+    'Rides',
     'Chat',
     'My Account',
   ];

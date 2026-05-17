@@ -46,7 +46,7 @@ class _PersonalInformationScreenState
     final profile = ref.read(accountNotifierProvider).valueOrNull;
     if (profile == null) return;
     _nameInput.text = profile.fullName;
-    _matricNoInput.text = profile.matricNo;
+    _matricNoInput.text = profile.matricNo ?? '';
     _phoneNoInput.text = profile.phoneNo;
     _emailInput.text = profile.email;
     _selectedGender = profile.gender;

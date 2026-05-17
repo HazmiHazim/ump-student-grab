@@ -6,7 +6,7 @@ class Profile {
   final String fullName;
   final String? gender;
   final String? birthDate;
-  final String matricNo;
+  final String? matricNo;
   final String phoneNo;
   final String role;
   final int? attachmentId;
@@ -19,7 +19,7 @@ class Profile {
     required this.fullName,
     this.gender,
     this.birthDate,
-    required this.matricNo,
+    this.matricNo,
     required this.phoneNo,
     required this.role,
     this.attachmentId,
@@ -34,7 +34,7 @@ class Profile {
       fullName: json['fullName'] as String,
       gender: json['gender'] as String?,
       birthDate: json['birthDate'] as String?,
-      matricNo: json['matricNo'] as String,
+      matricNo: json['matricNo'] as String?,
       phoneNo: json['phoneNo'] as String,
       role: json['role'] as String,
       attachmentId: json['attachmentId'] as int?,

@@ -6,13 +6,16 @@ import 'package:ump_student_grab_mobile/features/account/presentation/screen/per
 import 'package:ump_student_grab_mobile/features/auth/model/user.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/create_password_screen.dart';
+import 'package:ump_student_grab_mobile/features/auth/presentation/screen/driver_create_password_screen.dart';
+import 'package:ump_student_grab_mobile/features/auth/presentation/screen/driver_signup_args.dart';
+import 'package:ump_student_grab_mobile/features/auth/presentation/screen/driver_signup_screen.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/forgot_password_screen.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/login_screen.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/signup_args.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/signup_screen.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/welcome_screen.dart';
-import 'package:ump_student_grab_mobile/features/booking/presentation/screen/main_booking_screen.dart';
 import 'package:ump_student_grab_mobile/features/booking/presentation/screen/map_screen.dart';
+import 'package:ump_student_grab_mobile/features/booking/presentation/screen/main_rides_screen.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/screen/chat_room_args.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/screen/chat_room_screen.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/screen/main_chat_screen.dart';
@@ -89,6 +92,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, __) => const SignupScreen(),
       ),
       GoRoute(
+        path: '/auth/driver-signup',
+        builder: (_, __) => const DriverSignupScreen(),
+      ),
+      GoRoute(
         path: '/auth/forgot-password',
         builder: (_, __) => const ForgotPasswordScreen(),
       ),
@@ -105,6 +112,19 @@ final routerProvider = Provider<GoRouter>((ref) {
           return CreatePasswordScreen(args: args);
         },
       ),
+      GoRoute(
+        path: '/auth/driver-create-password',
+        builder: (context, state) {
+          final args = state.extra;
+          if (args is! DriverSignupArgs) {
+            return _ErrorPage(
+              message: 'Something went wrong. Please try again.',
+              onRetry: () => context.go('/auth/driver-signup'),
+            );
+          }
+          return DriverCreatePasswordScreen(args: args);
+        },
+      ),
 
       // Main app shell with bottom navigation
       StatefulShellRoute.indexedStack(
@@ -118,8 +138,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
-              path: '/booking',
-              builder: (_, __) => const MainBookingScreen(),
+              path: '/rides',
+              builder: (_, __) => const MainRidesScreen(),
               routes: [
                 GoRoute(
                   path: 'map',
