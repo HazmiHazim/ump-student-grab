@@ -22,6 +22,18 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
   final _confirmPasswordController = TextEditingController();
   String? _passwordError;
   String? _confirmPasswordError;
+  String _password = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(() {
+      setState(() {
+        _password = _passwordController.text;
+        _passwordError = null;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -29,6 +41,11 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
+
+  bool get _hasMinLength => _password.length >= 6;
+  bool get _hasUppercase => _password.contains(RegExp(r'[A-Z]'));
+  bool get _hasDigit => _password.contains(RegExp(r'\d'));
+  bool get _hasSpecial => _password.contains(RegExp(r'[@#$%*]'));
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +78,40 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Password Requirements:',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 75, 75, 75),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold)),
-                    _Requirement('Password must be at least 6 characters long.'),
-                    _Requirement('Password must contain at least 1 capital letter.'),
-                    _Requirement('Password must contain at least 1 number.'),
-                    _Requirement(r'Password must contain at least 1 special character (@,#,$,%,*).'),
+                    const Text(
+                      'Password Requirements:',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 75, 75, 75),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    _PasswordRule(
+                      met: _hasMinLength,
+                      text: 'At least 6 characters',
+                      touched: _password.isNotEmpty,
+                    ),
+                    _PasswordRule(
+                      met: _hasUppercase,
+                      text: 'At least 1 uppercase letter',
+                      touched: _password.isNotEmpty,
+                    ),
+                    _PasswordRule(
+                      met: _hasDigit,
+                      text: 'At least 1 number',
+                      touched: _password.isNotEmpty,
+                    ),
+                    _PasswordRule(
+                      met: _hasSpecial,
+                      text: r'At least 1 special character (@, #, $, %, *)',
+                      touched: _password.isNotEmpty,
+                    ),
                   ],
                 ),
               ),
@@ -85,7 +122,7 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 errorText: _passwordError,
-                onChanged: (_) => setState(() => _passwordError = null),
+                onChanged: (_) {},
               ),
               CustomInput(
                 userInput: _confirmPasswordController,
@@ -196,28 +233,49 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
   }
 }
 
-class _Requirement extends StatelessWidget {
+class _PasswordRule extends StatelessWidget {
+  final bool met;
+  final bool touched;
   final String text;
-  const _Requirement(this.text);
+
+  const _PasswordRule({
+    required this.met,
+    required this.touched,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('- ',
-            style: TextStyle(
-                color: Colors.redAccent,
-                fontSize: 14,
-                fontWeight: FontWeight.w500)),
-        Expanded(
-          child: Text(text,
-              style: const TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500)),
+    final Color color;
+    final IconData icon;
+
+    if (!touched) {
+      color = const Color.fromARGB(255, 175, 175, 175);
+      icon = Icons.radio_button_unchecked;
+    } else if (met) {
+      color = Colors.green;
+      icon = Icons.check_circle_rounded;
+    } else {
+      color = Colors.redAccent;
+      icon = Icons.cancel_rounded;
+    }
+
+    return AnimatedDefaultTextStyle(
+      duration: const Duration(milliseconds: 200),
+      style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w500),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(icon, key: ValueKey(icon), color: color, size: 15),
+            ),
+            const SizedBox(width: 6),
+            Expanded(child: Text(text)),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
