@@ -38,7 +38,6 @@ class AuthRepository {
     required String fullName,
     required String matricNo,
     required String phoneNo,
-    required String role,
   }) async {
     try {
       await _dio.post(
@@ -49,7 +48,6 @@ class AuthRepository {
           'fullName': fullName,
           'matricNo': matricNo,
           'phoneNo': phoneNo,
-          'role': role,
         },
       );
       return const Right(null);
@@ -58,6 +56,46 @@ class AuthRepository {
         return const Left(NetworkFailure());
       }
       final message = _extractMessage(e) ?? 'Signup failed';
+      return Left(ServerFailure(message, statusCode: e.response?.statusCode));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> signupDriver({
+    required String email,
+    required String password,
+    required String fullName,
+    required String icNo,
+    required String phoneNo,
+    required String carBrand,
+    required String carModel,
+    required String plateNo,
+    required String carColour,
+    required String licenseType,
+  }) async {
+    try {
+      await _dio.post(
+        ApiEndpoints.driverSignup,
+        data: {
+          'email': email,
+          'password': password,
+          'fullName': fullName,
+          'icNo': icNo,
+          'phoneNo': phoneNo,
+          'carBrand': carBrand,
+          'carModel': carModel,
+          'plateNo': plateNo,
+          'carColour': carColour,
+          'licenseType': licenseType,
+        },
+      );
+      return const Right(null);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        return const Left(NetworkFailure());
+      }
+      final message = _extractMessage(e) ?? 'Driver signup failed';
       return Left(ServerFailure(message, statusCode: e.response?.statusCode));
     } catch (e) {
       return Left(UnexpectedFailure(e.toString()));

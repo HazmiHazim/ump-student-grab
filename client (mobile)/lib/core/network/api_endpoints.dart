@@ -1,6 +1,7 @@
 class ApiEndpoints {
   // Auth
   static const String signup = '/api/auth/register';
+  static const String driverSignup = '/api/auth/register/driver';
   static const String login = '/api/auth/login';
   static const String logout = '/api/auth/logout';
   static const String forgotPassword = '/api/auth/forgot-password';

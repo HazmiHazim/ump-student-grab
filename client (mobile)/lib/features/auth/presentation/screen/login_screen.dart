@@ -26,36 +26,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  Widget _socialButton(String imagePath, String label) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          height: 50,
-          width: 125,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.withValues(alpha: 0.4)),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: Image.asset(imagePath, fit: BoxFit.fill),
-              ),
-              const SizedBox(width: 5),
-              Text(label, style: const TextStyle(color: AppColor.primary)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authNotifierProvider).isLoading;
@@ -142,14 +112,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: const Text('Forgot password?',
                       style: TextStyle(color: AppColor.primary)),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _socialButton('assets/images/google-logo.png', 'Google'),
-                  _socialButton('assets/images/facebook-logo.png', 'Facebook'),
-                ],
               ),
               const SizedBox(height: 8),
               Row(

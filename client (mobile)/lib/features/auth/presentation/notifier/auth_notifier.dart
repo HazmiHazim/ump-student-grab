@@ -35,7 +35,6 @@ class AuthNotifier extends AsyncNotifier<User?> {
     required String fullName,
     required String matricNo,
     required String phoneNo,
-    required String role,
   }) async {
     state = const AsyncLoading();
     final result = await ref.read(authRepositoryProvider).signup(
@@ -44,7 +43,35 @@ class AuthNotifier extends AsyncNotifier<User?> {
       fullName: fullName,
       matricNo: matricNo,
       phoneNo: phoneNo,
-      role: role,
+    );
+    state = const AsyncData(null);
+    return result.fold((failure) => failure, (_) => null);
+  }
+
+  Future<Failure?> signupDriver({
+    required String email,
+    required String password,
+    required String fullName,
+    required String icNo,
+    required String phoneNo,
+    required String carBrand,
+    required String carModel,
+    required String plateNo,
+    required String carColour,
+    required String licenseType,
+  }) async {
+    state = const AsyncLoading();
+    final result = await ref.read(authRepositoryProvider).signupDriver(
+      email: email,
+      password: password,
+      fullName: fullName,
+      icNo: icNo,
+      phoneNo: phoneNo,
+      carBrand: carBrand,
+      carModel: carModel,
+      plateNo: plateNo,
+      carColour: carColour,
+      licenseType: licenseType,
     );
     state = const AsyncData(null);
     return result.fold((failure) => failure, (_) => null);

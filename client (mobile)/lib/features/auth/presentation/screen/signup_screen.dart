@@ -146,6 +146,13 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 12),
               TextButton(
+                onPressed: () => context.push('/auth/driver-signup'),
+                child: const Text(
+                  'Register as Driver instead',
+                  style: TextStyle(color: AppColor.primary),
+                ),
+              ),
+              TextButton(
                 onPressed: () => context.push('/auth/login'),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

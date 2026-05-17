@@ -3,21 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/providers.dart';
-import 'package:ump_student_grab_mobile/features/auth/presentation/screen/signup_args.dart';
+import 'package:ump_student_grab_mobile/features/auth/presentation/screen/driver_signup_args.dart';
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 import 'package:ump_student_grab_mobile/widget/custom_loading.dart';
 
-class CreatePasswordScreen extends ConsumerStatefulWidget {
-  final SignupArgs args;
-  const CreatePasswordScreen({super.key, required this.args});
+class DriverCreatePasswordScreen extends ConsumerStatefulWidget {
+  final DriverSignupArgs args;
+  const DriverCreatePasswordScreen({super.key, required this.args});
 
   @override
-  ConsumerState<CreatePasswordScreen> createState() =>
-      _CreatePasswordScreenState();
+  ConsumerState<DriverCreatePasswordScreen> createState() =>
+      _DriverCreatePasswordScreenState();
 }
 
-class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
+class _DriverCreatePasswordScreenState
+    extends ConsumerState<DriverCreatePasswordScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String? _passwordError;
@@ -205,12 +206,17 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
     }
     if (hasError) return;
 
-    final failure = await ref.read(authNotifierProvider.notifier).signup(
+    final failure = await ref.read(authNotifierProvider.notifier).signupDriver(
           email: widget.args.email,
           password: _passwordController.text,
           fullName: widget.args.fullName,
-          matricNo: widget.args.matricNo,
+          icNo: widget.args.icNo,
           phoneNo: widget.args.phoneNo,
+          carBrand: widget.args.carBrand,
+          carModel: widget.args.carModel,
+          plateNo: widget.args.plateNo,
+          carColour: widget.args.carColour,
+          licenseType: widget.args.licenseType,
         );
 
     if (!mounted) return;
@@ -223,7 +229,7 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
       );
     } else {
       Fluttertoast.showToast(
-        msg: 'Account created successfully. Please log in.',
+        msg: 'Driver account created successfully. Please log in.',
         backgroundColor: Colors.green.shade800,
         textColor: Colors.white,
       );
