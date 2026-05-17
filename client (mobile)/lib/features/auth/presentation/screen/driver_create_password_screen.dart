@@ -7,6 +7,7 @@ import 'package:ump_student_grab_mobile/features/auth/presentation/screen/driver
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';
 import 'package:ump_student_grab_mobile/widget/custom_loading.dart';
+import 'package:ump_student_grab_mobile/widget/step_indicator.dart';
 
 class DriverCreatePasswordScreen extends ConsumerStatefulWidget {
   final DriverSignupArgs args;
@@ -54,13 +55,21 @@ class _DriverCreatePasswordScreenState
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const StepIndicator(
+              currentStep: 2,
+              totalSteps: 3,
+              labels: ['Personal', 'Vehicle', 'Password'],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 160),
                 child: Image.asset(
@@ -158,19 +167,21 @@ class _DriverCreatePasswordScreenState
               ),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: () => context.go('/auth/login'),
+                onPressed: () => context.pop(),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.arrow_back, color: AppColor.primary),
-                    Text('Back to login',
-                        style: TextStyle(color: AppColor.primary)),
+                    Text('Back', style: TextStyle(color: AppColor.primary)),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
             ],
           ),
+        ),
+            ),
+          ],
         ),
       ),
     );
