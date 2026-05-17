@@ -1,7 +1,7 @@
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ump_student_grab_mobile/features/booking/domain/entity/place.dart';
+import 'package:ump_student_grab_mobile/features/booking/model/place.dart';
 import 'package:ump_student_grab_mobile/features/booking/presentation/providers.dart';
 
 class MapState {

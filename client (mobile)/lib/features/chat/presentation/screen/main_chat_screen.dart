@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ump_student_grab_mobile/core/network/dio_client.dart';
-import 'package:ump_student_grab_mobile/features/chat/domain/entity/chat_room.dart';
+import 'package:ump_student_grab_mobile/features/chat/model/chat_room.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/screen/chat_room_args.dart';
 import 'package:ump_student_grab_mobile/widget/custom_chat_list.dart';

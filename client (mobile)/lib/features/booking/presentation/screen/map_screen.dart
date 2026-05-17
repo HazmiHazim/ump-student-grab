@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:ump_student_grab_mobile/core/network/dio_client.dart';
 import 'package:ump_student_grab_mobile/core/util/location_manager.dart';
-import 'package:ump_student_grab_mobile/features/booking/domain/entity/place.dart';
+import 'package:ump_student_grab_mobile/features/booking/model/place.dart';
 
 import 'package:ump_student_grab_mobile/features/booking/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/widget/custom_draggable_bottom_sheet.dart';

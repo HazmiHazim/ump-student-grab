@@ -7,13 +7,11 @@ class AppConfig {
 
   late final String baseUrl;
   late final String wsBaseUrl;
-  late final String apiKey;
 
   void init() {
     final domain = dotenv.get('APP_DOMAIN');
     final port = dotenv.get('APP_PORT');
     baseUrl = 'http://$domain:$port';
     wsBaseUrl = 'ws://$domain:$port';
-    apiKey = dotenv.get('API_KEY');
   }
 }

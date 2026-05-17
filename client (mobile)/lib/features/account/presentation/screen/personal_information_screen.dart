@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:ump_student_grab_mobile/features/account/domain/usecase/update_profile_use_case.dart';
+import 'package:ump_student_grab_mobile/features/account/presentation/notifier/account_notifier.dart';
 import 'package:ump_student_grab_mobile/features/account/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/theme/app_color.dart';
 import 'package:ump_student_grab_mobile/widget/custom_input.dart';

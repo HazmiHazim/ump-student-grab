@@ -1,38 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ump_student_grab_mobile/core/error/failure.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/entity/user.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/usecase/forgot_password_use_case.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/usecase/login_use_case.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/usecase/logout_use_case.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/usecase/signup_use_case.dart';
+import 'package:ump_student_grab_mobile/features/auth/model/user.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/providers.dart';
-import 'package:ump_student_grab_mobile/core/usecase/use_case.dart';
 
 class AuthNotifier extends AsyncNotifier<User?> {
-  late LoginUseCase _loginUseCase;
-  late SignupUseCase _signupUseCase;
-  late LogoutUseCase _logoutUseCase;
-  late ForgotPasswordUseCase _forgotPasswordUseCase;
-
   @override
   Future<User?> build() async {
-    _loginUseCase = ref.read(loginUseCaseProvider);
-    _signupUseCase = ref.read(signupUseCaseProvider);
-    _logoutUseCase = ref.read(logoutUseCaseProvider);
-    _forgotPasswordUseCase = ref.read(forgotPasswordUseCaseProvider);
-
     final repo = ref.read(authRepositoryProvider);
     final cachedUser = await repo.getCachedUser();
     if (cachedUser == null) return null;
 
-    // Validate cached session against server
     final isValid = await repo.validateSession();
     return isValid ? cachedUser : null;
   }
 
   Future<Failure?> login(String email, String password) async {
     state = const AsyncLoading();
-    final result = await _loginUseCase(LoginParams(email: email, password: password));
+    final result = await ref.read(authRepositoryProvider).login(email, password);
     return result.fold(
       (failure) {
         state = const AsyncData(null);
@@ -54,28 +38,28 @@ class AuthNotifier extends AsyncNotifier<User?> {
     required String role,
   }) async {
     state = const AsyncLoading();
-    final result = await _signupUseCase(SignupParams(
+    final result = await ref.read(authRepositoryProvider).signup(
       email: email,
       password: password,
       fullName: fullName,
       matricNo: matricNo,
       phoneNo: phoneNo,
       role: role,
-    ));
+    );
     state = const AsyncData(null);
     return result.fold((failure) => failure, (_) => null);
   }
 
   Future<Failure?> logout() async {
     state = const AsyncLoading();
-    final result = await _logoutUseCase(const NoParams());
+    final result = await ref.read(authRepositoryProvider).logout();
     state = const AsyncData(null);
     return result.fold((failure) => failure, (_) => null);
   }
 
   Future<({Failure? failure, String? message})> forgotPassword(String email) async {
     state = const AsyncLoading();
-    final result = await _forgotPasswordUseCase(ForgotPasswordParams(email: email));
+    final result = await ref.read(authRepositoryProvider).forgotPassword(email);
     state = const AsyncData(null);
     return result.fold(
       (failure) => (failure: failure, message: null),

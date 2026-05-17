@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ump_student_grab_mobile/features/chat/domain/entity/chat_message.dart';
-import 'package:ump_student_grab_mobile/features/chat/domain/usecase/get_messages_use_case.dart';
+import 'package:ump_student_grab_mobile/features/chat/model/chat_message.dart';
 import 'package:ump_student_grab_mobile/features/chat/presentation/providers.dart';
 
 class ChatRoomState {
@@ -34,17 +33,11 @@ class ChatRoomNotifier extends FamilyNotifier<ChatRoomState, int> {
 
   Future<void> initialize(int recipientId) async {
     final repo = ref.read(chatRepositoryProvider);
-    final useCase = ref.read(getMessagesUseCaseProvider);
 
-    // Load history
-    final result = await useCase(
-        GetMessagesParams(chatId: _chatId, participantId: recipientId));
-
-    final history =
-        result.fold((_) => <ChatMessage>[], (messages) => messages);
+    final result = await repo.getMessages(_chatId, recipientId);
+    final history = result.fold((_) => <ChatMessage>[], (messages) => messages);
     state = state.copyWith(messages: history, isLoading: false);
 
-    // Subscribe to live messages
     _subscription = repo.subscribeToRoom(_chatId.toString()).listen((msg) {
       final alreadyExists = state.messages.any((m) =>
           m.createdAt == msg.createdAt &&
@@ -57,8 +50,6 @@ class ChatRoomNotifier extends FamilyNotifier<ChatRoomState, int> {
   }
 
   void sendMessage(int userId, String senderName, String content) {
-    ref
-        .read(chatRepositoryProvider)
-        .sendMessage(_chatId, userId, senderName, content);
+    ref.read(chatRepositoryProvider).sendMessage(_chatId, userId, senderName, content);
   }
 }

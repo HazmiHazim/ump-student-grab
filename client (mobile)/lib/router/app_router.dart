@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ump_student_grab_mobile/features/account/presentation/screen/main_account_screen.dart';
 import 'package:ump_student_grab_mobile/features/account/presentation/screen/personal_information_screen.dart';
-import 'package:ump_student_grab_mobile/features/auth/domain/entity/user.dart';
+import 'package:ump_student_grab_mobile/features/auth/model/user.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/create_password_screen.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/screen/forgot_password_screen.dart';

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ump_student_grab_mobile/core/config/app_config.dart';
 import 'package:ump_student_grab_mobile/core/storage/local_storage.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -11,7 +10,6 @@ class AuthInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers['X-Api-Key'] = AppConfig().apiKey;
     final token = await _storage.getToken();
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';

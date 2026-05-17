@@ -1,24 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ump_student_grab_mobile/core/error/failure.dart';
-import 'package:ump_student_grab_mobile/core/usecase/use_case.dart';
-import 'package:ump_student_grab_mobile/features/account/domain/entity/profile.dart';
-import 'package:ump_student_grab_mobile/features/account/domain/usecase/get_profile_use_case.dart';
-import 'package:ump_student_grab_mobile/features/account/domain/usecase/update_profile_use_case.dart';
+import 'package:ump_student_grab_mobile/features/account/model/profile.dart';
 import 'package:ump_student_grab_mobile/features/account/presentation/providers.dart';
 
-class AccountNotifier extends AsyncNotifier<Profile> {
-  late GetProfileUseCase _getProfile;
-  late UpdateProfileUseCase _updateProfile;
+class UpdateProfileParams {
+  final String? fullName;
+  final String? matricNo;
+  final String? birthDate;
+  final String? gender;
+  final String? phoneNo;
+  final String? email;
 
+  const UpdateProfileParams({
+    this.fullName,
+    this.matricNo,
+    this.birthDate,
+    this.gender,
+    this.phoneNo,
+    this.email,
+  });
+}
+
+class AccountNotifier extends AsyncNotifier<Profile> {
   @override
-  Future<Profile> build() async {
-    _getProfile = ref.read(getProfileUseCaseProvider);
-    _updateProfile = ref.read(updateProfileUseCaseProvider);
-    return _loadProfile();
-  }
+  Future<Profile> build() async => _loadProfile();
 
   Future<Profile> _loadProfile() async {
-    final result = await _getProfile(const NoParams());
+    final result = await ref.read(accountRepositoryProvider).getProfile();
     return result.fold(
       (failure) => throw failure,
       (profile) => profile,
@@ -31,7 +39,14 @@ class AccountNotifier extends AsyncNotifier<Profile> {
   }
 
   Future<Failure?> updateProfile(UpdateProfileParams params) async {
-    final result = await _updateProfile(params);
+    final result = await ref.read(accountRepositoryProvider).updateProfile(
+      fullName: params.fullName,
+      matricNo: params.matricNo,
+      birthDate: params.birthDate,
+      gender: params.gender,
+      phoneNo: params.phoneNo,
+      email: params.email,
+    );
     return result.fold(
       (failure) => failure,
       (profile) {

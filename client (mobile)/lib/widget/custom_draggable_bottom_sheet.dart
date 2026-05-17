@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ump_student_grab_mobile/features/booking/domain/entity/place.dart';
+import 'package:ump_student_grab_mobile/features/booking/model/place.dart';
 
 class CustomDraggableBottomSheet extends StatelessWidget {
   final DraggableScrollableController draggableController;

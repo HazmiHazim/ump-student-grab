@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ump_student_grab_mobile/features/account/domain/entity/profile.dart';
+import 'package:ump_student_grab_mobile/features/account/model/profile.dart';
 import 'package:ump_student_grab_mobile/features/account/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/features/auth/presentation/providers.dart';
 import 'package:ump_student_grab_mobile/widget/custom_account_list.dart';
