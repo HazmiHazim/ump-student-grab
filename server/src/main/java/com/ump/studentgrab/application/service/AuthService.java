@@ -44,7 +44,22 @@ public class AuthService {
         User user = userMapper.toEntity(request);
         user.setPassword(PASSWORD_ENCODER.encode(request.password()));
         UserResponse response = userMapper.toResponse(userRepository.save(user));
-        log.info("User registered: {}", request.email());
+        log.info("Passenger registered: {}", request.email());
+        return response;
+    }
+
+    @Transactional
+    public UserResponse registerDriver(DriverRegisterRequest request) {
+        userService.validateEmailFormat(request.email());
+
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new DuplicateResourceException("Email is already registered: " + request.email());
+        }
+
+        User user = userMapper.toDriverEntity(request);
+        user.setPassword(PASSWORD_ENCODER.encode(request.password()));
+        UserResponse response = userMapper.toResponse(userRepository.save(user));
+        log.info("Driver registered: {}", request.email());
         return response;
     }
 

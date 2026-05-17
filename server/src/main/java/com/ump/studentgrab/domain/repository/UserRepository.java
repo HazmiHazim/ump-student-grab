@@ -1,5 +1,6 @@
 package com.ump.studentgrab.domain.repository;
 
+import com.ump.studentgrab.domain.enums.UserRole;
 import com.ump.studentgrab.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,5 +10,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByRole(String role);
+    Optional<User> findByRole(UserRole role);
 }

@@ -1,5 +1,6 @@
 package com.ump.studentgrab.domain.model;
 
+import com.ump.studentgrab.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,8 +29,19 @@ public class User {
     private LocalDate birthDate;
     private String matricNo;
     private String phoneNo;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     private Long attachmentId;
+
+    // Driver-specific fields (null for passengers)
+    private String icNo;
+    private String carBrand;
+    private String carModel;
+    private String plateNo;
+    private String carColour;
+    private String licenseType;
 
     @Column(nullable = false)
     @Builder.Default

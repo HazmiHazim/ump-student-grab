@@ -21,7 +21,14 @@ public class AuthController {
     public ResponseEntity<ApiResponse<UserResponse>> register(@Valid @RequestBody RegisterRequest request) {
         UserResponse user = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.created("User registered successfully", user));
+                .body(ApiResponse.created("Passenger registered successfully", user));
+    }
+
+    @PostMapping("/register/driver")
+    public ResponseEntity<ApiResponse<UserResponse>> registerDriver(@Valid @RequestBody DriverRegisterRequest request) {
+        UserResponse user = authService.registerDriver(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created("Driver registered successfully", user));
     }
 
     @PostMapping("/login")

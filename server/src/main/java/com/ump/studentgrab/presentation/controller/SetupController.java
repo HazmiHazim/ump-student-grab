@@ -1,6 +1,7 @@
 package com.ump.studentgrab.presentation.controller;
 
 import com.ump.studentgrab.application.exception.UnauthorizedException;
+import com.ump.studentgrab.domain.enums.UserRole;
 import com.ump.studentgrab.domain.model.User;
 import com.ump.studentgrab.domain.repository.UserRepository;
 import com.ump.studentgrab.presentation.response.ApiResponse;
@@ -32,8 +33,8 @@ public class SetupController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, String>>> setup(@Valid @RequestBody SetupRequest request) {
-        if (userRepository.findByRole("Super Admin").isPresent()) {
-            log.warn("Setup endpoint rejected — Super Admin already exists");
+        if (userRepository.findByRole(UserRole.ADMIN).isPresent()) {
+            log.warn("Setup endpoint rejected — Admin already exists");
             throw new UnauthorizedException("Setup has already been completed. This endpoint is disabled.");
         }
 
@@ -41,7 +42,7 @@ public class SetupController {
                 .email(request.email())
                 .password(PASSWORD_ENCODER.encode(request.password()))
                 .fullName("Super Admin")
-                .role("Super Admin")
+                .role(UserRole.ADMIN)
                 .isVerified(true)
                 .build();
         userRepository.save(admin);

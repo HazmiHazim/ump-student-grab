@@ -1,5 +1,7 @@
 package com.ump.studentgrab.application.dto.response;
 
+import com.ump.studentgrab.domain.enums.UserRole;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,8 +13,14 @@ public record UserResponse(
         LocalDate birthDate,
         String matricNo,
         String phoneNo,
-        String role,
+        UserRole role,
         Long attachmentId,
+        String icNo,
+        String carBrand,
+        String carModel,
+        String plateNo,
+        String carColour,
+        String licenseType,
         Boolean isVerified,
         String token,
         LocalDateTime createdAt,

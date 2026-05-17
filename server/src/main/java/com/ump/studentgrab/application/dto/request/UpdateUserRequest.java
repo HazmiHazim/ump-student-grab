@@ -1,5 +1,6 @@
 package com.ump.studentgrab.application.dto.request;
 
+import com.ump.studentgrab.domain.enums.UserRole;
 import jakarta.validation.constraints.Email;
 
 import java.time.LocalDate;
@@ -13,6 +14,6 @@ public record UpdateUserRequest(
         LocalDate birthDate,
         String matricNo,
         String phoneNo,
-        String role,
+        UserRole role,
         Long attachmentId
 ) {}
